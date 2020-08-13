@@ -1,10 +1,8 @@
-class VkApiResponseException(Exception):# да, спиздил))0)
-    def __init__(self, *args, **kwargs):
-        self.error_code = kwargs.get('error_code', None)
-        self.error_msg = kwargs.get('error_msg', None)
-        self.request_params = kwargs.get('request_params', None)
-        self.args = args
-        self.kwargs = kwargs
+class VkResponseException(Exception):
+    def __init__(self, error: dict):
+        self.error_code = error.get('error_code', None)
+        self.error_msg = error.get('error_msg', None)
+        self.request_params = error.get('request_params', None)
 
 class NetworkError(Exception):
     code: int
@@ -16,5 +14,5 @@ class TooManyRequests(Exception):
     def __init__(self, data: dict):
         self.data = data
 
-class TokenInvalid(Exception): # не, ну внатуре
+class TokenInvalid(Exception): # не, ну внатуре же
     pass

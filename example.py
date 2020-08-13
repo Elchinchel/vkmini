@@ -1,5 +1,5 @@
 import asyncio
-from vkmini import VkApi, create_user_poller, LP
+from vkmini import VkApi, LP
 from datetime import datetime
 
 token = '<VK token>'
@@ -41,10 +41,9 @@ async def handle(update: list, vk: VkApi, lp: LP):
 
 async def main():
     vk = VkApi(token)
-    lp = await create_user_poller(vk)
-    while True:
-        for update in await lp.check: # проверка событий пользовательского longpoll
-            if update[0] == 4 and update[2] & 2 == 2:
-                await handle(update, vk, lp)
+    lp = await LP.create_poller(vk)
+    async for update in lp.listen(): # "прослушка" событий пользовательского longpoll
+        if update[0] == 4 and update[2] & 2 == 2:
+            await handle(update, vk, lp)
 
 asyncio.run(main())

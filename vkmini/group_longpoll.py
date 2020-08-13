@@ -1,66 +1,13 @@
-"""
-не работает по причине автор ленивая жопа (надо переделать под aio)
-"""
-import requests
-from . import VkApi
+from typing import Generator, List, Union, Any
 from datetime import datetime
+from .request import longpoll_get
+from . import VkApi
 
 # from wtflog import warden
 # logger = warden.get_boy('VK Group LongPoll')
 from .printer import Printer
 logger = Printer()
 
-class LPGroup():
-    key: str
-    server:str
-    ts: int
-    group_id: int
-    time: float
-    vk: VkApi
-    wait: int
-
-    def __init__(self, vk, group_id, wait = 25):
-        'vk - экземпляр VkApi'
-        self.vk = vk
-        self.group_id = group_id
-        data = vk('groups.getLongPollServer', group_id = group_id)
-        if data.get('error'):
-            if data['error']['error_code'] == 5:
-                raise Exception('Неверный токен')
-        self.server = data['server']
-        self.key = data['key']
-        self.ts = data['ts']
-        self.wait = wait
-
-    @property
-    def check(self):
-        'Возвращает список событий (updates)'
-        response = requests.get(f"{self.server}?act=a_check&key={self.key}&ts={self.ts}&wait={self.wait}")
-        if response.status_code != 200:
-            logger.error('Ошибка сети')
-            return []
-
-        self.time = datetime.now().timestamp()
-        data = response.json()
-
-        if 'failed' in data.keys():
-            if data['failed'] == 1:
-                logger.error('Ошибка истории событий')
-                self.ts = data['ts']
-            elif data['failed'] == 2:
-                self.key = self.vk('groups.getLongPollServer', group_id = self.group_id)['key']
-            else:
-                logger.error('Информация утрачена')
-                data = self.vk('groups.getLongPollServer', group_id = self.group_id)
-                self.key = data['key']
-                self.ts = data['ts']
-            return []
-        else:
-            self.ts = data['ts']
-            updates = []
-            for update in data['updates']:
-                updates.append(Update(update, self.vk))
-            return updates
 
 class Update:
 
@@ -95,6 +42,68 @@ class Update:
         if self.type == 'message_new':
             self.message = self._Message(self.object['message'])
 
-    def reply_to_peer(self, message, **kwargs):
-        return self.vk.msg_op(1, self.message.peer_id, message, **kwargs)
+    async def reply_to_peer(self, message, **kwargs):
+        return await self.vk.msg_op(1, self.message.peer_id, message, **kwargs)
+
+
+class LPGroup():
+    make_classes: bool
+
+    key: str
+    server:str
+    ts: int
+    group_id: int
+    time: float
+    vk: VkApi
+    wait: int
+        
+    def __init__(self, vk: VkApi, wait: int, make_classes: bool):
+        'Для создания экземпляра используйте метод `create_poller`'
+        self.vk = vk
+        self.wait = wait
+        self.make_classes = make_classes
+
+    @staticmethod
+    async def create_poller(vk: VkApi, group_id: int, wait: int = 25,
+                            make_classes: bool = True) -> "LPGroup":
+        lp = LPGroup(vk, wait, make_classes)
+        data = await vk('groups.getLongPollServer', group_id = group_id)
+        if data.get('error'):
+            if data['error']['error_code'] == 5:
+                raise TokenInvalid
+        lp.server = data['server']
+        lp.key = data['key']
+        lp.ts = data['ts']
+        return lp
+        
+    @property
+    async def check(self) -> List[Union[Update, List[Any]]]:
+        'Возвращает список событий (updates)'
+        data = await longpoll_get(f"{self.server}?act=a_check&key={self.key}&ts={self.ts}&wait={self.wait}")
+
+        self.time = datetime.now().timestamp()
+
+        if 'failed' in data.keys():
+            if data['failed'] == 1:
+                logger.error('Ошибка истории событий')
+                self.ts = data['ts']
+            elif data['failed'] == 2:
+                self.key = await self.vk('groups.getLongPollServer', group_id = self.group_id)['key']
+            else:
+                logger.error('Информация утрачена')
+                data = await self.vk('groups.getLongPollServer', group_id = self.group_id)
+                self.key = data['key']
+                self.ts = data['ts']
+            return []
+        else:
+            self.ts = data['ts']
+            if self.make_classes:
+                return [Update(update, self.vk) for update in data['updates']]
+            else:
+                return data['updates']
+
+    async def listen(self) -> Generator[list, None, None]:
+        while True:
+            for update in await self.check:
+                yield update
         

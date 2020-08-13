@@ -1,7 +1,7 @@
 # давай вот щас не начинай, работает, а больше мне ничего не нужно
 import asyncio
 import aiohttp
-from .exceptions import VkApiResponseException, NetworkError, TokenInvalid, TooManyRequests
+from .exceptions import VkResponseException, NetworkError, TokenInvalid, TooManyRequests
 from .methods import Messages
 from .request import post
 
@@ -18,7 +18,7 @@ class VkApi:
     messages = Messages
 
     def __init__(self, access_token: str, excepts: bool = False, version: str = "5.110"):
-        'Eсли excepts == True, ошибки ВК будут генерировать исключение VkApiResponseException'
+        'Eсли excepts == True, ошибки ВК будут генерировать исключение VkResponseException'
         self.query = f'?v={version}&access_token={access_token}&lang=ru'
         self.excepts = excepts
 
@@ -37,7 +37,7 @@ class VkApi:
                 if resp_body['error']['error_code'] == 6:
                     raise TooManyRequests(kwargs)
                 else:
-                    raise VkApiResponseException(**resp_body["error"])
+                    raise VkResponseException(resp_body["error"])
         return resp_body
 
 
