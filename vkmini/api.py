@@ -12,25 +12,30 @@ logger = Printer()
 
 class VkApi:
     url: str = 'https://api.vk.com/method/'
+    log: bool
     query: str
     excepts: bool
 
     messages = Messages
 
-    def __init__(self, access_token: str, excepts: bool = False, version: str = "5.110"):
+    def __init__(self, access_token: str, excepts: bool = False, version: str = "5.110", log: bool = True):
         'Eсли excepts == True, ошибки ВК будут генерировать исключение VkResponseException'
         self.query = f'?v={version}&access_token={access_token}&lang=ru'
         self.excepts = excepts
+        self.log = log
 
 
     async def __call__(self, method, **kwargs):
-        logger.debug(f'URL = "{self.url}{method}{self.query}" Data = {kwargs}')
+        if self.log:
+            logger.debug(f'URL = "{self.url}{method}{self.query}" Data = {kwargs}')
         resp_body = await post(f'{self.url}{method}{self.query}', kwargs, self.excepts)
         if 'response' in resp_body.keys():
-            logger.info(f"Запрос {method} выполнен")
+            if self.log:
+                logger.info(f"Запрос {method} выполнен")
             return resp_body['response']
         elif 'error' in resp_body.keys():
-            logger.warning(f"Запрос {method} не выполнен: {resp_body['error']}")
+            if self.log:
+                logger.warning(f"Запрос {method} не выполнен: {resp_body['error']}")
             if self.excepts:
                 if resp_body['error']['error_code'] == 5:
                     raise TokenInvalid

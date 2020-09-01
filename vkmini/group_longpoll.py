@@ -1,6 +1,7 @@
 from typing import Generator, List, Union, Any
 from datetime import datetime
 from .request import longpoll_get
+from .exceptions import TokenInvalid
 from . import VkApi
 
 # from wtflog import warden
@@ -57,16 +58,17 @@ class LPGroup():
     vk: VkApi
     wait: int
         
-    def __init__(self, vk: VkApi, wait: int, make_classes: bool):
+    def __init__(self, vk: VkApi, group_id: int, wait: int, make_classes: bool):
         'Для создания экземпляра используйте метод `create_poller`'
         self.vk = vk
         self.wait = wait
+        self.group_id = group_id
         self.make_classes = make_classes
 
     @staticmethod
     async def create_poller(vk: VkApi, group_id: int, wait: int = 25,
                             make_classes: bool = True) -> "LPGroup":
-        lp = LPGroup(vk, wait, make_classes)
+        lp = LPGroup(vk, group_id, wait, make_classes)
         data = await vk('groups.getLongPollServer', group_id = group_id)
         if data.get('error'):
             if data['error']['error_code'] == 5:
