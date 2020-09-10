@@ -1,13 +1,8 @@
-from typing import Generator, List, Union, Any
+from typing import Generator, List, Union, Any, Callable
 from datetime import datetime
 from .request import longpoll_get
 from .exceptions import TokenInvalid
 from . import VkApi
-
-# from wtflog import warden
-# logger = warden.get_boy('VK Group LongPoll')
-from .printer import Printer
-logger = Printer()
 
 
 class Update:
@@ -67,8 +62,10 @@ class LPGroup():
 
     @staticmethod
     async def create_poller(vk: VkApi, group_id: int, wait: int = 25,
-                            make_classes: bool = True) -> "LPGroup":
+                            make_classes: bool = True,
+                            logger: Callable=None) -> "LPGroup":
         lp = LPGroup(vk, group_id, wait, make_classes)
+        lp.logger = logger or vk.logger
         data = await vk('groups.getLongPollServer', group_id = group_id)
         if data.get('error'):
             if data['error']['error_code'] == 5:
@@ -77,22 +74,26 @@ class LPGroup():
         lp.key = data['key']
         lp.ts = data['ts']
         return lp
-        
+
     @property
     async def check(self) -> List[Union[Update, List[Any]]]:
         'Возвращает список событий (updates)'
-        data = await longpoll_get(f"{self.server}?act=a_check&key={self.key}&ts={self.ts}&wait={self.wait}")
+        data = await longpoll_get(f"{self.server}?act=a_check&key={self.key}&ts={self.ts}&wait={self.wait}",
+            self.vk.excepts
+            )
 
         self.time = datetime.now().timestamp()
 
         if 'failed' in data.keys():
             if data['failed'] == 1:
-                logger.error('Ошибка истории событий')
+                if self.logger:
+                    self.logger.warning('Ошибка истории событий')
                 self.ts = data['ts']
             elif data['failed'] == 2:
-                self.key = await self.vk('groups.getLongPollServer', group_id = self.group_id)['key']
+                self.key = (await self.vk('groups.getLongPollServer', group_id = self.group_id))['key']
             else:
-                logger.error('Информация утрачена')
+                if self.logger:
+                    self.logger.error('Информация утрачена')
                 data = await self.vk('groups.getLongPollServer', group_id = self.group_id)
                 self.key = data['key']
                 self.ts = data['ts']
