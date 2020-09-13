@@ -47,7 +47,7 @@ class LP:
                     self.logger.error('Ошибка истории событий')
                 self.ts = data['ts']
             elif data['failed'] == 2:
-                self.key = await self.vk('messages.getLongPollServer')['key']
+                self.key = (await self.vk('messages.getLongPollServer'))['key']
             else:
                 if self.logger:
                     self.logger.error('Информация о пользователе утрачена')
