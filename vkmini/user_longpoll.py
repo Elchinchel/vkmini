@@ -1,8 +1,9 @@
+import time
+from typing import Generator, List, Any, Callable
+
 from .request import longpoll_get
 from .exceptions import TokenInvalid
 from . import VkApi
-from typing import Generator, List, Any, Callable
-from datetime import datetime
 
 
 class LP:
@@ -14,13 +15,13 @@ class LP:
     wait: int
 
     def __init__(self, vk: VkApi, wait: int):
-        'Для создания экземпляра используйте метод `create_poller`'
+        'Для создания экземпляра используйте метод `new`'
         self.vk = vk
         self.wait = wait
 
     @staticmethod
-    async def create_poller(vk: VkApi, wait: int = 25,
-                            logger: Callable = None) -> "LP":
+    async def new(vk: VkApi, wait: int = 25,
+                  logger: Callable = None) -> "LP":
         lp = LP(vk, wait)
         lp.logger = logger or vk.logger
         data = await vk('messages.getLongPollServer')
@@ -39,7 +40,7 @@ class LP:
             self.vk.excepts
             )
 
-        self.receive_time = datetime.now().timestamp()
+        self.receive_time = time.time()
 
         if 'failed' in data.keys():
             if data['failed'] == 1:

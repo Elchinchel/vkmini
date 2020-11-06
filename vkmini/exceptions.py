@@ -7,16 +7,18 @@ class VkResponseException(Exception):
 
 class NetworkError(Exception):
     code: int
+
     def __init__(self, code: int):
         self.code = code
 
 
 class TooManyRequests(VkResponseException):
     data: dict
+
     def __init__(self, error: dict, data: dict):
         super().__init__(error)
         self.data = data
 
 
-class TokenInvalid(VkResponseException): # не, ну внатуре же
+class TokenInvalid(VkResponseException):
     pass

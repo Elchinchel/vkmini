@@ -7,7 +7,7 @@ class Printer:
     level: int = 1
 
     def critical(self, text):
-        print(text)
+        _print(text)
 
     def error(self, text):
         if self.level < 5: _print(text)

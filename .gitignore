@@ -1,5 +1,13 @@
-.vscode/launch.json
-tests.py
-group_tests.py
-handlers.py
+..*
+**/__pycache__
 *.pyc
+.vscode
+*test*.py
+
+test_upload.bat
+upload.bat
+*.egg-info
+MANIFEST*
+setup.py
+build/
+dist/

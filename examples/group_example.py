@@ -1,3 +1,4 @@
+# TODO: не работает с последней версией либы (наверное)
 from vkmini import VkApi, LPGroup
 import asyncio
 
