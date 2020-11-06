@@ -27,7 +27,7 @@ class VkApi:
                  access_token: str,
                  excepts: bool = False,
                  version: str = "5.110",
-                 retries: int = 5,
+                 retries: int = 0,
                  sync_mode: bool = False,
                  logger: LoggerType = None):
         """
@@ -71,11 +71,11 @@ class VkApi:
 
     async def __tmr_retryer(self, method: str, **kwargs) -> Any:
         retry = 0
-        while retry < self.retries:
+        while True:
             try:
                 return await self._method(method, **kwargs)
             except VkResponseException as e:
-                if e.error_code != 6:
+                if e.error_code != 6 or retry == self.retries:
                     raise e
                 await asyncio.sleep(0.5)
                 retry += 1
