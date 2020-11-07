@@ -1,7 +1,6 @@
 import asyncio
-from queue import Queue
 from typing import Callable, Union, Any
-from .utils import LoggerType, sync_wrapper
+from .utils import AbstractLogger
 from .methods.method_group import MethodGroup
 from .exceptions import VkResponseException, TokenInvalid, TooManyRequests
 from .request import post
@@ -29,7 +28,7 @@ class VkApi:
                  version: str = "5.110",
                  retries: int = 0,
                  sync_mode: bool = False,
-                 logger: LoggerType = None):
+                 logger: AbstractLogger = None):
         """
         Eсли `excepts` == True, ошибки ВК будут генерировать
         исключение VkResponseException
@@ -62,7 +61,7 @@ class VkApi:
                 self.logger.warning(f"Запрос {method} не выполнен: {resp_body['error']}")
             if self.excepts:
                 if resp_body['error']['error_code'] == 5:
-                    raise TokenInvalid(resp_body['error'])
+                    raise TokenInvalid(resp_body['error'], kwargs)
                 if resp_body['error']['error_code'] == 6:
                     raise TooManyRequests(resp_body["error"], kwargs)
                 else:
@@ -87,20 +86,14 @@ class VkApi:
         return MethodGroup(name, self)
 
     def sync_call(self, method: str, **kwargs) -> Any:
-        queue = Queue()
         if not _loop.is_running():
-            _loop.run_until_complete(
-                sync_wrapper(queue, self.__tmr_retryer(method, **kwargs))
+            return _loop.run_until_complete(
+                self.__tmr_retryer(method, **kwargs)
             )
         else:
-            _loop.create_task(
-                sync_wrapper(queue, self.__tmr_retryer(method, **kwargs))
-            )
-        result, error = queue.get()
-        if error is None:
-            return result
-        else:
-            raise error
+            return asyncio.run_coroutine_threadsafe(
+                self.__tmr_retryer(method, **kwargs), _loop
+            ).result()
 
     def switch_to_sync(self) -> None:
         self.__call__ = self.sync_call

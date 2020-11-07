@@ -1,6 +1,6 @@
 # TODO: не работает с последней версией либы
 import asyncio
-from vkmini import VkApi, LP, logger
+from vkmini import VkApi, LP
 
 token = '<VK token>'
 

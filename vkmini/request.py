@@ -2,8 +2,11 @@ from .exceptions import NetworkError
 from aiohttp import ClientSession
 
 
-async def post(url: str, data: dict, excepts: bool = False) -> dict:
-    async with ClientSession() as session:
+async def post(url: str, data: dict, excepts: bool = False,
+               client_session: ClientSession = None) -> dict:
+    if client_session is None:
+        client_session = ClientSession()
+    async with client_session as session:
         async with session.post(url, data=data) as resp:
             if resp.status == 200:
                 return await resp.json()

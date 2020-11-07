@@ -1,5 +1,6 @@
-from typing import Generator, List, Union, Any, Callable
+from typing import AsyncGenerator, List, Union, Any
 
+from .utils import AbstractLogger
 from .request import longpoll_get
 from .exceptions import TokenInvalid
 from . import VkApi
@@ -67,7 +68,7 @@ class LPGroup():
     @staticmethod
     async def new(vk: VkApi, group_id: int, wait: int = 25,
                   make_classes: bool = True,
-                  logger: Callable = None) -> "LPGroup":
+                  logger: AbstractLogger = None) -> "LPGroup":
         lp = LPGroup(vk, group_id, wait, make_classes)
         lp.logger = logger or vk.logger
         data = await vk('groups.getLongPollServer', group_id=group_id)
@@ -110,7 +111,7 @@ class LPGroup():
             else:
                 return data['updates']
 
-    async def listen(self) -> Generator[Update, None, None]:
+    async def listen(self) -> AsyncGenerator[Update, None]:
         while True:
             for update in await self.check:
                 yield update

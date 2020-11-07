@@ -1,6 +1,7 @@
 import time
-from typing import Generator, List, Any, Callable
+from typing import Generator, List, Any
 
+from .utils import AbstractLogger
 from .request import longpoll_get
 from .exceptions import TokenInvalid
 from . import VkApi
@@ -8,7 +9,7 @@ from . import VkApi
 
 class LP:
     key: str
-    server:str
+    server: str
     ts: int
     receive_time: float
     vk: VkApi
@@ -21,7 +22,7 @@ class LP:
 
     @staticmethod
     async def new(vk: VkApi, wait: int = 25,
-                  logger: Callable = None) -> "LP":
+                  logger: AbstractLogger = None) -> "LP":
         lp = LP(vk, wait)
         lp.logger = logger or vk.logger
         data = await vk('messages.getLongPollServer')

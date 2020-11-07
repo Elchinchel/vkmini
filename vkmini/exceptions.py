@@ -1,7 +1,12 @@
 class VkResponseException(Exception):
-    def __init__(self, error: dict):
-        self.error_code = error.get('error_code', None)
-        self.error_msg = error.get('error_msg', None)
+    request_data: dict
+    error_code: int
+    error_msg: str
+
+    def __init__(self, error: dict, request_data: dict):
+        self.error_code = error['error_code']
+        self.error_msg = error['error_msg']
+        self.request_data = request_data
         self.request_params = error.get('request_params', None)
 
 
@@ -13,12 +18,8 @@ class NetworkError(Exception):
 
 
 class TooManyRequests(VkResponseException):
-    data: dict
-
-    def __init__(self, error: dict, data: dict):
-        super().__init__(error)
-        self.data = data
+    """Too many requests (6) error"""
 
 
 class TokenInvalid(VkResponseException):
-    pass
+    """Token is not valid (5) error"""
