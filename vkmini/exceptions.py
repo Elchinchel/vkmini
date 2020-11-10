@@ -3,11 +3,16 @@ class VkResponseException(Exception):
     error_code: int
     error_msg: str
 
-    def __init__(self, error: dict, request_data: dict):
+    def __init__(self, error: dict, request_data: dict = {}):
         self.error_code = error['error_code']
         self.error_msg = error['error_msg']
         self.request_data = request_data
-        self.request_params = error.get('request_params', None)
+
+    def __str__(self) -> str:
+        info = f'Ошибка ВК #{self.error_code}: {self.error_msg}'
+        if self.request_data:
+            info += f'\nПараметры запроса: {self.request_data}'
+        return info
 
 
 class NetworkError(Exception):

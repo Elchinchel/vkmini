@@ -28,7 +28,7 @@ class LP:
         data = await vk('messages.getLongPollServer')
         if data.get('error'):
             if data['error']['error_code'] == 5:
-                raise TokenInvalid
+                raise TokenInvalid(data['error'])
         lp.server = data['server']
         lp.key = data['key']
         lp.ts = data['ts']
@@ -54,6 +54,7 @@ class LP:
                 if self.logger:
                     self.logger.error('Информация о пользователе утрачена')
                 if self.vk.excepts:
+                    # TODO: придумать что нибудь другое сюда
                     raise Exception('Информация о пользователе утрачена')
             return []
         else:

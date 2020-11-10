@@ -74,7 +74,7 @@ class LPGroup():
         data = await vk('groups.getLongPollServer', group_id=group_id)
         if data.get('error'):
             if data['error']['error_code'] == 5:
-                raise TokenInvalid
+                raise TokenInvalid(data['error'])
         lp.server = data['server']
         lp.key = data['key']
         lp.ts = data['ts']

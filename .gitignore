@@ -2,7 +2,10 @@
 **/__pycache__
 *.pyc
 .vscode
+
 *test*.py
+pylama.ini
+/json_schema
 
 test_upload.bat
 upload.bat

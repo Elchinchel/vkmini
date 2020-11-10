@@ -1,30 +1,23 @@
-# TODO: не работает с последней версией либы
 import asyncio
 from vkmini import VkApi, LP
 
-token = '<VK token>'
+token = 'токен'
 
 vk = VkApi(token, True)
 
-async def handle(update: list, vk: VkApi, lp: LP):
-    text_lowered = update[5].lower()
-    if text_lowered == 'тест':
-
-        # отправка нового сообщения
-        await vk.msg_op(
-            mode = 1,
-            peer_id = update[3],
-            text = f'''Хэй!\nСообщение получено через {
-            round(lp.receive_time - update[4], 1)
-            }с. (±0.5)'''
-            )
-
 
 async def main():
-    vk = VkApi(token, logger=logger.Printer())
+    vk = VkApi(token)
     lp = await LP.new(vk)
-    async for update in lp.listen(): # "прослушка" событий пользовательского longpoll
+    async for update in lp.listen():  # "прослушка" событий user longpoll
+        print(update)
         if update[0] == 4 and update[2] & 2 == 2:
-            await handle(update, vk, lp)
+            if update[5].lower() == 'пинг':
+                # отправка нового сообщения в чат, из которого пришло событие
+                await vk.messages.send(
+                    peer_id=update[3],
+                    message='Понг!',
+                    random_id=0
+                )
 
 asyncio.run(main())
