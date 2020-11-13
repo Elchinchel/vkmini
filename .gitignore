@@ -4,6 +4,7 @@
 .vscode
 
 *test*.py
+tests/*
 pylama.ini
 /json_schema
 

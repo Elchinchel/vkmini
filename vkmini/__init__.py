@@ -9,5 +9,6 @@ else:
 
 from .exceptions import *
 from .user_longpoll import LP
-from .group_longpoll import LPGroup
+from .request import set_session
+from .group.group_longpoll import GroupLP
 from .keyboard import Keyboard, Button

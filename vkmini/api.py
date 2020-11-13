@@ -1,11 +1,12 @@
 import asyncio
-from copy import deepcopy
 from typing import Union, Any
 
-from .utils import AbstractLogger
+from aiohttp.client import ClientSession
+
 from .method_groups import method_groups, MethodGroup
 from .exceptions import VkResponseException, TokenInvalid, TooManyRequests
 from .request import post
+from .utils import AbstractLogger, run_coro_sync
 
 _loop = asyncio.get_event_loop()
 
@@ -21,24 +22,21 @@ class VkApi:
     access_token: str
     logger: Union[AbstractLogger, None]
 
-    excepts: bool
-    retries: int
     sync: bool
+    retries: int
+    excepts: bool
 
     __query: str
+    __session: ClientSession = None
 
-    def __new__(cls,
-                access_token: str,
-                excepts: bool = False,
-                version: str = "5.110",
-                retries: int = 0,
-                sync_mode: bool = False,
-                logger: AbstractLogger = None):
-        if sync_mode:
+    def __new__(cls, *args, **kwargs):
+        if 'sync_mode' in kwargs:
             cls = VkApiSync
+        if len(args) >= 5:
+            if args[4]:
+                cls = VkApiSync
         instance = object.__new__(cls)
-        instance.__init__(access_token, excepts, version,
-                          retries, sync_mode, logger)
+        instance.__init__(*args, **kwargs)
         return instance
 
     def __init__(self,
@@ -47,7 +45,8 @@ class VkApi:
                  version: str = "5.110",
                  retries: int = 0,
                  sync_mode: bool = False,
-                 logger: AbstractLogger = None):
+                 logger: AbstractLogger = None,
+                 session: ClientSession = None):
         """
         `retries` -- количество повторных попыток при возникновении ошибки
         TooManyRequests
@@ -57,14 +56,18 @@ class VkApi:
 
         `excepts` -- генерировать ли VkResponseException при ошибках VK
 
-        `logger` - любой объект, имеющий атрибуты info, debug и warning,
+        `logger` -- любой объект, имеющий атрибуты info, debug и warning,
         по умолчанию None, то есть логирование не ведется
+
+        `session` -- aiohttp.ClientSession, см. описание vkmini.set_session
         """
         self._set_query(version, access_token)
-        self.sync = sync_mode
-        self.retries = retries
-        self.logger = logger
         self.excepts = excepts
+        self.retries = retries
+        self.sync = sync_mode
+        self.logger = logger
+        if session is not None:
+            self._session = session
         for group in method_groups:
             setattr(self, group, MethodGroup(group, self))
 
@@ -77,8 +80,11 @@ class VkApi:
             self.logger.debug(
                 f'URL = "{self.url}{method}{self.__query}" Data = {kwargs}'
             )
-        resp_body = await post(self.url+method+self.__query, kwargs,
-                               self.excepts)
+        resp_body = await post(
+            self.url+method+self.__query,
+            kwargs,
+            self.__session
+        )
         if 'response' in resp_body.keys():
             if self.logger:
                 self.logger.info(f"Запрос {method} выполнен")
@@ -115,14 +121,7 @@ class VkApi:
         return MethodGroup(name, self)
 
     def sync_call(self, method: str, **kwargs) -> Any:
-        if not _loop.is_running():
-            return _loop.run_until_complete(
-                self.__tmr_retryer(method, **kwargs)
-            )
-        else:
-            return asyncio.run_coroutine_threadsafe(
-                self.__tmr_retryer(method, **kwargs), _loop
-            ).result()
+        return run_coro_sync(self.__tmr_retryer(method, **kwargs), _loop)
 
 
 class VkApiSync(VkApi):

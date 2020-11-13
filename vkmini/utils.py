@@ -1,5 +1,14 @@
 import time
+import asyncio
 from abc import ABC, abstractmethod
+from typing import Any
+
+
+def run_coro_sync(coro, loop: asyncio.AbstractEventLoop) -> Any:
+    if loop.is_running():
+        return asyncio.run_coroutine_threadsafe(coro, loop).result()
+    else:
+        return loop.run_until_complete(coro)
 
 
 class AbstractLogger(ABC):

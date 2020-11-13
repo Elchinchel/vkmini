@@ -1,32 +1,76 @@
-from typing import AsyncGenerator, Generator, List, Any, Union
+from typing import AsyncGenerator, List, Union, Any
 
 from aiohttp.client import ClientSession
 
-from .exceptions import TokenInvalid
-from .request import longpoll_get
-from .utils import AbstractLogger, run_coro_sync
-from .api import VkApi, _loop
+from vkmini.utils import AbstractLogger
+from vkmini.request import longpoll_get
+from vkmini.exceptions import TokenInvalid
+from vkmini import VkApi
 
 
-class LP:
-    ts: int
-    key: str
+class Update:
+    # TODO ну тут без комментариев
+    class _Message:
+        date: int
+        from_id: int
+        id: int
+        out: int
+        peer_id: int
+        text: str
+        conversation_message_id: int
+        fwd_messages: list
+        important: bool
+        attachments: list
+        is_hidden: bool
+        client_info: dict
+        reply_message: dict = None
+
+        def __init__(self, object):
+            self.__dict__.update(object)
+
+    type: str
+    object: dict
+    message: _Message
+
+    vk: VkApi
+
+    def __init__(self, update, vk):
+        self.vk = vk
+        self.type = update['type']
+        self.object = update['object']
+        if self.type == 'message_new':
+            self.message = self._Message(self.object['message'])
+
+    def __getitem__(self, key):
+        return self.object[key]
+
+    async def reply_to_peer(self, message, **kwargs):
+        return await self.vk.msg_op(1, self.message.peer_id, message, **kwargs)
+
+
+class GroupLP:
+    # TODO: чёт старовато капец
+    wrap_events: bool
+
+    group_id: int
     server: str
-
-    mode: int
     wait: int
+    key: str
+    ts: int
 
-    _vk: VkApi
-    _pts: bool = False
+    time: float
+    vk: VkApi
+
     _session: Union[ClientSession, None]
-    __session_owner: bool = True
 
-    def __init__(self, vk: VkApi, wait: int = 25, mode: int = 2,
+    __session_owner: bool = False
+
+    def __init__(self, vk: VkApi, group_id: int, wait: int = 25,
                  logger: AbstractLogger = None,
                  session: ClientSession = None) -> None:
         """
-        Параметры `wait` и `mode` описаны в документации
-        (https://vk.com/dev/using_longpoll)
+        Параметр `wait` описан в документации
+        (https://vk.com/dev/bots_longpoll)
 
         `logger` -- любой объект, имеющий атрибуты info, debug и warning,
         по умолчанию None, то есть логирование не ведется
@@ -42,34 +86,30 @@ class LP:
 
         Пример с контекстом:
         ```
-        async with LP(vk) as lp:
+        async with GroupLP(vk, group_id) as lp:
             print(await lp.check())
         ```
         Пример без контекста:
         ```
-        lp = LP(vk)
+        lp = GroupLP(vk, group_id)
         await lp.start()
         print(await lp.check())
         ```
         """
-        self._init(vk, wait, mode, logger, session)
-
-    def _init(self, vk, wait, mode, logger, session) -> None:
         self._vk = vk
         self.wait = wait
-        self.mode = mode
-        if self.mode & 32 == 32:
-            self._pts = True
+        self.group_id = group_id
         self.logger = logger or vk.logger
         self._session = session
-        if session is not None:
-            self.__session_owner = False
 
-    async def check(self) -> List[List[Any]]:
-        data = await longpoll_get((
-                f"https://{self.server}?act=a_check&key={self.key}"
-                f"&ts={self.ts}&wait={self.wait}&mode={self.mode}&version=10"
-            ), self._session)
+    @property
+    async def check(self) -> List[Union[Update, List[Any]]]:
+        'Возвращает список событий (updates)'
+        data = await longpoll_get(
+            f"{self.server}?act=a_check&key={self.key}" +
+            f"&ts={self.ts}&wait={self.wait}",
+            self._session
+        )
 
         if 'failed' in data:
             if data['failed'] == 1:
@@ -81,11 +121,14 @@ class LP:
             return []
         else:
             self.ts = data['ts']
+            # if self.wrap_events:
+            # return [Update(update, self.vk) for update in data['updates']]
+            # else:
             return data['updates']
 
     async def get_longpoll_data(self, new_ts: bool) -> None:
         data = await self._vk._method(
-            'messages.getLongPollServer', need_pts=self._pts
+            'groups.getLongPollServer', group_id=self.group_id
         )
         if not self._vk.excepts:
             if data.get('error', {}).get('error_code') == 5:
@@ -98,7 +141,7 @@ class LP:
     async def start(self) -> None:
         await self.get_longpoll_data(True)
 
-    async def __aenter__(self) -> "LP":
+    async def __aenter__(self) -> "GroupLP":
         if self._session is None:
             self._session = ClientSession()
             self.__session_owner = True
@@ -109,37 +152,7 @@ class LP:
         if self.__session_owner:
             await self._session.close()
 
-    async def listen(self) -> AsyncGenerator[list, None]:
-        """
-        Возвращает асинхронный генератор LongPoll событий
-
-        Официальная документация: https://vk.com/dev/using_longpoll_2
-        """
+    async def listen(self) -> AsyncGenerator[Update, None]:
         while True:
-            for update in await self.check():
+            for update in await self.check:
                 yield update
-
-
-class SyncLP(LP):
-    # XXX: господи, кому вообще нужен синхронный поллер?
-    def listen(self) -> Generator[list, None, None]:
-        """
-        Возвращает генератор LongPoll событий
-
-        Официальная документация: https://vk.com/dev/using_longpoll_2
-        """
-        while True:
-            for update in run_coro_sync(self.check(), _loop):
-                yield update
-
-    @staticmethod
-    def new(vk: VkApi, wait: int = 25, mode: int = 2,
-            logger: AbstractLogger = None,
-            session: ClientSession = None) -> "SyncLP":
-        lp = SyncLP(vk, wait, mode)
-        if lp.mode & 32 == 32:
-            lp._pts = True
-        lp._session = session
-        lp.logger = logger or vk.logger
-        run_coro_sync(lp.get_longpoll_data(True), _loop)
-        return lp

@@ -56,12 +56,28 @@ class Keyboard:
     def add_buttons(self, buttons: List[Button]):
         self.buttons.append(buttons)
 
-    def jsonize(self) -> str:
+    def jsonize(self, alt_buttons: List[List[Button]] = None) -> str:
+        if alt_buttons is None:
+            alt_buttons = self.buttons
         return json.dumps({
             "one_time": self.one_time,
             "inline": self.inline,
-            "buttons": [[b.obj for b in li] for li in self.buttons]
+            "buttons": [[b.obj for b in li] for li in alt_buttons]
         }, ensure_ascii=False)
+
+    def format_and_jsonize(self, data: tuple) -> str:
+        buttons = []
+        for line in self.buttons:
+            button_line = []
+            for button in line:
+                button_line.append(Button(
+                    button.label,
+                    button.payload % data,
+                    button.type,
+                    button.color
+                ))
+            buttons.append(button_line)
+        return self.jsonize(buttons)
 
 
 # {

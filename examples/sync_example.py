@@ -1,4 +1,3 @@
-# TODO: синхронного LP-то нет))0)
 from vkmini import VkApi
 
 # создание экземпляра класса для работы с VK API в синхронном режиме
@@ -8,11 +7,13 @@ vk = VkApi(
     excepts=True
 )
 
-# user = vk.users.get()[0]  # получение информации о текущем пользователе
+user = vk.users.get()[0]  # получение информации о текущем пользователе
 
-# print(user)
+print(user)
+# user - информация, возвращаемая методом users.get в поле "response"
+# подробнее -- https://vk.com/dev/users.get
 
-# user_id = user['id']
+user_id = user['id']
 
 # отправка сообщения в лс пользователю-владельцу токена (самому себе)
 message_id = vk.messages.send(
@@ -22,3 +23,5 @@ message_id = vk.messages.send(
 )
 
 print(message_id)
+# message_id - информация, возвращаемая методом messages.send в поле "response"
+# подробнее -- https://vk.com/dev/messages.send
