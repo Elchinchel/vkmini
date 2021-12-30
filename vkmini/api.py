@@ -4,7 +4,9 @@ from typing import Union, Any
 from aiohttp.client import ClientSession
 
 from .method_groups import method_groups, MethodGroup
-from .exceptions import VkResponseException, TokenInvalid, TooManyRequests
+from .exceptions import (
+    VkResponseException, TokenInvalid, TooManyRequests, CaptchaNeeded
+)
 from .request import post
 from .utils import AbstractLogger, run_coro_sync
 
@@ -18,6 +20,7 @@ def set_loop(loop: asyncio.AbstractEventLoop) -> None:
 
 class VkApi:
     url: str = 'https://api.vk.com/method/'
+    user_id: Union[int, None] = None
     version: str
     access_token: str
     logger: Union[AbstractLogger, None]
@@ -32,7 +35,7 @@ class VkApi:
     def __new__(cls, *args, **kwargs):
         if 'sync_mode' in kwargs:
             cls = VkApiSync
-        if len(args) >= 5:
+        elif len(args) >= 5:
             if args[4]:
                 cls = VkApiSync
         instance = object.__new__(cls)
@@ -87,7 +90,7 @@ class VkApi:
         )
         if 'response' in resp_body.keys():
             if self.logger:
-                self.logger.info(f"Запрос {method} выполнен")
+                self.logger.debug(f"Запрос {method} выполнен")
             return resp_body['response']
         elif 'error' in resp_body.keys():
             if self.logger:
@@ -97,31 +100,49 @@ class VkApi:
             if self.excepts:
                 if resp_body['error']['error_code'] == 5:
                     raise TokenInvalid(resp_body['error'], kwargs)
-                if resp_body['error']['error_code'] == 6:
+                elif resp_body['error']['error_code'] == 6:
                     raise TooManyRequests(resp_body["error"], kwargs)
+                elif resp_body['error']['error_code'] == 14:
+                    raise CaptchaNeeded(resp_body["error"], kwargs)
                 else:
                     raise VkResponseException(resp_body["error"], kwargs)
         return resp_body
 
-    async def __tmr_retryer(self, method: str, **kwargs) -> Any:
+    async def __retryer(self, method: str, **kwargs) -> Any:
         retry = 0
         while True:
             try:
                 return await self._method(method, **kwargs)
             except VkResponseException as e:
-                if e.error_code != 6 or retry == self.retries:
+                if e.error_code not in {6} or retry == self.retries:
                     raise e
-                await asyncio.sleep(0.5)
+                if e.error_code == 6:
+                    await asyncio.sleep(0.5)
+                # elif e.error_code == 14:
+                #     if self.captcha_solver is None:
+                #         raise e
+                #     key = await self.captcha_solver.solve(e.error_data["captcha_img"])
+                #     if key is None:
+                #         raise e
+                #     kwargs.update({
+                #         "captcha_sid": e.error_data["captcha_sid"],
+                #         "captcha_key": key
+                #     })
                 retry += 1
 
     async def __call__(self, method, **kwargs) -> Any:
-        return await self.__tmr_retryer(method, **kwargs)
+        return await self.__retryer(method, **kwargs)
+
+    async def set_user_id(self, user_id: Union[int, None] = None) -> None:
+        if user_id is None:
+            self.user_id = (await self.users.get())[0]["id"]
+        self.user_id = user_id
 
     def __getattr__(self, name: str) -> MethodGroup:
         return MethodGroup(name, self)
 
     def sync_call(self, method: str, **kwargs) -> Any:
-        return run_coro_sync(self.__tmr_retryer(method, **kwargs), _loop)
+        return run_coro_sync(self.__retryer(method, **kwargs), _loop)
 
 
 class VkApiSync(VkApi):

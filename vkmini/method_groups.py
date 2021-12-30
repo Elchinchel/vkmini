@@ -53,7 +53,7 @@ class MethodGroup:
     def __getattr__(self, method: str) -> Union[Coroutine, Callable]:
         if self.vk.sync:
             def method_call(**kwargs):
-                return self.vk.sync_call(f'{self.name}.{method}', **kwargs)
+                return self.vk(f'{self.name}.{method}', **kwargs)
         else:
             async def method_call(**kwargs):
                 return await self.vk(f'{self.name}.{method}', **kwargs)

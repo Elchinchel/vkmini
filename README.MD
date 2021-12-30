@@ -1,6 +1,6 @@
 # VKmini
 
-Махонькая библиотека для почти прямой работы с VK API
+Лёгкая библиотека для прямой работы с VK API
 
 ## Установка
 
@@ -31,4 +31,4 @@ async def main():
 asyncio.get_event_loop().run_until_complete(main())
 ```
 
-Больше примеров в [тута](https://github.com/Elchinchel/vkmini/tree/master/examples)
+Больше примеров [здесь](https://github.com/Elchinchel/vkmini/tree/master/examples)

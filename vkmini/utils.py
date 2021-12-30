@@ -1,7 +1,7 @@
 import time
 import asyncio
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Union
 
 
 def run_coro_sync(coro, loop: asyncio.AbstractEventLoop) -> Any:
@@ -9,6 +9,15 @@ def run_coro_sync(coro, loop: asyncio.AbstractEventLoop) -> Any:
         return asyncio.run_coroutine_threadsafe(coro, loop).result()
     else:
         return loop.run_until_complete(coro)
+
+
+class AbstractCaptchaSolver(ABC):
+    @abstractmethod
+    async def solve(image_link: str) -> Union[str, None]:
+        raise NotImplementedError
+
+    async def callback(VkApi, method: str, data: dict) -> Any:
+        pass
 
 
 class AbstractLogger(ABC):
