@@ -1,11 +1,12 @@
-from typing import AsyncGenerator, Generator, List, Any, Union
+from typing import AsyncGenerator, List, Any, Union
+from warnings import warn
 
 from aiohttp.client import ClientSession
 
 from .exceptions import TokenInvalid
-from .request import longpoll_get
-from .utils import AbstractLogger, run_coro_sync
-from .api import VkApi, _loop
+from .utils import AbstractLogger
+from .api import VkApi
+from . import request
 
 
 class LP:
@@ -21,7 +22,10 @@ class LP:
     _session: Union[ClientSession, None]
     __session_owner: bool = True
 
-    def __init__(self, vk: VkApi, wait: int = 25, mode: int = 2,
+    def __init__(self,
+                 vk: VkApi,
+                 wait: int = 25,
+                 mode: int = 2,
                  logger: AbstractLogger = None,
                  session: ClientSession = None) -> None:
         """
@@ -65,11 +69,23 @@ class LP:
         if session is not None:
             self.__session_owner = False
 
-    async def check(self) -> List[List[Any]]:
-        data = await longpoll_get((
-                f"https://{self.server}?act=a_check&key={self.key}"
-                f"&ts={self.ts}&wait={self.wait}&mode={self.mode}&version=10"
-            ), self._session)
+    async def check(self):
+        if self._session is None and request.default_session is None:
+            warn(ResourceWarning(
+                'При создании экземпляра LP не была указана сессия, при этом '
+                'сессия default_session также не задана. Это приведёт к '
+                'созданию новой сессии на каждый запрос.'
+            ))
+        await self.get_longpoll_data(True)
+        self.check = self._check
+        return await self.check()
+
+    async def _check(self) -> List[List[Any]]:
+        data = await request.longpoll_get(
+            f"https://{self.server}?act=a_check&key={self.key}"
+            f"&ts={self.ts}&wait={self.wait}&mode={self.mode}&version=10",
+            self._session
+        )
 
         if 'failed' in data:
             if data['failed'] == 1:
@@ -95,14 +111,10 @@ class LP:
         if new_ts:
             self.ts = data['ts']
 
-    async def start(self) -> None:
-        await self.get_longpoll_data(True)
-
     async def __aenter__(self) -> "LP":
         if self._session is None:
             self._session = ClientSession()
             self.__session_owner = True
-        await self.get_longpoll_data(True)
         return self
 
     async def __aexit__(self, *_) -> None:
@@ -114,32 +126,8 @@ class LP:
         Возвращает асинхронный генератор LongPoll событий
 
         Официальная документация: https://vk.com/dev/using_longpoll_2
+        Неофициальная: https://github.com/danyadev/longpoll-doc
         """
         while True:
             for update in await self.check():
                 yield update
-
-
-class SyncLP(LP):
-    # XXX: господи, кому вообще нужен синхронный поллер?
-    def listen(self) -> Generator[list, None, None]:
-        """
-        Возвращает генератор LongPoll событий
-
-        Официальная документация: https://vk.com/dev/using_longpoll_2
-        """
-        while True:
-            for update in run_coro_sync(self.check(), _loop):
-                yield update
-
-    @staticmethod
-    def new(vk: VkApi, wait: int = 25, mode: int = 2,
-            logger: AbstractLogger = None,
-            session: ClientSession = None) -> "SyncLP":
-        lp = SyncLP(vk, wait, mode)
-        if lp.mode & 32 == 32:
-            lp._pts = True
-        lp._session = session
-        lp.logger = logger or vk.logger
-        run_coro_sync(lp.get_longpoll_data(True), _loop)
-        return lp

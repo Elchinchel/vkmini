@@ -1,14 +1,16 @@
 import asyncio
+
 from typing import Union, Any
+from warnings import warn
 
 from aiohttp.client import ClientSession
 
+from .utils import AbstractLogger, run_coro_sync
+from .request import post
 from .method_groups import method_groups, MethodGroup
 from .exceptions import (
     VkResponseException, TokenInvalid, TooManyRequests, CaptchaNeeded
 )
-from .request import post
-from .utils import AbstractLogger, run_coro_sync
 
 _loop = asyncio.get_event_loop()
 
@@ -33,11 +35,10 @@ class VkApi:
     __session: ClientSession = None
 
     def __new__(cls, *args, **kwargs):
-        if 'sync_mode' in kwargs:
+        if kwargs.get('sync_mode', False):
             cls = VkApiSync
-        elif len(args) >= 5:
-            if args[4]:
-                cls = VkApiSync
+        elif len(args) >= 5 and args[4]:
+            cls = VkApiSync
         instance = object.__new__(cls)
         instance.__init__(*args, **kwargs)
         return instance
@@ -45,7 +46,7 @@ class VkApi:
     def __init__(self,
                  access_token: str,
                  excepts: bool = False,
-                 version: str = "5.110",
+                 version: str = "5.130",
                  retries: int = 0,
                  sync_mode: bool = False,
                  logger: AbstractLogger = None,
@@ -64,25 +65,31 @@ class VkApi:
 
         `session` -- aiohttp.ClientSession, см. описание vkmini.set_session
         """
-        self._set_query(version, access_token)
+        self._set_query(version)
+        self.access_token = access_token
         self.excepts = excepts
         self.retries = retries
         self.sync = sync_mode
         self.logger = logger
         if session is not None:
-            self._session = session
+            self.__session = session
         for group in method_groups:
             setattr(self, group, MethodGroup(group, self))
 
-    def _set_query(self, version: str, access_token: str):
-        self.access_token, self.version = access_token, version
-        self.__query = f'?v={version}&access_token={access_token}&lang=ru'
+    def _set_query(self, version: str, access_token=None):
+        if access_token is not None:
+            warn(DeprecationWarning(
+                'Параметр "access_token" устарел и будет удалён в будущих версиях'
+            ))
+        self.version = version
+        self.__query = f'?v={version}&lang=ru'
 
     async def _method(self, method: str, **kwargs) -> Any:
         if self.logger:
             self.logger.debug(
                 f'URL = "{self.url}{method}{self.__query}" Data = {kwargs}'
             )
+        kwargs['access_token'] = self.access_token
         resp_body = await post(
             self.url+method+self.__query,
             kwargs,
@@ -91,13 +98,22 @@ class VkApi:
         if 'response' in resp_body.keys():
             if self.logger:
                 self.logger.debug(f"Запрос {method} выполнен")
-            return resp_body['response']
+            resp = resp_body['response']
+            if 'execute_errors' in resp_body:
+                class container(resp.__class__):
+                    pass
+
+                resp = container(resp)
+                resp.execute_errors = resp_body['execute_errors']
+
+            return resp
         elif 'error' in resp_body.keys():
             if self.logger:
                 self.logger.warning(
                     f"Запрос {method} не выполнен: {resp_body['error']}"
                 )
             if self.excepts:
+                del(kwargs['access_token'])
                 if resp_body['error']['error_code'] == 5:
                     raise TokenInvalid(resp_body['error'], kwargs)
                 elif resp_body['error']['error_code'] == 6:
@@ -118,16 +134,6 @@ class VkApi:
                     raise e
                 if e.error_code == 6:
                     await asyncio.sleep(0.5)
-                # elif e.error_code == 14:
-                #     if self.captcha_solver is None:
-                #         raise e
-                #     key = await self.captcha_solver.solve(e.error_data["captcha_img"])
-                #     if key is None:
-                #         raise e
-                #     kwargs.update({
-                #         "captcha_sid": e.error_data["captcha_sid"],
-                #         "captcha_key": key
-                #     })
                 retry += 1
 
     async def __call__(self, method, **kwargs) -> Any:

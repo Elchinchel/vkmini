@@ -1,5 +1,17 @@
-from typing import List, Union
 import json
+
+from typing import List, Union, Literal
+
+
+button_colors = Literal[
+    'primary',  # Обычная
+    'secondary',  # "Бледная"
+    'positive',  # Зелёная
+    'negative'  # Красная
+]
+button_types = Literal[
+    'text', 'open_link', 'location', 'vkpay', 'open_app', 'callback'
+]
 
 
 class Button:
@@ -16,8 +28,8 @@ class Button:
     def __init__(self,
                  label: str,
                  payload: Union[str, dict],
-                 type: str = 'text',
-                 color: str = 'primary') -> None:
+                 type: button_types = 'text',
+                 color: button_colors = 'primary') -> None:
         self.payload = payload
         if isinstance(self.payload, dict):
             self.payload = json.dumps(self.payload, ensure_ascii=False)
@@ -38,7 +50,7 @@ class Button:
 
 
 class Keyboard:
-    buttons: List[List[Button]] = []
+    buttons: List[List[Button]]
     one_time: bool
     inline: bool
 
@@ -46,6 +58,7 @@ class Keyboard:
                  buttons: Union[Button, List[Button]] = None,
                  inline: bool = True,
                  one_time: bool = False) -> None:
+        self.buttons = []
         if buttons is not None:
             self.add_buttons(buttons)
         if inline and one_time:
@@ -54,6 +67,9 @@ class Keyboard:
             )
         self.inline = inline
         self.one_time = one_time
+
+    def __str__(self) -> str:
+        return self.jsonize()
 
     def add_buttons(self, buttons: Union[Button, List[Button]]):
         if isinstance(buttons, Button):
@@ -69,29 +85,20 @@ class Keyboard:
             "buttons": [[b.obj for b in li] for li in alt_buttons]
         }, ensure_ascii=False)
 
-    # XXX: remove
-    def format_and_jsonize(self, data: Union[tuple, dict]) -> str:
-        buttons = []
-        for line in self.buttons:
-            button_line = []
-            for button in line:
-                button_line.append(Button(
-                    button.label,
-                    button.payload % data,
-                    button.type,
-                    button.color
-                ))
-            buttons.append(button_line)
-        return self.jsonize(buttons)
-    
     def format_label(self, data: Union[tuple, dict]) -> 'Keyboard':
         for line in self.buttons:
             for button in line:
-                button.label = button.label % data
+                try:
+                    button.label = button.label % data
+                except TypeError:
+                    pass
         return self
 
     def format_payload(self, data: Union[tuple, dict]) -> 'Keyboard':
         for line in self.buttons:
             for button in line:
-                button.payload = button.payload % data
+                try:
+                    button.payload = button.label % data
+                except TypeError:
+                    pass
         return self

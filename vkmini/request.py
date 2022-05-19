@@ -1,9 +1,22 @@
+import json
+
 from typing import Tuple, Union
 from aiohttp import ClientSession
+
 from vkmini.exceptions import NetworkError
 
 
 default_session: Union[ClientSession, None] = None
+json_decoder = json.loads
+
+
+def set_decoder(loads) -> None:
+    """
+    Устанавливает функцию, которая будет использоваться при
+    десериализации ответа на запросы
+    """
+    global json_decoder
+    json_decoder = loads
 
 
 def set_session(session: ClientSession) -> None:
@@ -30,12 +43,13 @@ async def _get_session(session) -> Tuple[ClientSession, bool]:
     return (session or default_session), False
 
 
-async def post(url: str, data: dict,
+async def post(url: str,
+               data: dict,
                client_session: ClientSession = None) -> dict:
     session, should_close = await _get_session(client_session)
     async with session.post(url, data=data) as resp:
         if resp.status == 200:
-            data = await resp.json()
+            data = await resp.json(loads=json_decoder)
         else:
             data = {}
     if should_close:
@@ -50,7 +64,7 @@ async def longpoll_get(url: str,
     session, should_close = await _get_session(client_session)
     async with session.get(url) as resp:
         if resp.status == 200:
-            data = await resp.json()
+            data = await resp.json(loads=json_decoder)
         else:
             data = {}
     if should_close:
