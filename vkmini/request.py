@@ -72,3 +72,16 @@ async def longpoll_get(url: str,
     if data:
         return data
     raise NetworkError(resp.status)
+
+
+async def get(url: str, client_session: ClientSession = None) -> bytes:
+    session, should_close = await _get_session(client_session)
+    try:
+        async with session.get(url) as resp:
+            if resp.status == 200:
+                return await resp.content.read()
+            else:
+                raise NetworkError(resp.status)
+    finally:
+        if should_close:
+            await session.close()

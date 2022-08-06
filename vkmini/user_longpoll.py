@@ -5,8 +5,7 @@ from aiohttp.client import ClientSession
 
 from .exceptions import TokenInvalid
 from .utils import AbstractLogger
-from .api import VkApi
-from . import request
+from . import VkApi, request
 
 
 class LP:
@@ -41,9 +40,6 @@ class LP:
         иначе будет использоваться стандартная общая сессия,
         см. vkmini.set_default)
 
-        Возвращает "сырой" класс, для подготовки к работе, нужно использовать
-        его в контексте или вызвать метод `start`
-
         Пример с контекстом:
         ```
         async with LP(vk) as lp:
@@ -52,7 +48,6 @@ class LP:
         Пример без контекста:
         ```
         lp = LP(vk)
-        await lp.start()
         print(await lp.check())
         ```
         """
@@ -70,7 +65,7 @@ class LP:
             self.__session_owner = False
 
     async def check(self):
-        if self._session is None and request.default_session is None:
+        if not (self._session or request.default_session):
             warn(ResourceWarning(
                 'При создании экземпляра LP не была указана сессия, при этом '
                 'сессия default_session также не задана. Это приведёт к '
@@ -100,8 +95,8 @@ class LP:
             return data['updates']
 
     async def get_longpoll_data(self, new_ts: bool) -> None:
-        data = await self._vk._method(
-            'messages.getLongPollServer', need_pts=self._pts
+        data = await self._vk.messages.getLongPollServer(
+            need_pts=self._pts
         )
         if not self._vk.excepts:
             if data.get('error', {}).get('error_code') == 5:
@@ -111,7 +106,7 @@ class LP:
         if new_ts:
             self.ts = data['ts']
 
-    async def __aenter__(self) -> "LP":
+    async def __aenter__(self) -> 'LP':
         if self._session is None:
             self._session = ClientSession()
             self.__session_owner = True

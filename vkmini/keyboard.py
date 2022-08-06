@@ -40,12 +40,12 @@ class Button:
     @property
     def obj(self):
         return {
-            "action": {
-                "type": self.type,
-                "label": self.label,
-                "payload": self.payload
+            'action': {
+                'type': self.type,
+                'label': self.label,
+                'payload': self.payload
             },
-            "color": self.color
+            'color': self.color
         }
 
 
@@ -80,9 +80,9 @@ class Keyboard:
         if alt_buttons is None:
             alt_buttons = self.buttons
         return json.dumps({
-            "one_time": self.one_time,
-            "inline": self.inline,
-            "buttons": [[b.obj for b in li] for li in alt_buttons]
+            'one_time': self.one_time,
+            'inline': self.inline,
+            'buttons': [[b.obj for b in li] for li in alt_buttons]
         }, ensure_ascii=False)
 
     def format_label(self, data: Union[tuple, dict]) -> 'Keyboard':

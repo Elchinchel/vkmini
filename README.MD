@@ -1,6 +1,9 @@
 # VKmini
 
-Лёгкая библиотека для прямой работы с VK API
+Лёгкая библиотека, "оборачивающая" запросы к API vk.com
+
+Параметры запросов и ответы библиотекой не модифицируются,
+поведение методов максимально соответствует официальной [документации API](https://vk.com/dev/methods)
 
 ## Установка
 
@@ -8,17 +11,8 @@
 pip install vkmini
 ```
 
-## Примеры использования:
+## Пример использования:
 
-### Синхронный режим
-```python
-from vkmini import VkApi
-
-vk = VkApi(access_token='токен', sync_mode=True, excepts=True)
-
-print(vk.users.get())
-```
-### Асинхронный режим
 ```python
 import asyncio
 import vkmini
@@ -28,7 +22,7 @@ vk = vkmini.VkApi(access_token='токен', excepts=True)
 async def main():
     print(await vk.users.get())
 
-asyncio.get_event_loop().run_until_complete(main())
+asyncio.run(main())
 ```
 
 Больше примеров [здесь](https://github.com/Elchinchel/vkmini/tree/master/examples)

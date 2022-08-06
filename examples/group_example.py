@@ -1,5 +1,5 @@
 # TODO: жидковато
-from vkmini import VkApi, GroupLP
+from vkmini import VkGroupApi, GroupLP
 import asyncio
 
 
@@ -8,7 +8,7 @@ group_id: int = 0  # ID группы
 
 
 async def main():
-    vk = VkApi(token, excepts=True)
+    vk = VkGroupApi(token, excepts=True)
     async with GroupLP(vk, group_id) as lp:
         async for update in lp.listen():
             print(update)

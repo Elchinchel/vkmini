@@ -18,6 +18,9 @@ class VkResponseException(Exception):
         self.request_data = request_data
         self.error_data = error
 
+    def __repr__(self) -> str:
+        return f'{self.__class__.__name__}({self.error_code})'
+
     def __str__(self) -> str:
         info = f'Ошибка ВК #{self.error_code}: {self.error_msg}'
         if self.request_data:
@@ -29,6 +32,7 @@ class VkResponseException(Exception):
 
 
 class NetworkError(Exception):
+    """Ошибка сети при выполнении запроса"""
     code: int
 
     def __init__(self, code: int):
@@ -36,27 +40,28 @@ class NetworkError(Exception):
 
 
 class RateLimit(VkResponseException):
-    """Rate limit reached (29) error"""
+    """Достигнут лимит на вызов метода"""
 
 
 class CaptchaNeeded(VkResponseException):
-    """Captcha needed (14) error"""
+    """Необходимо решить капчу и повторить запрос"""
 
 
 class FloodControl(VkResponseException):
-    """Flood control (9) error"""
+    """Flood control, слишком много капч (пользователь) или сообщений (группа)"""
 
 
 class TooManyRequests(VkResponseException):
-    """Too many requests (6) error"""
+    """Слишком много запросов"""
 
 
 class TokenInvalid(VkResponseException):
-    """Token is not valid (5) error"""
+    """Недействительный токен (5 для пользователей, 27 для групп)"""
 
 
 _error_map = {
     5: TokenInvalid,
+    27: TokenInvalid,
     6: TooManyRequests,
     9: FloodControl,
     14: CaptchaNeeded,

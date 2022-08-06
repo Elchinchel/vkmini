@@ -4,8 +4,9 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .types.api import VkApi  # type: ignore
+    VkGroupApi = VkApi
 else:
-    from .api import VkApi
+    from .api import VkApi, VkGroupApi
 
 from .exceptions import *
 from .user_longpoll import LP

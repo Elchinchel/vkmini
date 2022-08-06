@@ -25,6 +25,7 @@ class GroupLP:
 
     def __init__(self,
                  vk: VkApi,
+                 group_id: int = None,
                  wait: int = 25,
                  logger: AbstractLogger = None,
                  session: ClientSession = default_session) -> None:
@@ -45,10 +46,12 @@ class GroupLP:
         self._vk = vk
         self.wait = wait
         self.logger = logger or vk.logger
+        self.group_id = group_id
         self._session = session
 
     async def check(self):
-        self.group_id = (await self._vk.groups.getById())[0]['id']
+        if self.group_id is None:
+            self.group_id = (await self._vk.groups.getById())[0]['id']
         await self.get_longpoll_data(True)
         self.check = self._check
         return await self.check()
@@ -82,7 +85,7 @@ class GroupLP:
         if new_ts:
             self.ts = data['ts']
 
-    async def __aenter__(self) -> "GroupLP":
+    async def __aenter__(self) -> 'GroupLP':
         if self._session is None:
             self._session = ClientSession()
             self.__session_owner = True

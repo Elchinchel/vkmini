@@ -1,7 +1,10 @@
-from typing import Callable, Coroutine, Union
+from typing import Coroutine, List, TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from .api import VkApi
 
 
-method_groups = {
+_method_groups = {
     'account': '',
     'ads': '',
     'apps': '',
@@ -46,15 +49,21 @@ method_groups = {
 class MethodGroup:
     name: str
 
-    def __init__(self, name: str, vk) -> None:
+    @staticmethod
+    def _get(vk: 'VkApi', name: str) -> Optional['MethodGroup']:
+        if name in _method_groups:
+            return MethodGroup(name, vk)
+        return None
+
+    @staticmethod
+    def _get_all(vk: 'VkApi') -> List['MethodGroup']:
+        return [MethodGroup(name, vk) for name in _method_groups.keys()]
+
+    def __init__(self, name, vk) -> None:
         self.name = name
         self.vk = vk
 
-    def __getattr__(self, method: str) -> Union[Coroutine, Callable]:
-        if self.vk.sync:
-            def method_call(**kwargs):
-                return self.vk(f'{self.name}.{method}', **kwargs)
-        else:
-            async def method_call(**kwargs):
-                return await self.vk(f'{self.name}.{method}', **kwargs)
+    def __getattr__(self, method: str) -> Coroutine:
+        async def method_call(**kwargs):
+            return await self.vk(f'{self.name}.{method}', **kwargs)
         return method_call
