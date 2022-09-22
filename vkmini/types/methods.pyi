@@ -1,1001 +1,1483 @@
-from typing import Any, Dict, List
+from typing import TYPE_CHECKING, Any, Dict, List, Union, Literal, Optional
+from typing_extensions import TypedDict, NotRequired
+
+if TYPE_CHECKING:
+    from . import objects, methods, responses
+
 
 class account:
- def ban(self, owner_id: int) -> Any: ...
- def changePassword(self, restore_sid: str, change_password_hash: str, old_password: str, new_password: str) -> Any:
-  '''Changes a user password after access is successfully restored with the [vk.com/dev/auth.restore|auth.restore] method.'''
- def getActiveOffers(self, offset: int = 0, count: int = 100) -> Any:
-  '''Returns a list of active ads (offers) which executed by the user will bring him/her respective number of votes to his balance in the application.'''
- def getAppPermissions(self, user_id: int) -> Any:
-  '''Gets settings of the user in this application.'''
- def getBanned(self, offset: int, count: int = 20) -> Any:
-  '''Returns a user's blacklist.'''
- def getCounters(self, filter: List[str], user_id: int) -> Any:
-  '''Returns non-null values of user counters.'''
- def getInfo(self, fields: List[str]) -> Any:
-  '''Returns current account info.'''
- def getProfileInfo(self) -> Any:
-  '''Returns the current account info.'''
- def getPushSettings(self, device_id: str) -> Any:
-  '''Gets settings of push notifications.'''
- def registerDevice(self, token: str, device_model: str, device_year: int, device_id: str, system_version: str, settings: str, sandbox: bool = 0) -> Any:
-  '''Subscribes an iOS/Android/Windows Phone-based device to receive push notifications'''
- def saveProfileInfo(self, first_name: str, last_name: str, maiden_name: str, screen_name: str, cancel_request_id: int, sex: int, relation: int, relation_partner_id: int, bdate: str, bdate_visibility: int, home_town: str, country_id: int, city_id: int, status: str) -> Any:
-  '''Edits current profile info.'''
- def setInfo(self, name: str, value: str) -> Any:
-  '''Allows to edit the current account info.'''
- def setNameInMenu(self, user_id: int, name: str) -> Any:
-  '''Sets an application screen name (up to 17 characters), that is shown to the user in the left menu.'''
- def setOffline(self) -> Any:
-  '''Marks a current user as offline.'''
- def setOnline(self, voip: bool) -> Any:
-  '''Marks the current user as online for 15 minutes.'''
- def setPushSettings(self, device_id: str, settings: str, key: str, value: List[str]) -> Any:
-  '''Change push settings.'''
- def setSilenceMode(self, device_id: str, time: int, peer_id: int, sound: int) -> Any:
-  '''Mutes push notifications for the set period of time.'''
- def unban(self, owner_id: int) -> Any: ...
- def unregisterDevice(self, device_id: str, sandbox: bool = 0) -> Any:
-  '''Unsubscribes a device from push notifications.'''
+    async def ban(self, *, owner_id: Optional[int] = None) -> 'responses.base_ok_response': ...
+
+    async def changePassword(self, *, new_password: str, restore_sid: Optional[str] = None, change_password_hash: Optional[str] = None, old_password: Optional[str] = None) -> 'responses.account_changePassword_response':
+        '''Changes a user password after access is successfully restored with the [vk.com/dev/auth.restore|auth.restore] method.'''
+
+    async def getActiveOffers(self, *, offset: int = 0, count: int = 100) -> 'responses.account_getActiveOffers_response':
+        '''Returns a list of active ads (offers) which executed by the user will bring him/her respective number of votes to his balance in the application.'''
+
+    async def getAppPermissions(self, *, user_id: int) -> 'responses.account_getAppPermissions_response':
+        '''Gets settings of the user in this application.'''
+
+    async def getBanned(self, *, offset: Optional[int] = None, count: int = 20) -> 'responses.account_getBanned_response':
+        '''Returns a user's blacklist.'''
+
+    filter_enum = Literal['friends', 'messages', 'photos', 'notes', 'gifts', 'events', 'groups', 'sdk', 'friends_suggestions', 'notifications', 'app_requests', 'friends_recommendations']
+    async def getCounters(self, *, filter: Optional[filter_enum] = None, user_id: Optional[int] = None) -> 'responses.account_getCounters_response':
+        '''Returns non-null values of user counters.'''
+
+    fields_enum = Literal['country', 'https_required', 'own_posts_default', 'no_wall_replies', 'intro', 'lang']
+    async def getInfo(self, *, fields: Optional[fields_enum] = None) -> 'responses.account_getInfo_response':
+        '''Returns current account info.'''
+
+    async def getProfileInfo(self) -> 'responses.account_getProfileInfo_response':
+        '''Returns the current account info.'''
+
+    async def getPushSettings(self, *, device_id: Optional[str] = None) -> 'responses.account_getPushSettings_response':
+        '''Gets settings of push notifications.'''
+
+    async def registerDevice(self, *, token: str, device_id: str, device_model: Optional[str] = None, device_year: Optional[int] = None, system_version: Optional[str] = None, settings: Optional[str] = None, sandbox: bool = 0) -> 'responses.base_ok_response':
+        '''Subscribes an iOS/Android/Windows Phone-based device to receive push notifications'''
+
+    async def saveProfileInfo(self, *, first_name: Optional[str] = None, last_name: Optional[str] = None, maiden_name: Optional[str] = None, screen_name: Optional[str] = None, cancel_request_id: Optional[int] = None, sex: Optional[Literal[0, 1, 2]] = None, relation: Optional[Literal[1, 2, 3, 4, 5, 6, 7, 0]] = None, relation_partner_id: Optional[int] = None, bdate: Optional[str] = None, bdate_visibility: Optional[Literal[1, 2, 0]] = None, home_town: Optional[str] = None, country_id: Optional[int] = None, city_id: Optional[int] = None, status: Optional[str] = None) -> 'responses.account_saveProfileInfo_response':
+        '''Edits current profile info.'''
+
+    async def setInfo(self, *, name: Optional[Literal['intro', 'no_wall_replies', 'own_posts_default']] = None, value: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Allows to edit the current account info.'''
+
+    async def setNameInMenu(self, *, user_id: int, name: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Sets an application screen name (up to 17 characters), that is shown to the user in the left menu.'''
+
+    async def setOffline(self) -> 'responses.base_ok_response':
+        '''Marks a current user as offline.'''
+
+    async def setOnline(self, *, voip: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Marks the current user as online for 15 minutes.'''
+
+    async def setPushSettings(self, *, device_id: str, settings: Optional[str] = None, key: Optional[str] = None, value: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Change push settings.'''
+
+    async def setSilenceMode(self, *, device_id: Optional[str] = None, time: Optional[int] = None, peer_id: Optional[int] = None, sound: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Mutes push notifications for the set period of time.'''
+
+    async def unban(self, *, owner_id: Optional[int] = None) -> 'responses.base_ok_response': ...
+
+    async def unregisterDevice(self, *, device_id: Optional[str] = None, sandbox: bool = 0) -> 'responses.base_ok_response':
+        '''Unsubscribes a device from push notifications.'''
 
 class ads:
- def addOfficeUsers(self, account_id: int, data: str) -> Any:
-  '''Adds managers and/or supervisors to advertising account.'''
- def checkLink(self, account_id: int, link_type: str, link_url: str, campaign_id: int) -> Any:
-  '''Allows to check the ad link.'''
- def createAds(self, account_id: int, data: str) -> Any:
-  '''Creates ads.'''
- def createCampaigns(self, account_id: int, data: str) -> Any:
-  '''Creates advertising campaigns.'''
- def createClients(self, account_id: int, data: str) -> Any:
-  '''Creates clients of an advertising agency.'''
- def createTargetGroup(self, account_id: int, client_id: int, name: str, lifetime: int, target_pixel_id: int, target_pixel_rules: str) -> Any:
-  '''Creates a group to re-target ads for users who visited advertiser's site (viewed information about the product, registered, etc.).'''
- def deleteAds(self, account_id: int, ids: str) -> Any:
-  '''Archives ads.'''
- def deleteCampaigns(self, account_id: int, ids: str) -> Any:
-  '''Archives advertising campaigns.'''
- def deleteClients(self, account_id: int, ids: str) -> Any:
-  '''Archives clients of an advertising agency.'''
- def deleteTargetGroup(self, account_id: int, client_id: int, target_group_id: int) -> Any:
-  '''Deletes a retarget group.'''
- def getAccounts(self) -> Any:
-  '''Returns a list of advertising accounts.'''
- def getAds(self, account_id: int, ad_ids: str, campaign_ids: str, client_id: int, include_deleted: bool, only_deleted: bool, limit: int, offset: int) -> Any:
-  '''Returns number of ads.'''
- def getAdsLayout(self, account_id: int, client_id: int, include_deleted: bool, only_deleted: bool, campaign_ids: str, ad_ids: str, limit: int, offset: int) -> Any:
-  '''Returns descriptions of ad layouts.'''
- def getAdsTargeting(self, account_id: int, ad_ids: str, campaign_ids: str, client_id: int, include_deleted: bool, limit: int, offset: int) -> Any:
-  '''Returns ad targeting parameters.'''
- def getBudget(self, account_id: int) -> Any:
-  '''Returns current budget of the advertising account.'''
- def getCampaigns(self, account_id: int, client_id: int, include_deleted: bool, campaign_ids: str, fields: List[str]) -> Any:
-  '''Returns a list of campaigns in an advertising account.'''
- def getCategories(self, lang: str) -> Any:
-  '''Returns a list of possible ad categories.'''
- def getClients(self, account_id: int) -> Any:
-  '''Returns a list of advertising agency's clients.'''
- def getDemographics(self, account_id: int, ids_type: str, ids: str, period: str, date_from: str, date_to: str) -> Any:
-  '''Returns demographics for ads or campaigns.'''
- def getFloodStats(self, account_id: int) -> Any:
-  '''Returns information about current state of a counter — number of remaining runs of methods and time to the next counter nulling in seconds.'''
- def getLookalikeRequests(self, account_id: int, client_id: int, requests_ids: str, offset: int = 0, limit: int = 10, sort_by: str = 'id') -> Any: ...
- def getMusicians(self, artist_name: str) -> Any: ...
- def getMusiciansByIds(self, ids: List[int]) -> Any: ...
- def getOfficeUsers(self, account_id: int) -> Any:
-  '''Returns a list of managers and supervisors of advertising account.'''
- def getPostsReach(self, account_id: int, ids_type: str, ids: str) -> Any:
-  '''Returns detailed statistics of promoted posts reach from campaigns and ads.'''
- def getRejectionReason(self, account_id: int, ad_id: int) -> Any:
-  '''Returns a reason of ad rejection for pre-moderation.'''
- def getStatistics(self, account_id: int, ids_type: str, ids: str, period: str, date_from: str, date_to: str, stats_fields: List[str]) -> Any:
-  '''Returns statistics of performance indicators for ads, campaigns, clients or the whole account.'''
- def getSuggestions(self, section: str, ids: str, q: str, country: int, cities: str, lang: str) -> Any:
-  '''Returns a set of auto-suggestions for various targeting parameters.'''
- def getTargetGroups(self, account_id: int, client_id: int, extended: bool) -> Any:
-  '''Returns a list of target groups.'''
- def getTargetingStats(self, account_id: int, client_id: int, criteria: str, ad_id: int, ad_format: int, ad_platform: str, ad_platform_no_wall: str, ad_platform_no_ad_network: str, publisher_platforms: str, link_url: str, link_domain: str, need_precise: bool, impressions_limit_period: int) -> Any:
-  '''Returns the size of targeting audience, and also recommended values for CPC and CPM.'''
- def getUploadURL(self, ad_format: int, icon: int) -> Any:
-  '''Returns URL to upload an ad photo to.'''
- def getVideoUploadURL(self) -> Any:
-  '''Returns URL to upload an ad video to.'''
- def importTargetContacts(self, account_id: int, client_id: int, target_group_id: int, contacts: str) -> Any:
-  '''Imports a list of advertiser's contacts to count VK registered users against the target group.'''
- def removeOfficeUsers(self, account_id: int, ids: str) -> Any:
-  '''Removes managers and/or supervisors from advertising account.'''
- def updateAds(self, account_id: int, data: str) -> Any:
-  '''Edits ads.'''
- def updateCampaigns(self, account_id: int, data: str) -> Any:
-  '''Edits advertising campaigns.'''
- def updateClients(self, account_id: int, data: str) -> Any:
-  '''Edits clients of an advertising agency.'''
- def updateOfficeUsers(self, account_id: int, data: str) -> Any:
-  '''Adds managers and/or supervisors to advertising account.'''
- def updateTargetGroup(self, account_id: int, client_id: int, target_group_id: int, name: str, domain: str, lifetime: int, target_pixel_id: int, target_pixel_rules: str) -> Any:
-  '''Edits a retarget group.'''
+    async def addOfficeUsers(self, *, account_id: int, data: str) -> 'responses.ads_addOfficeUsers_response':
+        '''Adds managers and/or supervisors to advertising account.'''
+
+    async def checkLink(self, *, account_id: int, link_type: Literal['community', 'post', 'application', 'video', 'site'], link_url: str, campaign_id: Optional[int] = None) -> 'responses.ads_checkLink_response':
+        '''Allows to check the ad link.'''
+
+    async def createAds(self, *, account_id: int, data: str) -> 'responses.ads_createAds_response':
+        '''Creates ads.'''
+
+    async def createCampaigns(self, *, account_id: int, data: str) -> 'responses.ads_createCampaigns_response':
+        '''Creates advertising campaigns.'''
+
+    async def createClients(self, *, account_id: int, data: str) -> 'responses.ads_createClients_response':
+        '''Creates clients of an advertising agency.'''
+
+    async def createTargetGroup(self, *, account_id: int, name: str, lifetime: int, client_id: Optional[int] = None, target_pixel_id: Optional[int] = None, target_pixel_rules: Optional[str] = None) -> 'responses.ads_createTargetGroup_response':
+        '''Creates a group to re-target ads for users who visited advertiser's site (viewed information about the product, registered, etc.).'''
+
+    async def deleteAds(self, *, account_id: int, ids: str) -> 'responses.ads_deleteAds_response':
+        '''Archives ads.'''
+
+    async def deleteCampaigns(self, *, account_id: int, ids: str) -> 'responses.ads_deleteCampaigns_response':
+        '''Archives advertising campaigns.'''
+
+    async def deleteClients(self, *, account_id: int, ids: str) -> 'responses.ads_deleteClients_response':
+        '''Archives clients of an advertising agency.'''
+
+    async def deleteTargetGroup(self, *, account_id: int, target_group_id: int, client_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a retarget group.'''
+
+    async def getAccounts(self) -> 'responses.ads_getAccounts_response':
+        '''Returns a list of advertising accounts.'''
+
+    async def getAds(self, *, account_id: int, ad_ids: Optional[str] = None, campaign_ids: Optional[str] = None, client_id: Optional[int] = None, include_deleted: Optional[bool] = None, only_deleted: Optional[bool] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> 'responses.ads_getAds_response':
+        '''Returns number of ads.'''
+
+    async def getAdsLayout(self, *, account_id: int, client_id: Optional[int] = None, include_deleted: Optional[bool] = None, only_deleted: Optional[bool] = None, campaign_ids: Optional[str] = None, ad_ids: Optional[str] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> 'responses.ads_getAdsLayout_response':
+        '''Returns descriptions of ad layouts.'''
+
+    async def getAdsTargeting(self, *, account_id: int, ad_ids: Optional[str] = None, campaign_ids: Optional[str] = None, client_id: Optional[int] = None, include_deleted: Optional[bool] = None, limit: Optional[int] = None, offset: Optional[int] = None) -> 'responses.ads_getAdsTargeting_response':
+        '''Returns ad targeting parameters.'''
+
+    async def getBudget(self, *, account_id: int) -> 'responses.ads_getBudget_response':
+        '''Returns current budget of the advertising account.'''
+
+    fields_enum = Literal['ads_count']
+    async def getCampaigns(self, *, account_id: int, client_id: Optional[int] = None, include_deleted: Optional[bool] = None, campaign_ids: Optional[str] = None, fields: Optional[fields_enum] = None) -> 'responses.ads_getCampaigns_response':
+        '''Returns a list of campaigns in an advertising account.'''
+
+    async def getCategories(self, *, lang: Optional[str] = None) -> 'responses.ads_getCategories_response':
+        '''Returns a list of possible ad categories.'''
+
+    async def getClients(self, *, account_id: int) -> 'responses.ads_getClients_response':
+        '''Returns a list of advertising agency's clients.'''
+
+    async def getDemographics(self, *, account_id: int, ids_type: Literal['ad', 'campaign'], ids: str, period: Literal['day', 'month', 'overall'], date_from: str, date_to: str) -> 'responses.ads_getDemographics_response':
+        '''Returns demographics for ads or campaigns.'''
+
+    async def getFloodStats(self, *, account_id: int) -> 'responses.ads_getFloodStats_response':
+        '''Returns information about current state of a counter — number of remaining runs of methods and time to the next counter nulling in seconds.'''
+
+    async def getLookalikeRequests(self, *, account_id: int, client_id: Optional[int] = None, requests_ids: Optional[str] = None, offset: int = 0, limit: int = 10, sort_by: str = 'id') -> 'responses.ads_getLookalikeRequests_response': ...
+
+    async def getMusicians(self, *, artist_name: str) -> 'responses.ads_getMusicians_response': ...
+
+    async def getMusiciansByIds(self, *, ids: Union[List[int], str]) -> 'responses.ads_getMusicians_response': ...
+
+    async def getOfficeUsers(self, *, account_id: int) -> 'responses.ads_getOfficeUsers_response':
+        '''Returns a list of managers and supervisors of advertising account.'''
+
+    async def getPostsReach(self, *, account_id: int, ids_type: Literal['ad', 'campaign'], ids: str) -> 'responses.ads_getPostsReach_response':
+        '''Returns detailed statistics of promoted posts reach from campaigns and ads.'''
+
+    async def getRejectionReason(self, *, account_id: int, ad_id: int) -> 'responses.ads_getRejectionReason_response':
+        '''Returns a reason of ad rejection for pre-moderation.'''
+
+    stats_fields_enum = Literal['views_times']
+    async def getStatistics(self, *, account_id: int, ids_type: Literal['ad', 'campaign', 'client', 'office'], ids: str, period: Literal['day', 'month', 'overall'], date_from: str, date_to: str, stats_fields: Optional[stats_fields_enum] = None) -> 'responses.ads_getStatistics_response':
+        '''Returns statistics of performance indicators for ads, campaigns, clients or the whole account.'''
+
+    async def getSuggestions(self, *, section: Literal['countries', 'regions', 'cities', 'districts', 'stations', 'streets', 'schools', 'interests', 'positions', 'group_types', 'religions', 'browsers'], ids: Optional[str] = None, q: Optional[str] = None, country: Optional[int] = None, cities: Optional[str] = None, lang: Optional[Literal['ru', 'ua', 'en']] = None) -> 'responses.ads_getSuggestions_response':
+        '''Returns a set of auto-suggestions for various targeting parameters.'''
+
+    async def getTargetGroups(self, *, account_id: int, client_id: Optional[int] = None, extended: Optional[bool] = None) -> 'responses.ads_getTargetGroups_response':
+        '''Returns a list of target groups.'''
+
+    async def getTargetingStats(self, *, account_id: int, link_url: str, client_id: Optional[int] = None, criteria: Optional[str] = None, ad_id: Optional[int] = None, ad_format: Optional[Literal[1, 2, 3, 4, 7, 8, 9, 10]] = None, ad_platform: Optional[str] = None, ad_platform_no_wall: Optional[str] = None, ad_platform_no_ad_network: Optional[str] = None, publisher_platforms: Optional[str] = None, link_domain: Optional[str] = None, need_precise: Optional[bool] = None, impressions_limit_period: Optional[int] = None) -> 'responses.ads_getTargetingStats_response':
+        '''Returns the size of targeting audience, and also recommended values for CPC and CPM.'''
+
+    async def getUploadURL(self, *, ad_format: Literal[1, 2, 3, 4, 7], icon: Optional[int] = None) -> 'responses.ads_getUploadURL_response':
+        '''Returns URL to upload an ad photo to.'''
+
+    async def getVideoUploadURL(self) -> 'responses.ads_getVideoUploadURL_response':
+        '''Returns URL to upload an ad video to.'''
+
+    async def importTargetContacts(self, *, account_id: int, target_group_id: int, contacts: str, client_id: Optional[int] = None) -> 'responses.ads_importTargetContacts_response':
+        '''Imports a list of advertiser's contacts to count VK registered users against the target group.'''
+
+    async def removeOfficeUsers(self, *, account_id: int, ids: str) -> 'responses.ads_removeOfficeUsers_response':
+        '''Removes managers and/or supervisors from advertising account.'''
+
+    async def updateAds(self, *, account_id: int, data: str) -> 'responses.ads_updateAds_response':
+        '''Edits ads.'''
+
+    async def updateCampaigns(self, *, account_id: int, data: str) -> 'responses.ads_updateCampaigns_response':
+        '''Edits advertising campaigns.'''
+
+    async def updateClients(self, *, account_id: int, data: str) -> 'responses.ads_updateClients_response':
+        '''Edits clients of an advertising agency.'''
+
+    async def updateOfficeUsers(self, *, account_id: int, data: str) -> 'responses.ads_updateOfficeUsers_response':
+        '''Adds managers and/or supervisors to advertising account.'''
+
+    async def updateTargetGroup(self, *, account_id: int, target_group_id: int, name: str, lifetime: int, client_id: Optional[int] = None, domain: Optional[str] = None, target_pixel_id: Optional[int] = None, target_pixel_rules: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Edits a retarget group.'''
 
 class adsweb:
- def getAdCategories(self, office_id: int) -> Any: ...
- def getAdUnitCode(self) -> Any: ...
- def getAdUnits(self, office_id: int, sites_ids: str, ad_units_ids: str, fields: str, limit: int = None, offset: int = 0) -> Any: ...
- def getFraudHistory(self, office_id: int, sites_ids: str, limit: int = None, offset: int = 0) -> Any: ...
- def getSites(self, office_id: int, sites_ids: str, fields: str, limit: int = None, offset: int = 0) -> Any: ...
- def getStatistics(self, office_id: int, ids_type: str, ids: str, period: str, date_from: str, date_to: str, fields: str, page_id: str, limit: int = None) -> Any: ...
+    async def getAdCategories(self, *, office_id: int) -> 'responses.adsweb_getAdCategories_response': ...
+
+    async def getAdUnitCode(self) -> 'responses.adsweb_getAdUnitCode_response': ...
+
+    async def getAdUnits(self, *, office_id: int, sites_ids: Optional[str] = None, ad_units_ids: Optional[str] = None, fields: Optional[str] = None, limit: int = None, offset: int = 0) -> 'responses.adsweb_getAdUnits_response': ...
+
+    async def getFraudHistory(self, *, office_id: int, sites_ids: Optional[str] = None, limit: int = None, offset: int = 0) -> 'responses.adsweb_getFraudHistory_response': ...
+
+    async def getSites(self, *, office_id: int, sites_ids: Optional[str] = None, fields: Optional[str] = None, limit: int = None, offset: int = 0) -> 'responses.adsweb_getSites_response': ...
+
+    async def getStatistics(self, *, office_id: int, ids_type: str, ids: str, period: str, date_from: str, date_to: str, fields: Optional[str] = None, page_id: Optional[str] = None, limit: int = None) -> 'responses.adsweb_getStatistics_response': ...
 
 class appWidgets:
- def getAppImageUploadServer(self, image_type: str) -> Any:
-  '''Returns a URL for uploading a photo to the community collection for community app widgets'''
- def getAppImages(self, offset: int, image_type: str, count: int = 20) -> Any:
-  '''Returns an app collection of images for community app widgets'''
- def getGroupImageUploadServer(self, image_type: str) -> Any:
-  '''Returns a URL for uploading a photo to the community collection for community app widgets'''
- def getGroupImages(self, offset: int, image_type: str, count: int = 20) -> Any:
-  '''Returns a community collection of images for community app widgets'''
- def getImagesById(self, images: List[str]) -> Any:
-  '''Returns an image for community app widgets by its ID'''
- def saveAppImage(self, hash: str, image: str) -> Any:
-  '''Allows to save image into app collection for community app widgets'''
- def saveGroupImage(self, hash: str, image: str) -> Any:
-  '''Allows to save image into community collection for community app widgets'''
- def update(self, code: str, type: str) -> Any:
-  '''Allows to update community app widget'''
+    async def getAppImageUploadServer(self, *, image_type: Literal['160x160', '160x240', '24x24', '50x50', '510x128']) -> 'responses.appWidgets_getAppImageUploadServer_response':
+        '''Returns a URL for uploading a photo to the community collection for community app widgets'''
+
+    async def getAppImages(self, *, offset: Optional[int] = None, image_type: Optional[Literal['160x160', '160x240', '24x24', '50x50', '510x128']] = None, count: int = 20) -> 'responses.appWidgets_getAppImages_response':
+        '''Returns an app collection of images for community app widgets'''
+
+    async def getGroupImageUploadServer(self, *, image_type: Literal['160x160', '160x240', '24x24', '50x50', '510x128']) -> 'responses.appWidgets_getGroupImageUploadServer_response':
+        '''Returns a URL for uploading a photo to the community collection for community app widgets'''
+
+    async def getGroupImages(self, *, offset: Optional[int] = None, image_type: Optional[Literal['160x160', '160x240', '24x24', '50x50', '510x128']] = None, count: int = 20) -> 'responses.appWidgets_getGroupImages_response':
+        '''Returns a community collection of images for community app widgets'''
+
+    async def getImagesById(self, *, images: Union[List[str], str]) -> 'responses.appWidgets_getImagesById_response':
+        '''Returns an image for community app widgets by its ID'''
+
+    async def saveAppImage(self, *, hash: str, image: str) -> 'responses.appWidgets_saveAppImage_response':
+        '''Allows to save image into app collection for community app widgets'''
+
+    async def saveGroupImage(self, *, hash: str, image: str) -> 'responses.appWidgets_saveGroupImage_response':
+        '''Allows to save image into community collection for community app widgets'''
+
+    async def update(self, *, code: str, type: Literal['compact_list', 'cover_list', 'donation', 'list', 'match', 'matches', 'table', 'text', 'tiles']) -> 'responses.base_ok_response':
+        '''Allows to update community app widget'''
 
 class apps:
- def deleteAppRequests(self) -> Any:
-  '''Deletes all request notifications from the current app.'''
- def get(self, app_id: int, app_ids: List[str], fields: Dict[str, Any], name_case: str, platform: str = 'web', extended: bool = 0, return_friends: bool = 0) -> Any:
-  '''Returns applications data.'''
- def getCatalog(self, sort: str, offset: int, platform: str, extended: bool, return_friends: bool, fields: Dict[str, Any], name_case: str, q: str, genre_id: int, filter: str, count: int = 100) -> Any:
-  '''Returns a list of applications (apps) available to users in the App Catalog.'''
- def getFriendsList(self, fields: Dict[str, Any], extended: bool = 0, count: int = 20, offset: int = 0, type: str = 'invite') -> Any:
-  '''Creates friends list for requests and invites in current app.'''
- def getLeaderboard(self, type: str, extended: bool = 0) -> Any:
-  '''Returns players rating in the game.'''
- def getMiniAppPolicies(self, app_id: int) -> Any:
-  '''Returns policies and terms given to a mini app.'''
- def getScopes(self, type: str = 'user') -> Any:
-  '''Returns scopes for auth'''
- def getScore(self, user_id: int) -> Any:
-  '''Returns user score in app'''
- def promoHasActiveGift(self, promo_id: int, user_id: int) -> Any: ...
- def promoUseGift(self, promo_id: int, user_id: int) -> Any: ...
- def sendRequest(self, user_id: int, text: str, name: str, key: str, separate: bool, type: str = 'request') -> Any:
-  '''Sends a request to another user in an app that uses VK authorization.'''
+    async def deleteAppRequests(self) -> 'responses.base_ok_response':
+        '''Deletes all request notifications from the current app.'''
+
+    async def get(self, *, app_id: Optional[int] = None, app_ids: Optional[Union[List[str], str]] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, platform: Literal['android', 'ios', 'web', 'winphone'] = 'web', extended: bool = 0, return_friends: bool = 0) -> 'responses.apps_get_response':
+        '''Returns applications data.'''
+
+    async def getCatalog(self, *, sort: Optional[Literal['popular_today', 'visitors', 'create_date', 'growth_rate', 'popular_week']] = None, offset: Optional[int] = None, platform: Optional[str] = None, extended: Optional[bool] = None, return_friends: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[str] = None, q: Optional[str] = None, genre_id: Optional[int] = None, filter: Optional[Literal['favorite', 'featured', 'installed', 'new']] = None, count: int = 100) -> 'responses.apps_getCatalog_response':
+        '''Returns a list of applications (apps) available to users in the App Catalog.'''
+
+    async def getFriendsList(self, *, fields: Optional[Union[List['objects.users_fields'], str]] = None, extended: bool = 0, count: int = 20, offset: int = 0, type: Literal['invite', 'request'] = 'invite') -> 'responses.apps_getFriendsList_response':
+        '''Creates friends list for requests and invites in current app.'''
+
+    async def getLeaderboard(self, *, type: Literal['level', 'points', 'score'], extended: bool = 0) -> 'responses.apps_getLeaderboard_response':
+        '''Returns players rating in the game.'''
+
+    async def getMiniAppPolicies(self, *, app_id: int) -> 'responses.apps_getMiniAppPolicies_response':
+        '''Returns policies and terms given to a mini app.'''
+
+    async def getScopes(self, *, type: Literal['group', 'user'] = 'user') -> 'responses.apps_getScopes_response':
+        '''Returns scopes for auth'''
+
+    async def getScore(self, *, user_id: int) -> 'responses.apps_getScore_response':
+        '''Returns user score in app'''
+
+    async def promoHasActiveGift(self, *, promo_id: int, user_id: Optional[int] = None) -> 'responses.base_bool_response': ...
+
+    async def promoUseGift(self, *, promo_id: int, user_id: Optional[int] = None) -> 'responses.base_bool_response': ...
+
+    async def sendRequest(self, *, user_id: int, text: Optional[str] = None, name: Optional[str] = None, key: Optional[str] = None, separate: Optional[bool] = None, type: Literal['invite', 'request'] = 'request') -> 'responses.apps_sendRequest_response':
+        '''Sends a request to another user in an app that uses VK authorization.'''
 
 class auth:
- def restore(self, phone: str, last_name: str) -> Any:
-  '''Allows to restore account access using a code received via SMS. " This method is only available for apps with [vk.com/dev/auth_direct|Direct authorization] access. "'''
+    async def restore(self, *, phone: str, last_name: str) -> 'responses.auth_restore_response':
+        '''Allows to restore account access using a code received via SMS. " This method is only available for apps with [vk.com/dev/auth_direct|Direct authorization] access. "'''
 
 class board:
- def addTopic(self, group_id: int, title: str, text: str, from_group: bool, attachments: List[str]) -> Any:
-  '''Creates a new topic on a community's discussion board.'''
- def closeTopic(self, group_id: int, topic_id: int) -> Any:
-  '''Closes a topic on a community's discussion board so that comments cannot be posted.'''
- def createComment(self, group_id: int, topic_id: int, message: str, attachments: List[str], from_group: bool, sticker_id: int, guid: str) -> Any:
-  '''Adds a comment on a topic on a community's discussion board.'''
- def deleteComment(self, group_id: int, topic_id: int, comment_id: int) -> Any:
-  '''Deletes a comment on a topic on a community's discussion board.'''
- def deleteTopic(self, group_id: int, topic_id: int) -> Any:
-  '''Deletes a topic from a community's discussion board.'''
- def editComment(self, group_id: int, topic_id: int, comment_id: int, message: str, attachments: List[str]) -> Any:
-  '''Edits a comment on a topic on a community's discussion board.'''
- def editTopic(self, group_id: int, topic_id: int, title: str) -> Any:
-  '''Edits the title of a topic on a community's discussion board.'''
- def fixTopic(self, group_id: int, topic_id: int) -> Any:
-  '''Pins a topic (fixes its place) to the top of a community's discussion board.'''
- def getComments(self, group_id: int, topic_id: int, need_likes: bool, start_comment_id: int, offset: int, extended: bool, sort: str, count: int = 20) -> Any:
-  '''Returns a list of comments on a topic on a community's discussion board.'''
- def getTopics(self, group_id: int, topic_ids: List[int], order: int, offset: int, extended: bool, preview: int, count: int = 40, preview_length: int = 90) -> Any:
-  '''Returns a list of topics on a community's discussion board.'''
- def openTopic(self, group_id: int, topic_id: int) -> Any:
-  '''Re-opens a previously closed topic on a community's discussion board.'''
- def restoreComment(self, group_id: int, topic_id: int, comment_id: int) -> Any:
-  '''Restores a comment deleted from a topic on a community's discussion board.'''
- def unfixTopic(self, group_id: int, topic_id: int) -> Any:
-  '''Unpins a pinned topic from the top of a community's discussion board.'''
+    async def addTopic(self, *, group_id: int, title: str, text: Optional[str] = None, from_group: Optional[bool] = None, attachments: Optional[Union[List[str], str]] = None) -> 'responses.board_addTopic_response':
+        '''Creates a new topic on a community's discussion board.'''
+
+    async def closeTopic(self, *, group_id: int, topic_id: int) -> 'responses.base_ok_response':
+        '''Closes a topic on a community's discussion board so that comments cannot be posted.'''
+
+    async def createComment(self, *, group_id: int, topic_id: int, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, from_group: Optional[bool] = None, sticker_id: Optional[int] = None, guid: Optional[str] = None) -> 'responses.board_createComment_response':
+        '''Adds a comment on a topic on a community's discussion board.'''
+
+    async def deleteComment(self, *, group_id: int, topic_id: int, comment_id: int) -> 'responses.base_ok_response':
+        '''Deletes a comment on a topic on a community's discussion board.'''
+
+    async def deleteTopic(self, *, group_id: int, topic_id: int) -> 'responses.base_ok_response':
+        '''Deletes a topic from a community's discussion board.'''
+
+    async def editComment(self, *, group_id: int, topic_id: int, comment_id: int, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Edits a comment on a topic on a community's discussion board.'''
+
+    async def editTopic(self, *, group_id: int, topic_id: int, title: str) -> 'responses.base_ok_response':
+        '''Edits the title of a topic on a community's discussion board.'''
+
+    async def fixTopic(self, *, group_id: int, topic_id: int) -> 'responses.base_ok_response':
+        '''Pins a topic (fixes its place) to the top of a community's discussion board.'''
+
+    async def getComments(self, *, group_id: int, topic_id: int, need_likes: Optional[bool] = None, start_comment_id: Optional[int] = None, offset: Optional[int] = None, extended: Optional[bool] = None, sort: Optional[Literal['asc', 'desc']] = None, count: int = 20) -> 'responses.board_getComments_response':
+        '''Returns a list of comments on a topic on a community's discussion board.'''
+
+    async def getTopics(self, *, group_id: int, topic_ids: Optional[Union[List[int], str]] = None, order: Optional[Literal[1, 2, -1, -2, 0]] = None, offset: Optional[int] = None, extended: Optional[bool] = None, preview: Optional[Literal[1, 2, 0]] = None, count: int = 40, preview_length: int = 90) -> 'responses.board_getTopics_response':
+        '''Returns a list of topics on a community's discussion board.'''
+
+    async def openTopic(self, *, group_id: int, topic_id: int) -> 'responses.base_ok_response':
+        '''Re-opens a previously closed topic on a community's discussion board.'''
+
+    async def restoreComment(self, *, group_id: int, topic_id: int, comment_id: int) -> 'responses.base_ok_response':
+        '''Restores a comment deleted from a topic on a community's discussion board.'''
+
+    async def unfixTopic(self, *, group_id: int, topic_id: int) -> 'responses.base_ok_response':
+        '''Unpins a pinned topic from the top of a community's discussion board.'''
 
 class database:
- def getChairs(self, faculty_id: int, offset: int, count: int = 100) -> Any:
-  '''Returns list of chairs on a specified faculty.'''
- def getCities(self, country_id: int, region_id: int, q: str, need_all: bool, offset: int, count: int = 100) -> Any:
-  '''Returns a list of cities.'''
- def getCitiesById(self, city_ids: List[int]) -> Any:
-  '''Returns information about cities by their IDs.'''
- def getCountries(self, need_all: bool, code: str, offset: int, count: int = 100) -> Any:
-  '''Returns a list of countries.'''
- def getCountriesById(self, country_ids: List[int]) -> Any:
-  '''Returns information about countries by their IDs.'''
- def getFaculties(self, university_id: int, offset: int, count: int = 100) -> Any:
-  '''Returns a list of faculties (i.e., university departments).'''
- def getMetroStations(self, city_id: int, offset: int, count: int = 100, extended: bool = False) -> Any:
-  '''Get metro stations by city'''
- def getMetroStationsById(self, station_ids: List[int]) -> Any:
-  '''Get metro station by his id'''
- def getRegions(self, country_id: int, q: str, offset: int, count: int = 100) -> Any:
-  '''Returns a list of regions.'''
- def getSchoolClasses(self, country_id: int) -> Any:
-  '''Returns a list of school classes specified for the country.'''
- def getSchools(self, q: str, city_id: int, offset: int, count: int = 100) -> Any:
-  '''Returns a list of schools.'''
- def getUniversities(self, q: str, country_id: int, city_id: int, offset: int, count: int = 100) -> Any:
-  '''Returns a list of higher education institutions.'''
+    async def getChairs(self, *, faculty_id: int, offset: Optional[int] = None, count: int = 100) -> 'responses.database_getChairs_response':
+        '''Returns list of chairs on a specified faculty.'''
+
+    async def getCities(self, *, country_id: int, region_id: Optional[int] = None, q: Optional[str] = None, need_all: Optional[bool] = None, offset: Optional[int] = None, count: int = 100) -> 'responses.database_getCities_response':
+        '''Returns a list of cities.'''
+
+    async def getCitiesById(self, *, city_ids: Optional[Union[List[int], str]] = None) -> 'responses.database_getCitiesById_response':
+        '''Returns information about cities by their IDs.'''
+
+    async def getCountries(self, *, need_all: Optional[bool] = None, code: Optional[str] = None, offset: Optional[int] = None, count: int = 100) -> 'responses.database_getCountries_response':
+        '''Returns a list of countries.'''
+
+    async def getCountriesById(self, *, country_ids: Optional[Union[List[int], str]] = None) -> 'responses.database_getCountriesById_response':
+        '''Returns information about countries by their IDs.'''
+
+    async def getFaculties(self, *, university_id: int, offset: Optional[int] = None, count: int = 100) -> 'responses.database_getFaculties_response':
+        '''Returns a list of faculties (i.e., university departments).'''
+
+    async def getMetroStations(self, *, city_id: int, offset: Optional[int] = None, count: int = 100, extended: bool = False) -> 'responses.database_getMetroStations_response':
+        '''Get metro stations by city'''
+
+    async def getMetroStationsById(self, *, station_ids: Optional[Union[List[int], str]] = None) -> 'responses.database_getMetroStationsById_response':
+        '''Get metro station by his id'''
+
+    async def getRegions(self, *, country_id: int, q: Optional[str] = None, offset: Optional[int] = None, count: int = 100) -> 'responses.database_getRegions_response':
+        '''Returns a list of regions.'''
+
+    async def getSchoolClasses(self, *, country_id: Optional[int] = None) -> 'responses.database_getSchoolClasses_response':
+        '''Returns a list of school classes specified for the country.'''
+
+    async def getSchools(self, *, city_id: int, q: Optional[str] = None, offset: Optional[int] = None, count: int = 100) -> 'responses.database_getSchools_response':
+        '''Returns a list of schools.'''
+
+    async def getUniversities(self, *, q: Optional[str] = None, country_id: Optional[int] = None, city_id: Optional[int] = None, offset: Optional[int] = None, count: int = 100) -> 'responses.database_getUniversities_response':
+        '''Returns a list of higher education institutions.'''
 
 class docs:
- def add(self, owner_id: int, doc_id: int, access_key: str) -> Any:
-  '''Copies a document to a user's or community's document list.'''
- def delete(self, owner_id: int, doc_id: int) -> Any:
-  '''Deletes a user or community document.'''
- def edit(self, owner_id: int, doc_id: int, title: str, tags: List[str]) -> Any:
-  '''Edits a document.'''
- def get(self, count: int, offset: int, owner_id: int, type: int = 0, return_tags: bool = False) -> Any:
-  '''Returns detailed information about user or community documents.'''
- def getById(self, docs: List[str], return_tags: bool = False) -> Any:
-  '''Returns information about documents by their IDs.'''
- def getMessagesUploadServer(self, peer_id: int, type: str = 'doc') -> Any:
-  '''Returns the server address for document upload.'''
- def getTypes(self, owner_id: int) -> Any:
-  '''Returns documents types available for current user.'''
- def getUploadServer(self, group_id: int) -> Any:
-  '''Returns the server address for document upload.'''
- def getWallUploadServer(self, group_id: int) -> Any:
-  '''Returns the server address for document upload onto a user's or community's wall.'''
- def save(self, file: str, title: str, tags: str, return_tags: bool = False) -> Any:
-  '''Saves a document after [vk.com/dev/upload_files_2|uploading it to a server].'''
- def search(self, q: str, search_own: bool, offset: int, return_tags: bool, count: int = 20) -> Any:
-  '''Returns a list of documents matching the search criteria.'''
+    async def add(self, *, owner_id: int, doc_id: int, access_key: Optional[str] = None) -> 'responses.docs_add_response':
+        '''Copies a document to a user's or community's document list.'''
+
+    async def delete(self, *, owner_id: int, doc_id: int) -> 'responses.base_ok_response':
+        '''Deletes a user or community document.'''
+
+    async def edit(self, *, owner_id: int, doc_id: int, title: str, tags: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Edits a document.'''
+
+    async def get(self, *, count: Optional[int] = None, offset: Optional[int] = None, owner_id: Optional[int] = None, type: Literal[0, 1, 2, 3, 4, 5, 6, 7, 8] = 0, return_tags: bool = False) -> 'responses.docs_get_response':
+        '''Returns detailed information about user or community documents.'''
+
+    async def getById(self, *, docs: Union[List[str], str], return_tags: bool = False) -> 'responses.docs_getById_response':
+        '''Returns information about documents by their IDs.'''
+
+    async def getMessagesUploadServer(self, *, peer_id: Optional[int] = None, type: Literal['audio_message', 'doc', 'graffiti'] = 'doc') -> 'responses.base_getUploadServer_response':
+        '''Returns the server address for document upload.'''
+
+    async def getTypes(self, *, owner_id: int) -> 'responses.docs_getTypes_response':
+        '''Returns documents types available for current user.'''
+
+    async def getUploadServer(self, *, group_id: Optional[int] = None) -> 'responses.docs_getUploadServer_response':
+        '''Returns the server address for document upload.'''
+
+    async def getWallUploadServer(self, *, group_id: Optional[int] = None) -> 'responses.base_getUploadServer_response':
+        '''Returns the server address for document upload onto a user's or community's wall.'''
+
+    async def save(self, *, file: str, title: Optional[str] = None, tags: Optional[str] = None, return_tags: bool = False) -> 'responses.docs_save_response':
+        '''Saves a document after [vk.com/dev/upload_files_2|uploading it to a server].'''
+
+    async def search(self, *, q: str, search_own: Optional[bool] = None, offset: Optional[int] = None, return_tags: Optional[bool] = None, count: int = 20) -> 'responses.docs_search_response':
+        '''Returns a list of documents matching the search criteria.'''
 
 class donut:
- def getFriends(self, owner_id: int, fields: List[str], offset: int = 0, count: int = 10) -> Any: ...
- def getSubscription(self, owner_id: int) -> Any: ...
- def getSubscriptions(self, fields: Dict[str, Any], offset: int = 0, count: int = 10) -> Any:
-  '''Returns a list of user's VK Donut subscriptions.'''
- def isDon(self, owner_id: int) -> Any: ...
+    async def getFriends(self, *, owner_id: int, fields: Optional[Union[List[str], str]] = None, offset: int = 0, count: int = 10) -> 'responses.groups_getMembers_fields_response': ...
+
+    async def getSubscription(self, *, owner_id: int) -> 'responses.donut_getSubscription_response': ...
+
+    async def getSubscriptions(self, *, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, offset: int = 0, count: int = 10) -> 'responses.donut_getSubscriptions_response':
+        '''Returns a list of user's VK Donut subscriptions.'''
+
+    async def isDon(self, *, owner_id: int) -> 'responses.base_bool_response': ...
 
 class downloadedGames:
- def getPaidStatus(self, user_id: int) -> Any: ...
+    async def getPaidStatus(self, *, user_id: Optional[int] = None) -> 'responses.downloadedGames_paid_status_response': ...
 
 class fave:
- def addArticle(self, url: str) -> Any: ...
- def addLink(self, link: str) -> Any:
-  '''Adds a link to user faves.'''
- def addPage(self, user_id: int, group_id: int) -> Any: ...
- def addPost(self, owner_id: int, id: int, access_key: str) -> Any: ...
- def addProduct(self, owner_id: int, id: int, access_key: str) -> Any: ...
- def addTag(self, name: str, position: str = 'back') -> Any: ...
- def addVideo(self, owner_id: int, id: int, access_key: str) -> Any: ...
- def editTag(self, id: int, name: str) -> Any: ...
- def get(self, item_type: str, tag_id: int, offset: int, fields: str, is_from_snackbar: bool, extended: bool = False, count: int = 50) -> Any: ...
- def getPages(self, offset: int, type: str, fields: Dict[str, Any], tag_id: int, count: int = 50) -> Any: ...
- def getTags(self) -> Any: ...
- def markSeen(self) -> Any: ...
- def removeArticle(self, owner_id: int, article_id: int) -> Any: ...
- def removeLink(self, link_id: str, link: str) -> Any:
-  '''Removes link from the user's faves.'''
- def removePage(self, user_id: int, group_id: int) -> Any: ...
- def removePost(self, owner_id: int, id: int) -> Any: ...
- def removeProduct(self, owner_id: int, id: int) -> Any: ...
- def removeTag(self, id: int) -> Any: ...
- def removeVideo(self, owner_id: int, id: int) -> Any: ...
- def reorderTags(self, ids: List[int]) -> Any: ...
- def setPageTags(self, user_id: int, group_id: int, tag_ids: List[int]) -> Any: ...
- def setTags(self, item_type: str, item_owner_id: int, item_id: int, tag_ids: List[int], link_id: str, link_url: str) -> Any: ...
- def trackPageInteraction(self, user_id: int, group_id: int) -> Any: ...
+    async def addArticle(self, *, url: str) -> 'responses.base_ok_response': ...
+
+    async def addLink(self, *, link: str) -> 'responses.base_ok_response':
+        '''Adds a link to user faves.'''
+
+    async def addPage(self, *, user_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.base_ok_response': ...
+
+    async def addPost(self, *, owner_id: int, id: int, access_key: Optional[str] = None) -> 'responses.base_ok_response': ...
+
+    async def addProduct(self, *, owner_id: int, id: int, access_key: Optional[str] = None) -> 'responses.base_ok_response': ...
+
+    async def addTag(self, *, name: Optional[str] = None, position: Literal['back', 'front'] = 'back') -> 'responses.fave_addTag_response': ...
+
+    async def addVideo(self, *, owner_id: int, id: int, access_key: Optional[str] = None) -> 'responses.base_ok_response': ...
+
+    async def editTag(self, *, id: int, name: str) -> 'responses.base_ok_response': ...
+
+    async def get(self, *, item_type: Optional[Literal['article', 'clip', 'link', 'narrative', 'page', 'podcast', 'post', 'product', 'video', 'youla_product']] = None, tag_id: Optional[int] = None, offset: Optional[int] = None, fields: Optional[str] = None, is_from_snackbar: Optional[bool] = None, extended: bool = False, count: int = 50) -> 'responses.fave_get_response': ...
+
+    async def getPages(self, *, offset: Optional[int] = None, type: Optional[Literal['groups', 'hints', 'users']] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, tag_id: Optional[int] = None, count: int = 50) -> 'responses.fave_getPages_response': ...
+
+    async def getTags(self) -> 'responses.fave_getTags_response': ...
+
+    async def markSeen(self) -> 'responses.base_bool_response': ...
+
+    async def removeArticle(self, *, owner_id: int, article_id: int) -> 'responses.base_bool_response': ...
+
+    async def removeLink(self, *, link_id: Optional[str] = None, link: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Removes link from the user's faves.'''
+
+    async def removePage(self, *, user_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.base_ok_response': ...
+
+    async def removePost(self, *, owner_id: int, id: int) -> 'responses.base_ok_response': ...
+
+    async def removeProduct(self, *, owner_id: int, id: int) -> 'responses.base_ok_response': ...
+
+    async def removeTag(self, *, id: int) -> 'responses.base_ok_response': ...
+
+    async def removeVideo(self, *, owner_id: int, id: int) -> 'responses.base_ok_response': ...
+
+    async def reorderTags(self, *, ids: Union[List[int], str]) -> 'responses.base_ok_response': ...
+
+    async def setPageTags(self, *, user_id: Optional[int] = None, group_id: Optional[int] = None, tag_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response': ...
+
+    async def setTags(self, *, item_type: Optional[Literal['article', 'clip', 'link', 'narrative', 'page', 'podcast', 'post', 'product', 'video', 'youla_product']] = None, item_owner_id: Optional[int] = None, item_id: Optional[int] = None, tag_ids: Optional[Union[List[int], str]] = None, link_id: Optional[str] = None, link_url: Optional[str] = None) -> 'responses.base_ok_response': ...
+
+    async def trackPageInteraction(self, *, user_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.base_ok_response': ...
 
 class friends:
- def add(self, user_id: int, text: str, follow: bool) -> Any:
-  '''Approves or creates a friend request.'''
- def addList(self, name: str, user_ids: List[int]) -> Any:
-  '''Creates a new friend list for the current user.'''
- def areFriends(self, user_ids: List[int], need_sign: bool, extended: bool) -> Any:
-  '''Checks the current user's friendship status with other specified users.'''
- def delete(self, user_id: int) -> Any:
-  '''Declines a friend request or deletes a user from the current user's friend list.'''
- def deleteAllRequests(self) -> Any:
-  '''Marks all incoming friend requests as viewed.'''
- def deleteList(self, list_id: int) -> Any:
-  '''Deletes a friend list of the current user.'''
- def edit(self, user_id: int, list_ids: List[int]) -> Any:
-  '''Edits the friend lists of the selected user.'''
- def editList(self, name: str, list_id: int, user_ids: List[int], add_user_ids: List[int], delete_user_ids: List[int]) -> Any:
-  '''Edits a friend list of the current user.'''
- def get(self, user_id: int, order: str, list_id: int, offset: int, fields: Dict[str, Any], name_case: str, ref: str, count: int = 5000) -> Any:
-  '''Returns a list of user IDs or detailed information about a user's friends.'''
- def getAppUsers(self) -> Any:
-  '''Returns a list of IDs of the current user's friends who installed the application.'''
- def getByPhones(self, phones: List[str], fields: Dict[str, Any]) -> Any:
-  '''Returns a list of the current user's friends whose phone numbers, validated or specified in a profile, are in a given list.'''
- def getLists(self, user_id: int, return_system: bool) -> Any:
-  '''Returns a list of the user's friend lists.'''
- def getMutual(self, source_uid: int, target_uid: int, target_uids: List[int], order: str, count: int, offset: int) -> Any:
-  '''Returns a list of user IDs of the mutual friends of two users.'''
- def getOnline(self, user_id: int, list_id: int, online_mobile: bool, order: str, count: int, offset: int) -> Any:
-  '''Returns a list of user IDs of a user's friends who are online.'''
- def getRecent(self, count: int = 100) -> Any:
-  '''Returns a list of user IDs of the current user's recently added friends.'''
- def getRequests(self, offset: int, extended: bool, need_mutual: bool, out: bool, sort: int, suggested: bool, ref: str, fields: Dict[str, Any], count: int = 100, need_viewed: bool = 0) -> Any:
-  '''Returns information about the current user's incoming and outgoing friend requests.'''
- def getSuggestions(self, filter: List[str], offset: int, fields: Dict[str, Any], name_case: str, count: int = 500) -> Any:
-  '''Returns a list of profiles of users whom the current user may know.'''
- def search(self, user_id: int, q: str, fields: Dict[str, Any], offset: int, name_case: str = 'Nom', count: int = 20) -> Any:
-  '''Returns a list of friends matching the search criteria.'''
+    async def add(self, *, user_id: Optional[int] = None, text: Optional[str] = None, follow: Optional[bool] = None) -> 'responses.friends_add_response':
+        '''Approves or creates a friend request.'''
+
+    async def addList(self, *, name: str, user_ids: Optional[Union[List[int], str]] = None) -> 'responses.friends_addList_response':
+        '''Creates a new friend list for the current user.'''
+
+    async def areFriends(self, *, user_ids: Union[List[int], str], need_sign: Optional[bool] = None, extended: Optional[bool] = None) -> 'responses.friends_areFriends_response':
+        '''Checks the current user's friendship status with other specified users.'''
+
+    async def delete(self, *, user_id: Optional[int] = None) -> 'responses.friends_delete_response':
+        '''Declines a friend request or deletes a user from the current user's friend list.'''
+
+    async def deleteAllRequests(self) -> 'responses.base_ok_response':
+        '''Marks all incoming friend requests as viewed.'''
+
+    async def deleteList(self, *, list_id: int) -> 'responses.base_ok_response':
+        '''Deletes a friend list of the current user.'''
+
+    async def edit(self, *, user_id: int, list_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response':
+        '''Edits the friend lists of the selected user.'''
+
+    async def editList(self, *, list_id: int, name: Optional[str] = None, user_ids: Optional[Union[List[int], str]] = None, add_user_ids: Optional[Union[List[int], str]] = None, delete_user_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response':
+        '''Edits a friend list of the current user.'''
+
+    async def get(self, *, user_id: Optional[int] = None, order: Optional[Literal['hints', 'random', 'mobile', 'name', 'smart']] = None, list_id: Optional[int] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, ref: Optional[str] = None, count: int = 5000) -> 'responses.friends_get_response':
+        '''Returns a list of user IDs or detailed information about a user's friends.'''
+
+    async def getAppUsers(self) -> 'responses.friends_getAppUsers_response':
+        '''Returns a list of IDs of the current user's friends who installed the application.'''
+
+    async def getByPhones(self, *, phones: Optional[Union[List[str], str]] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None) -> 'responses.friends_getByPhones_response':
+        '''Returns a list of the current user's friends whose phone numbers, validated or specified in a profile, are in a given list.'''
+
+    async def getLists(self, *, user_id: Optional[int] = None, return_system: Optional[bool] = None) -> 'responses.friends_getLists_response':
+        '''Returns a list of the user's friend lists.'''
+
+    async def getMutual(self, *, source_uid: Optional[int] = None, target_uid: Optional[int] = None, target_uids: Optional[Union[List[int], str]] = None, order: Optional[str] = None, count: Optional[int] = None, offset: Optional[int] = None) -> 'responses.friends_getMutual_response':
+        '''Returns a list of user IDs of the mutual friends of two users.'''
+
+    async def getOnline(self, *, user_id: Optional[int] = None, list_id: Optional[int] = None, online_mobile: Optional[bool] = None, order: Optional[str] = None, count: Optional[int] = None, offset: Optional[int] = None) -> 'responses.friends_getOnline_response':
+        '''Returns a list of user IDs of a user's friends who are online.'''
+
+    async def getRecent(self, *, count: int = 100) -> 'responses.friends_getRecent_response':
+        '''Returns a list of user IDs of the current user's recently added friends.'''
+
+    async def getRequests(self, *, offset: Optional[int] = None, extended: Optional[bool] = None, need_mutual: Optional[bool] = None, out: Optional[bool] = None, sort: Optional[Literal[0, 1, 2]] = None, suggested: Optional[bool] = None, ref: Optional[str] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, count: int = 100, need_viewed: bool = 0) -> 'responses.friends_getRequests_response':
+        '''Returns information about the current user's incoming and outgoing friend requests.'''
+
+    filter_enum = Literal['mutual', 'contacts', 'mutual_contacts']
+    async def getSuggestions(self, *, filter: Optional[filter_enum] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, count: int = 500) -> 'responses.friends_getSuggestions_response':
+        '''Returns a list of profiles of users whom the current user may know.'''
+
+    async def search(self, *, user_id: int, q: Optional[str] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, offset: Optional[int] = None, name_case: Literal['Nom', 'Gen', 'Dat', 'Acc', 'Ins', 'Abl'] = 'Nom', count: int = 20) -> 'responses.friends_search_response':
+        '''Returns a list of friends matching the search criteria.'''
 
 class gifts:
- def get(self, user_id: int, count: int, offset: int) -> Any:
-  '''Returns a list of user gifts.'''
+    async def get(self, *, user_id: Optional[int] = None, count: Optional[int] = None, offset: Optional[int] = None) -> 'responses.gifts_get_response':
+        '''Returns a list of user gifts.'''
 
 class groups:
- def addAddress(self, group_id: int, title: str, address: str, additional_address: str, country_id: int, city_id: int, metro_id: int, latitude: float, longitude: float, phone: str, timetable: str, is_main_address: bool, work_info_status: str = 'no_information') -> Any: ...
- def addCallbackServer(self, group_id: int, url: str, title: str, secret_key: str) -> Any: ...
- def addLink(self, group_id: int, link: str, text: str) -> Any:
-  '''Allows to add a link to the community.'''
- def approveRequest(self, group_id: int, user_id: int) -> Any:
-  '''Allows to approve join request to the community.'''
- def ban(self, group_id: int, owner_id: int, end_date: int, reason: int, comment: str, comment_visible: bool) -> Any: ...
- def create(self, title: str, description: str, public_category: int, public_subcategory: int, subtype: int, type: str = 'group') -> Any:
-  '''Creates a new community.'''
- def deleteAddress(self, group_id: int, address_id: int) -> Any: ...
- def deleteCallbackServer(self, group_id: int, server_id: int) -> Any: ...
- def deleteLink(self, group_id: int, link_id: int) -> Any:
-  '''Allows to delete a link from the community.'''
- def disableOnline(self, group_id: int) -> Any: ...
- def edit(self, group_id: int, title: str, description: str, screen_name: str, access: int, website: str, subject: str, email: str, phone: str, rss: str, event_start_date: int, event_finish_date: int, event_group_id: int, public_category: int, public_subcategory: int, public_date: str, wall: int, topics: int, photos: int, video: int, audio: int, links: bool, events: bool, places: bool, contacts: bool, docs: int, wiki: int, messages: bool, articles: bool, addresses: bool, market: bool, market_comments: bool, market_country: List[int], market_city: List[int], market_currency: int, market_contact: int, market_wiki: int, obscene_filter: bool, obscene_stopwords: bool, obscene_words: List[str], main_section: int, secondary_section: int, country: int, city: int, age_limits: int = 1) -> Any:
-  '''Edits a community.'''
- def editAddress(self, group_id: int, address_id: int, title: str, address: str, additional_address: str, country_id: int, city_id: int, metro_id: int, latitude: float, longitude: float, phone: str, work_info_status: str, timetable: str, is_main_address: bool) -> Any: ...
- def editCallbackServer(self, group_id: int, server_id: int, url: str, title: str, secret_key: str) -> Any: ...
- def editLink(self, group_id: int, link_id: int, text: str) -> Any:
-  '''Allows to edit a link in the community.'''
- def editManager(self, group_id: int, user_id: int, role: str, is_contact: bool, contact_position: str, contact_phone: str, contact_email: str) -> Any:
-  '''Allows to add, remove or edit the community manager.'''
- def enableOnline(self, group_id: int) -> Any: ...
- def get(self, user_id: int, extended: bool, filter: Dict[str, Any], fields: Dict[str, Any], offset: int, count: int) -> Any:
-  '''Returns a list of the communities to which a user belongs.'''
- def getAddresses(self, group_id: int, address_ids: List[int], latitude: float, longitude: float, offset: int, fields: Dict[str, Any], count: int = 10) -> Any:
-  '''Returns a list of community addresses.'''
- def getBanned(self, group_id: int, offset: int, fields: Dict[str, Any], owner_id: int, count: int = 20) -> Any:
-  '''Returns a list of users on a community blacklist.'''
- def getById(self, group_ids: List[str], group_id: str, fields: Dict[str, Any]) -> Any:
-  '''Returns information about communities by their IDs.'''
- def getCallbackConfirmationCode(self, group_id: int) -> Any:
-  '''Returns Callback API confirmation code for the community.'''
- def getCallbackServers(self, group_id: int, server_ids: List[int]) -> Any: ...
- def getCallbackSettings(self, group_id: int, server_id: int) -> Any:
-  '''Returns [vk.com/dev/callback_api|Callback API] notifications settings.'''
- def getCatalog(self, category_id: int, subcategory_id: int) -> Any:
-  '''Returns communities list for a catalog category.'''
- def getCatalogInfo(self, extended: bool = 0, subcategories: bool = 0) -> Any:
-  '''Returns categories list for communities catalog'''
- def getInvitedUsers(self, group_id: int, offset: int, fields: Dict[str, Any], name_case: str, count: int = 20) -> Any:
-  '''Returns invited users list of a community'''
- def getInvites(self, offset: int, extended: bool, count: int = 20) -> Any:
-  '''Returns a list of invitations to join communities and events.'''
- def getLongPollServer(self, group_id: int) -> Any:
-  '''Returns the data needed to query a Long Poll server for events'''
- def getLongPollSettings(self, group_id: int) -> Any:
-  '''Returns Long Poll notification settings'''
- def getMembers(self, group_id: str, offset: int, fields: Dict[str, Any], filter: str, sort: str = 'id_asc', count: int = 1000) -> Any:
-  '''Returns a list of community members.'''
- def getRequests(self, group_id: int, offset: int, fields: Dict[str, Any], count: int = 20) -> Any:
-  '''Returns a list of requests to the community.'''
- def getSettings(self, group_id: int) -> Any:
-  '''Returns community settings.'''
- def getTagList(self, group_id: int) -> Any:
-  '''List of group's tags'''
- def getTokenPermissions(self) -> Any: ...
- def invite(self, group_id: int, user_id: int) -> Any:
-  '''Allows to invite friends to the community.'''
- def isMember(self, group_id: str, user_id: int, user_ids: List[int], extended: bool) -> Any:
-  '''Returns information specifying whether a user is a member of a community.'''
- def join(self, group_id: int, not_sure: str) -> Any:
-  '''With this method you can join the group or public page, and also confirm your participation in an event.'''
- def leave(self, group_id: int) -> Any:
-  '''With this method you can leave a group, public page, or event.'''
- def removeUser(self, group_id: int, user_id: int) -> Any:
-  '''Removes a user from the community.'''
- def reorderLink(self, group_id: int, link_id: int, after: int) -> Any:
-  '''Allows to reorder links in the community.'''
- def search(self, q: str, type: str, country_id: int, city_id: int, future: bool, market: bool, sort: int, offset: int, count: int = 20) -> Any:
-  '''Returns a list of communities matching the search criteria.'''
- def setCallbackSettings(self, group_id: int, server_id: int, api_version: str, message_new: bool, message_reply: bool, message_allow: bool, message_edit: bool, message_deny: bool, message_typing_state: bool, photo_new: bool, audio_new: bool, video_new: bool, wall_reply_new: bool, wall_reply_edit: bool, wall_reply_delete: bool, wall_reply_restore: bool, wall_post_new: bool, wall_repost: bool, board_post_new: bool, board_post_edit: bool, board_post_restore: bool, board_post_delete: bool, photo_comment_new: bool, photo_comment_edit: bool, photo_comment_delete: bool, photo_comment_restore: bool, video_comment_new: bool, video_comment_edit: bool, video_comment_delete: bool, video_comment_restore: bool, market_comment_new: bool, market_comment_edit: bool, market_comment_delete: bool, market_comment_restore: bool, market_order_new: bool, market_order_edit: bool, poll_vote_new: bool, group_join: bool, group_leave: bool, group_change_settings: bool, group_change_photo: bool, group_officers_edit: bool, user_block: bool, user_unblock: bool, lead_forms_new: bool, like_add: bool, like_remove: bool, message_event: bool, donut_subscription_create: bool, donut_subscription_prolonged: bool, donut_subscription_cancelled: bool, donut_subscription_price_changed: bool, donut_subscription_expired: bool, donut_money_withdraw: bool, donut_money_withdraw_error: bool) -> Any:
-  '''Allow to set notifications settings for group.'''
- def setLongPollSettings(self, group_id: int, enabled: bool, api_version: str, message_new: bool, message_reply: bool, message_allow: bool, message_deny: bool, message_edit: bool, message_typing_state: bool, photo_new: bool, audio_new: bool, video_new: bool, wall_reply_new: bool, wall_reply_edit: bool, wall_reply_delete: bool, wall_reply_restore: bool, wall_post_new: bool, wall_repost: bool, board_post_new: bool, board_post_edit: bool, board_post_restore: bool, board_post_delete: bool, photo_comment_new: bool, photo_comment_edit: bool, photo_comment_delete: bool, photo_comment_restore: bool, video_comment_new: bool, video_comment_edit: bool, video_comment_delete: bool, video_comment_restore: bool, market_comment_new: bool, market_comment_edit: bool, market_comment_delete: bool, market_comment_restore: bool, poll_vote_new: bool, group_join: bool, group_leave: bool, group_change_settings: bool, group_change_photo: bool, group_officers_edit: bool, user_block: bool, user_unblock: bool, like_add: bool, like_remove: bool, message_event: bool, donut_subscription_create: bool, donut_subscription_prolonged: bool, donut_subscription_cancelled: bool, donut_subscription_price_changed: bool, donut_subscription_expired: bool, donut_money_withdraw: bool, donut_money_withdraw_error: bool) -> Any:
-  '''Sets Long Poll notification settings'''
- def setSettings(self, group_id: int, messages: bool, bots_capabilities: bool, bots_start_button: bool, bots_add_to_chat: bool) -> Any: ...
- def setUserNote(self, group_id: int, user_id: int, note: str) -> Any:
-  '''In order to save note about group participant'''
- def tagAdd(self, group_id: int, tag_name: str, tag_color: str) -> Any:
-  '''Add new group's tag'''
- def tagBind(self, group_id: int, tag_id: int, user_id: int, act: str) -> Any:
-  '''Bind or unbind group's tag to user'''
- def tagDelete(self, group_id: int, tag_id: int) -> Any:
-  '''Delete group's tag'''
- def tagUpdate(self, group_id: int, tag_id: int, tag_name: str) -> Any:
-  '''Update group's tag'''
- def toggleMarket(self, group_id: int, state: str, ref: str) -> Any: ...
- def unban(self, group_id: int, owner_id: int) -> Any: ...
+    async def addAddress(self, *, group_id: int, title: str, address: str, country_id: int, city_id: int, latitude: float, longitude: float, additional_address: Optional[str] = None, metro_id: Optional[int] = None, phone: Optional[str] = None, timetable: Optional[str] = None, is_main_address: Optional[bool] = None, work_info_status: 'objects.groups_address_work_info_status' = 'no_information') -> 'responses.groups_addAddress_response': ...
+
+    async def addCallbackServer(self, *, group_id: int, url: str, title: str, secret_key: Optional[str] = None) -> 'responses.groups_addCallbackServer_response': ...
+
+    async def addLink(self, *, group_id: int, link: str, text: Optional[str] = None) -> 'responses.groups_addLink_response':
+        '''Allows to add a link to the community.'''
+
+    async def approveRequest(self, *, group_id: int, user_id: int) -> 'responses.base_ok_response':
+        '''Allows to approve join request to the community.'''
+
+    async def ban(self, *, group_id: int, owner_id: Optional[int] = None, end_date: Optional[int] = None, reason: Optional[int] = None, comment: Optional[str] = None, comment_visible: Optional[bool] = None) -> 'responses.base_ok_response': ...
+
+    async def create(self, *, title: str, description: Optional[str] = None, public_category: Optional[int] = None, public_subcategory: Optional[int] = None, subtype: Optional[Literal[1, 2, 3, 4]] = None, type: Literal['event', 'group', 'public'] = 'group') -> 'responses.groups_create_response':
+        '''Creates a new community.'''
+
+    async def deleteAddress(self, *, group_id: int, address_id: int) -> 'responses.base_ok_response': ...
+
+    async def deleteCallbackServer(self, *, group_id: int, server_id: int) -> 'responses.base_ok_response': ...
+
+    async def deleteLink(self, *, group_id: int, link_id: int) -> 'responses.base_ok_response':
+        '''Allows to delete a link from the community.'''
+
+    async def disableOnline(self, *, group_id: int) -> 'responses.base_ok_response': ...
+
+    async def edit(self, *, group_id: int, title: Optional[str] = None, description: Optional[str] = None, screen_name: Optional[str] = None, access: Optional['objects.groups_group_access'] = None, website: Optional[str] = None, subject: Optional['objects.groups_group_subject'] = None, email: Optional[str] = None, phone: Optional[str] = None, rss: Optional[str] = None, event_start_date: Optional[int] = None, event_finish_date: Optional[int] = None, event_group_id: Optional[int] = None, public_category: Optional[int] = None, public_subcategory: Optional[int] = None, public_date: Optional[str] = None, wall: Optional['objects.groups_group_wall'] = None, topics: Optional['objects.groups_group_topics'] = None, photos: Optional['objects.groups_group_photos'] = None, video: Optional['objects.groups_group_video'] = None, audio: Optional['objects.groups_group_audio'] = None, links: Optional[bool] = None, events: Optional[bool] = None, places: Optional[bool] = None, contacts: Optional[bool] = None, docs: Optional['objects.groups_group_docs'] = None, wiki: Optional['objects.groups_group_wiki'] = None, messages: Optional[bool] = None, articles: Optional[bool] = None, addresses: Optional[bool] = None, market: Optional[bool] = None, market_comments: Optional[bool] = None, market_country: Optional[Union[List[int], str]] = None, market_city: Optional[Union[List[int], str]] = None, market_currency: Optional['objects.groups_group_market_currency'] = None, market_contact: Optional[int] = None, market_wiki: Optional[int] = None, obscene_filter: Optional[bool] = None, obscene_stopwords: Optional[bool] = None, obscene_words: Optional[Union[List[str], str]] = None, main_section: Optional[int] = None, secondary_section: Optional[int] = None, country: Optional[int] = None, city: Optional[int] = None, age_limits: 'objects.groups_group_age_limits' = 1) -> 'responses.base_ok_response':
+        '''Edits a community.'''
+
+    async def editAddress(self, *, group_id: int, address_id: int, title: Optional[str] = None, address: Optional[str] = None, additional_address: Optional[str] = None, country_id: Optional[int] = None, city_id: Optional[int] = None, metro_id: Optional[int] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, phone: Optional[str] = None, work_info_status: Optional['objects.groups_address_work_info_status'] = None, timetable: Optional[str] = None, is_main_address: Optional[bool] = None) -> 'responses.groups_editAddress_response': ...
+
+    async def editCallbackServer(self, *, group_id: int, server_id: int, url: str, title: str, secret_key: Optional[str] = None) -> 'responses.base_ok_response': ...
+
+    async def editLink(self, *, group_id: int, link_id: int, text: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Allows to edit a link in the community.'''
+
+    async def editManager(self, *, group_id: int, user_id: int, role: Optional['objects.groups_group_role'] = None, is_contact: Optional[bool] = None, contact_position: Optional[str] = None, contact_phone: Optional[str] = None, contact_email: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Allows to add, remove or edit the community manager.'''
+
+    async def enableOnline(self, *, group_id: int) -> 'responses.base_ok_response': ...
+
+    async def get(self, *, user_id: Optional[int] = None, extended: Optional[bool] = None, filter: Optional[Union[List['objects.groups_filter'], str]] = None, fields: Optional[Union[List['objects.groups_fields'], str]] = None, offset: Optional[int] = None, count: Optional[int] = None) -> 'responses.groups_get_response':
+        '''Returns a list of the communities to which a user belongs.'''
+
+    async def getAddresses(self, *, group_id: int, address_ids: Optional[Union[List[int], str]] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.addresses_fields'], str]] = None, count: int = 10) -> 'responses.groups_getAddresses_response':
+        '''Returns a list of community addresses.'''
+
+    async def getBanned(self, *, group_id: int, offset: Optional[int] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, owner_id: Optional[int] = None, count: int = 20) -> 'responses.groups_getBanned_response':
+        '''Returns a list of users on a community blacklist.'''
+
+    async def getById(self, *, group_ids: Optional[Union[List[str], str]] = None, group_id: Optional[str] = None, fields: Optional[Union[List['objects.groups_fields'], str]] = None) -> 'responses.groups_getById_object_legacy_response':
+        '''Returns information about communities by their IDs.'''
+
+    async def getCallbackConfirmationCode(self, *, group_id: int) -> 'responses.groups_getCallbackConfirmationCode_response':
+        '''Returns Callback API confirmation code for the community.'''
+
+    async def getCallbackServers(self, *, group_id: int, server_ids: Optional[Union[List[int], str]] = None) -> 'responses.groups_getCallbackServers_response': ...
+
+    async def getCallbackSettings(self, *, group_id: int, server_id: Optional[int] = None) -> 'responses.groups_getCallbackSettings_response':
+        '''Returns [vk.com/dev/callback_api|Callback API] notifications settings.'''
+
+    async def getCatalog(self, *, category_id: Optional[int] = None, subcategory_id: Optional[int] = None) -> 'responses.groups_getCatalog_response':
+        '''Returns communities list for a catalog category.'''
+
+    async def getCatalogInfo(self, *, extended: bool = 0, subcategories: bool = 0) -> 'responses.groups_getCatalogInfo_response':
+        '''Returns categories list for communities catalog'''
+
+    async def getInvitedUsers(self, *, group_id: int, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, count: int = 20) -> 'responses.groups_getInvitedUsers_response':
+        '''Returns invited users list of a community'''
+
+    async def getInvites(self, *, offset: Optional[int] = None, extended: Optional[bool] = None, count: int = 20) -> 'responses.groups_getInvites_response':
+        '''Returns a list of invitations to join communities and events.'''
+
+    async def getLongPollServer(self, *, group_id: int) -> 'responses.groups_getLongPollServer_response':
+        '''Returns the data needed to query a Long Poll server for events'''
+
+    async def getLongPollSettings(self, *, group_id: int) -> 'responses.groups_getLongPollSettings_response':
+        '''Returns Long Poll notification settings'''
+
+    async def getMembers(self, *, group_id: Optional[str] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, filter: Optional[Literal['friends', 'unsure', 'managers', 'donut']] = None, sort: Literal['id_asc', 'id_desc', 'time_asc', 'time_desc'] = 'id_asc', count: int = 1000) -> 'responses.groups_getMembers_response':
+        '''Returns a list of community members.'''
+
+    async def getRequests(self, *, group_id: int, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, count: int = 20) -> 'responses.groups_getRequests_response':
+        '''Returns a list of requests to the community.'''
+
+    async def getSettings(self, *, group_id: int) -> 'responses.groups_getSettings_response':
+        '''Returns community settings.'''
+
+    async def getTagList(self, *, group_id: int) -> 'responses.groups_getTagList_response':
+        '''List of group's tags'''
+
+    async def getTokenPermissions(self) -> 'responses.groups_getTokenPermissions_response': ...
+
+    async def invite(self, *, group_id: int, user_id: int) -> 'responses.base_ok_response':
+        '''Allows to invite friends to the community.'''
+
+    async def isMember(self, *, group_id: str, user_id: Optional[int] = None, user_ids: Optional[Union[List[int], str]] = None, extended: Optional[bool] = None) -> 'responses.groups_isMember_response':
+        '''Returns information specifying whether a user is a member of a community.'''
+
+    async def join(self, *, group_id: Optional[int] = None, not_sure: Optional[str] = None) -> 'responses.base_ok_response':
+        '''With this method you can join the group or public page, and also confirm your participation in an event.'''
+
+    async def leave(self, *, group_id: int) -> 'responses.base_ok_response':
+        '''With this method you can leave a group, public page, or event.'''
+
+    async def removeUser(self, *, group_id: int, user_id: int) -> 'responses.base_ok_response':
+        '''Removes a user from the community.'''
+
+    async def reorderLink(self, *, group_id: int, link_id: int, after: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Allows to reorder links in the community.'''
+
+    async def search(self, *, q: str, type: Optional[Literal['group', 'page', 'event']] = None, country_id: Optional[int] = None, city_id: Optional[int] = None, future: Optional[bool] = None, market: Optional[bool] = None, sort: Optional[Literal[0, 1, 2, 3, 4, 5]] = None, offset: Optional[int] = None, count: int = 20) -> 'responses.groups_search_response':
+        '''Returns a list of communities matching the search criteria.'''
+
+    async def setCallbackSettings(self, *, group_id: int, server_id: Optional[int] = None, api_version: Optional[str] = None, message_new: Optional[bool] = None, message_reply: Optional[bool] = None, message_allow: Optional[bool] = None, message_edit: Optional[bool] = None, message_deny: Optional[bool] = None, message_typing_state: Optional[bool] = None, photo_new: Optional[bool] = None, audio_new: Optional[bool] = None, video_new: Optional[bool] = None, wall_reply_new: Optional[bool] = None, wall_reply_edit: Optional[bool] = None, wall_reply_delete: Optional[bool] = None, wall_reply_restore: Optional[bool] = None, wall_post_new: Optional[bool] = None, wall_repost: Optional[bool] = None, board_post_new: Optional[bool] = None, board_post_edit: Optional[bool] = None, board_post_restore: Optional[bool] = None, board_post_delete: Optional[bool] = None, photo_comment_new: Optional[bool] = None, photo_comment_edit: Optional[bool] = None, photo_comment_delete: Optional[bool] = None, photo_comment_restore: Optional[bool] = None, video_comment_new: Optional[bool] = None, video_comment_edit: Optional[bool] = None, video_comment_delete: Optional[bool] = None, video_comment_restore: Optional[bool] = None, market_comment_new: Optional[bool] = None, market_comment_edit: Optional[bool] = None, market_comment_delete: Optional[bool] = None, market_comment_restore: Optional[bool] = None, market_order_new: Optional[bool] = None, market_order_edit: Optional[bool] = None, poll_vote_new: Optional[bool] = None, group_join: Optional[bool] = None, group_leave: Optional[bool] = None, group_change_settings: Optional[bool] = None, group_change_photo: Optional[bool] = None, group_officers_edit: Optional[bool] = None, user_block: Optional[bool] = None, user_unblock: Optional[bool] = None, lead_forms_new: Optional[bool] = None, like_add: Optional[bool] = None, like_remove: Optional[bool] = None, message_event: Optional[bool] = None, donut_subscription_create: Optional[bool] = None, donut_subscription_prolonged: Optional[bool] = None, donut_subscription_cancelled: Optional[bool] = None, donut_subscription_price_changed: Optional[bool] = None, donut_subscription_expired: Optional[bool] = None, donut_money_withdraw: Optional[bool] = None, donut_money_withdraw_error: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Allow to set notifications settings for group.'''
+
+    async def setLongPollSettings(self, *, group_id: int, enabled: Optional[bool] = None, api_version: Optional[str] = None, message_new: Optional[bool] = None, message_reply: Optional[bool] = None, message_allow: Optional[bool] = None, message_deny: Optional[bool] = None, message_edit: Optional[bool] = None, message_typing_state: Optional[bool] = None, photo_new: Optional[bool] = None, audio_new: Optional[bool] = None, video_new: Optional[bool] = None, wall_reply_new: Optional[bool] = None, wall_reply_edit: Optional[bool] = None, wall_reply_delete: Optional[bool] = None, wall_reply_restore: Optional[bool] = None, wall_post_new: Optional[bool] = None, wall_repost: Optional[bool] = None, board_post_new: Optional[bool] = None, board_post_edit: Optional[bool] = None, board_post_restore: Optional[bool] = None, board_post_delete: Optional[bool] = None, photo_comment_new: Optional[bool] = None, photo_comment_edit: Optional[bool] = None, photo_comment_delete: Optional[bool] = None, photo_comment_restore: Optional[bool] = None, video_comment_new: Optional[bool] = None, video_comment_edit: Optional[bool] = None, video_comment_delete: Optional[bool] = None, video_comment_restore: Optional[bool] = None, market_comment_new: Optional[bool] = None, market_comment_edit: Optional[bool] = None, market_comment_delete: Optional[bool] = None, market_comment_restore: Optional[bool] = None, poll_vote_new: Optional[bool] = None, group_join: Optional[bool] = None, group_leave: Optional[bool] = None, group_change_settings: Optional[bool] = None, group_change_photo: Optional[bool] = None, group_officers_edit: Optional[bool] = None, user_block: Optional[bool] = None, user_unblock: Optional[bool] = None, like_add: Optional[bool] = None, like_remove: Optional[bool] = None, message_event: Optional[bool] = None, donut_subscription_create: Optional[bool] = None, donut_subscription_prolonged: Optional[bool] = None, donut_subscription_cancelled: Optional[bool] = None, donut_subscription_price_changed: Optional[bool] = None, donut_subscription_expired: Optional[bool] = None, donut_money_withdraw: Optional[bool] = None, donut_money_withdraw_error: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Sets Long Poll notification settings'''
+
+    async def setSettings(self, *, group_id: int, messages: Optional[bool] = None, bots_capabilities: Optional[bool] = None, bots_start_button: Optional[bool] = None, bots_add_to_chat: Optional[bool] = None) -> 'responses.base_ok_response': ...
+
+    async def setUserNote(self, *, group_id: int, user_id: int, note: Optional[str] = None) -> 'responses.base_bool_response':
+        '''In order to save note about group participant'''
+
+    async def tagAdd(self, *, group_id: int, tag_name: str, tag_color: Optional[Literal['454647', '45678f', '4bb34b', '5181b8', '539b9c', '5c9ce6', '63b9ba', '6bc76b', '76787a', '792ec0', '7a6c4f', '7ececf', '9e8d6b', 'a162de', 'aaaeb3', 'bbaa84', 'e64646', 'ff5c5c', 'ffa000', 'ffc107']] = None) -> 'responses.base_bool_response':
+        '''Add new group's tag'''
+
+    async def tagBind(self, *, group_id: int, tag_id: int, user_id: int, act: Literal['bind', 'unbind']) -> 'responses.base_bool_response':
+        '''Bind or unbind group's tag to user'''
+
+    async def tagDelete(self, *, group_id: int, tag_id: int) -> 'responses.base_bool_response':
+        '''Delete group's tag'''
+
+    async def tagUpdate(self, *, group_id: int, tag_id: int, tag_name: str) -> 'responses.base_bool_response':
+        '''Update group's tag'''
+
+    async def toggleMarket(self, *, group_id: int, state: 'objects.groups_market_state', ref: Optional[str] = None) -> 'responses.base_ok_response': ...
+
+    async def unban(self, *, group_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response': ...
 
 class leadForms:
- def create(self, group_id: int, name: str, title: str, description: str, questions: str, policy_link_url: str, photo: str, confirmation: str, site_link_url: str, pixel_code: str, notify_admins: List[int], notify_emails: List[str], active: bool = 0, once_per_user: bool = 0) -> Any: ...
- def delete(self, group_id: int, form_id: int) -> Any: ...
- def get(self, group_id: int, form_id: int) -> Any: ...
- def getLeads(self, group_id: int, form_id: int, next_page_token: str, limit: int = 10) -> Any: ...
- def getUploadURL(self) -> Any: ...
- def list(self, group_id: int) -> Any: ...
- def update(self, group_id: int, form_id: int, name: str, title: str, description: str, questions: str, policy_link_url: str, photo: str, confirmation: str, site_link_url: str, pixel_code: str, notify_admins: List[int], notify_emails: List[str], active: bool = 0, once_per_user: bool = 0) -> Any: ...
+    async def create(self, *, group_id: int, name: str, title: str, description: str, questions: str, policy_link_url: str, photo: Optional[str] = None, confirmation: Optional[str] = None, site_link_url: Optional[str] = None, pixel_code: Optional[str] = None, notify_admins: Optional[Union[List[int], str]] = None, notify_emails: Optional[Union[List[str], str]] = None, active: bool = 0, once_per_user: bool = 0) -> 'responses.leadForms_create_response': ...
+
+    async def delete(self, *, group_id: int, form_id: int) -> 'responses.leadForms_delete_response': ...
+
+    async def get(self, *, group_id: int, form_id: int) -> 'responses.leadForms_get_response': ...
+
+    async def getLeads(self, *, group_id: int, form_id: int, next_page_token: Optional[str] = None, limit: int = 10) -> 'responses.leadForms_getLeads_response': ...
+
+    async def getUploadURL(self) -> 'responses.leadForms_uploadUrl_response': ...
+
+    async def list(self, *, group_id: int) -> 'responses.leadForms_list_response': ...
+
+    async def update(self, *, group_id: int, form_id: int, name: str, title: str, description: str, questions: str, policy_link_url: str, photo: Optional[str] = None, confirmation: Optional[str] = None, site_link_url: Optional[str] = None, pixel_code: Optional[str] = None, notify_admins: Optional[Union[List[int], str]] = None, notify_emails: Optional[Union[List[str], str]] = None, active: bool = 0, once_per_user: bool = 0) -> 'responses.leadForms_create_response': ...
 
 class likes:
- def add(self, type: str, owner_id: int, item_id: int, access_key: str) -> Any:
-  '''Adds the specified object to the 'Likes' list of the current user.'''
- def delete(self, type: str, owner_id: int, item_id: int, access_key: str) -> Any:
-  '''Deletes the specified object from the 'Likes' list of the current user.'''
- def getList(self, type: str, owner_id: int, item_id: int, page_url: str, filter: str, extended: bool, offset: int, count: int, skip_own: bool, friends_only: int = 0) -> Any:
-  '''Returns a list of IDs of users who added the specified object to their 'Likes' list.'''
- def isLiked(self, user_id: int, type: str, owner_id: int, item_id: int) -> Any:
-  '''Checks for the object in the 'Likes' list of the specified user.'''
+    async def add(self, *, type: 'objects.likes_type', item_id: int, owner_id: Optional[int] = None, access_key: Optional[str] = None) -> 'responses.likes_add_response':
+        '''Adds the specified object to the 'Likes' list of the current user.'''
+
+    async def delete(self, *, type: 'objects.likes_type', item_id: int, owner_id: Optional[int] = None, access_key: Optional[str] = None) -> 'responses.likes_delete_response':
+        '''Deletes the specified object from the 'Likes' list of the current user.'''
+
+    async def getList(self, *, type: 'objects.likes_type', owner_id: Optional[int] = None, item_id: Optional[int] = None, page_url: Optional[str] = None, filter: Optional[Literal['likes', 'copies']] = None, extended: Optional[bool] = None, offset: Optional[int] = None, count: Optional[int] = None, skip_own: Optional[bool] = None, friends_only: Literal[0, 1, 2, 3] = 0) -> 'responses.likes_getList_response':
+        '''Returns a list of IDs of users who added the specified object to their 'Likes' list.'''
+
+    async def isLiked(self, *, type: 'objects.likes_type', item_id: int, user_id: Optional[int] = None, owner_id: Optional[int] = None) -> 'responses.likes_isLiked_response':
+        '''Checks for the object in the 'Likes' list of the specified user.'''
 
 class market:
- def add(self, owner_id: int, name: str, description: str, category_id: int, price: float, old_price: float, deleted: bool, main_photo_id: int, photo_ids: List[int], url: str, dimension_width: int, dimension_height: int, dimension_length: int, weight: int, sku: str) -> Any:
-  '''Ads a new item to the market.'''
- def addAlbum(self, owner_id: int, title: str, photo_id: int, main_album: bool, is_hidden: bool) -> Any:
-  '''Creates new collection of items'''
- def addToAlbum(self, owner_id: int, item_ids: List[int], album_ids: List[int]) -> Any:
-  '''Adds an item to one or multiple collections.'''
- def createComment(self, owner_id: int, item_id: int, message: str, attachments: List[str], from_group: bool, reply_to_comment: int, sticker_id: int, guid: str) -> Any:
-  '''Creates a new comment for an item.'''
- def delete(self, owner_id: int, item_id: int) -> Any:
-  '''Deletes an item.'''
- def deleteAlbum(self, owner_id: int, album_id: int) -> Any:
-  '''Deletes a collection of items.'''
- def deleteComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Deletes an item's comment'''
- def edit(self, owner_id: int, item_id: int, name: str, description: str, category_id: int, price: float, deleted: bool, main_photo_id: int, photo_ids: List[int], url: str) -> Any:
-  '''Edits an item.'''
- def editAlbum(self, owner_id: int, album_id: int, title: str, photo_id: int, main_album: bool, is_hidden: bool) -> Any:
-  '''Edits a collection of items'''
- def editComment(self, owner_id: int, comment_id: int, message: str, attachments: List[str]) -> Any:
-  '''Chages item comment's text'''
- def editOrder(self, user_id: int, order_id: int, merchant_comment: str, status: int, track_number: str, payment_status: str, delivery_price: int, width: int, length: int, height: int, weight: int) -> Any:
-  '''Edit order'''
- def get(self, owner_id: int, offset: int, extended: bool, date_from: str, date_to: str, need_variants: bool, with_disabled: bool, album_id: int = 0, count: int = 100) -> Any:
-  '''Returns items list for a community.'''
- def getAlbumById(self, owner_id: int, album_ids: List[int]) -> Any:
-  '''Returns items album's data'''
- def getAlbums(self, owner_id: int, offset: int, count: int = 50) -> Any:
-  '''Returns community's market collections list.'''
- def getById(self, item_ids: List[str], extended: bool) -> Any:
-  '''Returns information about market items by their ids.'''
- def getCategories(self, offset: int, count: int = 10) -> Any:
-  '''Returns a list of market categories.'''
- def getComments(self, owner_id: int, item_id: int, need_likes: bool, start_comment_id: int, extended: bool, fields: Dict[str, Any], offset: int = 0, count: int = 20, sort: str = 'asc') -> Any:
-  '''Returns comments list for an item.'''
- def getGroupOrders(self, group_id: int, offset: int = 0, count: int = 10) -> Any:
-  '''Get market orders'''
- def getOrderById(self, user_id: int, order_id: int, extended: bool) -> Any:
-  '''Get order'''
- def getOrderItems(self, user_id: int, order_id: int, offset: int, count: int = 50) -> Any:
-  '''Get market items in the order'''
- def getOrders(self, extended: bool, date_from: str, date_to: str, offset: int = 0, count: int = 10) -> Any: ...
- def removeFromAlbum(self, owner_id: int, item_id: int, album_ids: List[int]) -> Any:
-  '''Removes an item from one or multiple collections.'''
- def reorderAlbums(self, owner_id: int, album_id: int, before: int, after: int) -> Any:
-  '''Reorders the collections list.'''
- def reorderItems(self, owner_id: int, album_id: int, item_id: int, before: int, after: int) -> Any:
-  '''Changes item place in a collection.'''
- def report(self, owner_id: int, item_id: int, reason: int = 0) -> Any:
-  '''Sends a complaint to the item.'''
- def reportComment(self, owner_id: int, comment_id: int, reason: int) -> Any:
-  '''Sends a complaint to the item's comment.'''
- def restore(self, owner_id: int, item_id: int) -> Any:
-  '''Restores recently deleted item'''
- def restoreComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Restores a recently deleted comment'''
- def search(self, owner_id: int, album_id: int, q: str, price_from: int, price_to: int, offset: int, status: List[int], need_variants: bool, sort: int = 0, rev: int = 1, count: int = 20, extended: bool = '0') -> Any:
-  '''Searches market items in a community's catalog'''
- def searchItems(self, q: str, category_id: int, price_from: int, price_to: int, offset: int = 0, count: int = 30, sort_by: int = 3, sort_direction: int = 1) -> Any: ...
+    async def add(self, *, owner_id: int, name: str, description: str, category_id: int, price: Optional[float] = None, old_price: Optional[float] = None, deleted: Optional[bool] = None, main_photo_id: Optional[int] = None, photo_ids: Optional[Union[List[int], str]] = None, url: Optional[str] = None, dimension_width: Optional[int] = None, dimension_height: Optional[int] = None, dimension_length: Optional[int] = None, weight: Optional[int] = None, sku: Optional[str] = None) -> 'responses.market_add_response':
+        '''Ads a new item to the market.'''
+
+    async def addAlbum(self, *, owner_id: int, title: str, photo_id: Optional[int] = None, main_album: Optional[bool] = None, is_hidden: Optional[bool] = None) -> 'responses.market_addAlbum_response':
+        '''Creates new collection of items'''
+
+    async def addToAlbum(self, *, owner_id: int, item_ids: Union[List[int], str], album_ids: Union[List[int], str]) -> 'responses.base_ok_response':
+        '''Adds an item to one or multiple collections.'''
+
+    async def createComment(self, *, owner_id: int, item_id: int, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, from_group: Optional[bool] = None, reply_to_comment: Optional[int] = None, sticker_id: Optional[int] = None, guid: Optional[str] = None) -> 'responses.market_createComment_response':
+        '''Creates a new comment for an item.'''
+
+    async def delete(self, *, owner_id: int, item_id: int) -> 'responses.base_ok_response':
+        '''Deletes an item.'''
+
+    async def deleteAlbum(self, *, owner_id: int, album_id: int) -> 'responses.base_ok_response':
+        '''Deletes a collection of items.'''
+
+    async def deleteComment(self, *, owner_id: int, comment_id: int) -> 'responses.market_deleteComment_response':
+        '''Deletes an item's comment'''
+
+    async def edit(self, *, owner_id: int, item_id: int, name: str, description: str, category_id: int, price: Optional[float] = None, deleted: Optional[bool] = None, main_photo_id: Optional[int] = None, photo_ids: Optional[Union[List[int], str]] = None, url: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Edits an item.'''
+
+    async def editAlbum(self, *, owner_id: int, album_id: int, title: str, photo_id: Optional[int] = None, main_album: Optional[bool] = None, is_hidden: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Edits a collection of items'''
+
+    async def editComment(self, *, owner_id: int, comment_id: int, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Chages item comment's text'''
+
+    async def editOrder(self, *, user_id: int, order_id: int, merchant_comment: Optional[str] = None, status: Optional[int] = None, track_number: Optional[str] = None, payment_status: Optional[Literal['not_paid', 'paid', 'returned']] = None, delivery_price: Optional[int] = None, width: Optional[int] = None, length: Optional[int] = None, height: Optional[int] = None, weight: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Edit order'''
+
+    async def get(self, *, owner_id: int, offset: Optional[int] = None, extended: Optional[bool] = None, date_from: Optional[str] = None, date_to: Optional[str] = None, need_variants: Optional[bool] = None, with_disabled: Optional[bool] = None, album_id: int = 0, count: int = 100) -> 'responses.market_get_response':
+        '''Returns items list for a community.'''
+
+    async def getAlbumById(self, *, owner_id: int, album_ids: Union[List[int], str]) -> 'responses.market_getAlbumById_response':
+        '''Returns items album's data'''
+
+    async def getAlbums(self, *, owner_id: int, offset: Optional[int] = None, count: int = 50) -> 'responses.market_getAlbums_response':
+        '''Returns community's market collections list.'''
+
+    async def getById(self, *, item_ids: Union[List[str], str], extended: Optional[bool] = None) -> 'responses.market_getById_response':
+        '''Returns information about market items by their ids.'''
+
+    async def getCategories(self, *, offset: Optional[int] = None, count: int = 10) -> 'responses.market_getCategories_response':
+        '''Returns a list of market categories.'''
+
+    async def getComments(self, *, owner_id: int, item_id: int, need_likes: Optional[bool] = None, start_comment_id: Optional[int] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, offset: int = 0, count: int = 20, sort: Literal['asc', 'desc'] = 'asc') -> 'responses.market_getComments_response':
+        '''Returns comments list for an item.'''
+
+    async def getGroupOrders(self, *, group_id: int, offset: int = 0, count: int = 10) -> 'responses.market_getGroupOrders_response':
+        '''Get market orders'''
+
+    async def getOrderById(self, *, order_id: int, user_id: Optional[int] = None, extended: Optional[bool] = None) -> 'responses.market_getOrderById_response':
+        '''Get order'''
+
+    async def getOrderItems(self, *, order_id: int, user_id: Optional[int] = None, offset: Optional[int] = None, count: int = 50) -> 'responses.market_getOrderItems_response':
+        '''Get market items in the order'''
+
+    async def getOrders(self, *, extended: Optional[bool] = None, date_from: Optional[str] = None, date_to: Optional[str] = None, offset: int = 0, count: int = 10) -> 'responses.market_getOrders_response': ...
+
+    async def removeFromAlbum(self, *, owner_id: int, item_id: int, album_ids: Union[List[int], str]) -> 'responses.base_ok_response':
+        '''Removes an item from one or multiple collections.'''
+
+    async def reorderAlbums(self, *, owner_id: int, album_id: int, before: Optional[int] = None, after: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Reorders the collections list.'''
+
+    async def reorderItems(self, *, owner_id: int, item_id: int, album_id: Optional[int] = None, before: Optional[int] = None, after: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Changes item place in a collection.'''
+
+    async def report(self, *, owner_id: int, item_id: int, reason: Literal[0, 1, 2, 3, 4, 5, 6] = 0) -> 'responses.base_ok_response':
+        '''Sends a complaint to the item.'''
+
+    async def reportComment(self, *, owner_id: int, comment_id: int, reason: Literal[0, 1, 2, 3, 4, 5, 6]) -> 'responses.base_ok_response':
+        '''Sends a complaint to the item's comment.'''
+
+    async def restore(self, *, owner_id: int, item_id: int) -> 'responses.base_ok_response':
+        '''Restores recently deleted item'''
+
+    async def restoreComment(self, *, owner_id: int, comment_id: int) -> 'responses.market_restoreComment_response':
+        '''Restores a recently deleted comment'''
+
+    async def search(self, *, owner_id: int, album_id: Optional[int] = None, q: Optional[str] = None, price_from: Optional[int] = None, price_to: Optional[int] = None, offset: Optional[int] = None, status: Optional[Union[List[int], str]] = None, need_variants: Optional[bool] = None, sort: Literal[0, 1, 2, 3] = 0, rev: Literal[0, 1] = 1, count: int = 20, extended: bool = '0') -> 'responses.market_search_response':
+        '''Searches market items in a community's catalog'''
+
+    async def searchItems(self, *, q: str, category_id: Optional[int] = None, price_from: Optional[int] = None, price_to: Optional[int] = None, offset: int = 0, count: int = 30, sort_by: Literal[1, 2, 3] = 3, sort_direction: Literal[0, 1] = 1) -> 'responses.market_search_response': ...
 
 class messages:
- def addChatUser(self, chat_id: int, user_id: int, visible_messages_count: int) -> Any:
-  '''Adds a new user to a chat.'''
- def allowMessagesFromGroup(self, group_id: int, key: str) -> Any:
-  '''Allows sending messages from community to the current user.'''
- def createChat(self, user_ids: List[int], title: str, group_id: int) -> Any:
-  '''Creates a chat with several participants.'''
- def delete(self, message_ids: List[int], spam: bool, group_id: int, peer_id: int, cmids: List[int], delete_for_all: bool = False) -> Any:
-  '''Deletes one or more messages.'''
- def deleteChatPhoto(self, chat_id: int, group_id: int) -> Any:
-  '''Deletes a chat's cover picture.'''
- def deleteConversation(self, user_id: int, peer_id: int, group_id: int) -> Any:
-  '''Deletes all private messages in a conversation.'''
- def denyMessagesFromGroup(self, group_id: int) -> Any:
-  '''Denies sending message from community to the current user.'''
- def edit(self, peer_id: int, message: str, lat: float, long: float, attachment: str, keep_forward_messages: bool, keep_snippets: bool, group_id: int, message_id: int, conversation_message_id: int, template: str, keyboard: str, dont_parse_links: bool = False, disable_mentions: bool = False) -> Any:
-  '''Edits the message.'''
- def editChat(self, chat_id: int, title: str) -> Any:
-  '''Edits the title of a chat.'''
- def getByConversationMessageId(self, peer_id: int, conversation_message_ids: List[int], extended: bool, fields: Dict[str, Any], group_id: int) -> Any:
-  '''Returns messages by their IDs within the conversation.'''
- def getById(self, message_ids: List[int], extended: bool, fields: Dict[str, Any], group_id: int, preview_length: int = 0) -> Any:
-  '''Returns messages by their IDs.'''
- def getChatPreview(self, peer_id: int, link: str, fields: Dict[str, Any]) -> Any: ...
- def getConversationMembers(self, peer_id: int, fields: Dict[str, Any], group_id: int) -> Any:
-  '''Returns a list of IDs of users participating in a chat.'''
- def getConversations(self, extended: bool, start_message_id: int, fields: Dict[str, Any], group_id: int, offset: int = 0, count: int = 20, filter: str = 'all') -> Any:
-  '''Returns a list of the current user's conversations.'''
- def getConversationsById(self, peer_ids: List[int], extended: bool, fields: Dict[str, Any], group_id: int) -> Any:
-  '''Returns conversations by their IDs'''
- def getHistory(self, offset: int, user_id: int, peer_id: int, start_message_id: int, rev: int, extended: bool, fields: Dict[str, Any], group_id: int, count: int = 20) -> Any:
-  '''Returns message history for the specified user or group chat.'''
- def getHistoryAttachments(self, peer_id: int, start_from: str, photo_sizes: bool, fields: Dict[str, Any], group_id: int, preserve_order: bool, media_type: str = 'photo', count: int = 30, max_forwards_level: int = 45) -> Any:
-  '''Returns media files from the dialog or group chat.'''
- def getImportantMessages(self, offset: int, start_message_id: int, preview_length: int, fields: Dict[str, Any], extended: bool, group_id: int, count: int = 20) -> Any:
-  '''Returns a list of user's important messages.'''
- def getIntentUsers(self, intent: str, subscribe_id: int, extended: bool, name_case: List[str], fields: List[str], offset: int = 0, count: int = 20) -> Any: ...
- def getInviteLink(self, peer_id: int, group_id: int, reset: bool = False) -> Any: ...
- def getLastActivity(self, user_id: int) -> Any:
-  '''Returns a user's current status and date of last activity.'''
- def getLongPollHistory(self, ts: int, pts: int, preview_length: int, onlines: bool, fields: Dict[str, Any], max_msg_id: int, group_id: int, lp_version: int, credentials: bool, events_limit: int = 1000, msgs_limit: int = 200, last_n: int = 0) -> Any:
-  '''Returns updates in user's private messages.'''
- def getLongPollServer(self, need_pts: bool, group_id: int, lp_version: int = 0) -> Any:
-  '''Returns data required for connection to a Long Poll server.'''
- def isMessagesFromGroupAllowed(self, group_id: int, user_id: int) -> Any:
-  '''Returns information whether sending messages from the community to current user is allowed.'''
- def joinChatByInviteLink(self, link: str) -> Any: ...
- def markAsAnsweredConversation(self, peer_id: int, group_id: int, answered: bool = 1) -> Any:
-  '''Marks and unmarks conversations as unanswered.'''
- def markAsImportant(self, message_ids: List[int], important: int) -> Any:
-  '''Marks and unmarks messages as important (starred).'''
- def markAsImportantConversation(self, peer_id: int, group_id: int, important: bool = 1) -> Any:
-  '''Marks and unmarks conversations as important.'''
- def markAsRead(self, message_ids: List[int], peer_id: int, start_message_id: int, group_id: int, mark_conversation_as_read: bool) -> Any:
-  '''Marks messages as read.'''
- def pin(self, peer_id: int, message_id: int, conversation_message_id: int) -> Any:
-  '''Pin a message.'''
- def removeChatUser(self, chat_id: int, user_id: int, member_id: int) -> Any:
-  '''Allows the current user to leave a chat or, if the current user started the chat, allows the user to remove another user from the chat.'''
- def restore(self, message_id: int, group_id: int) -> Any:
-  '''Restores a deleted message.'''
- def search(self, q: str, peer_id: int, date: int, extended: bool, fields: List[str], group_id: int, preview_length: int = 0, offset: int = 0, count: int = 20) -> Any:
-  '''Returns a list of the current user's private messages that match search criteria.'''
- def searchConversations(self, q: str, extended: bool, fields: Dict[str, Any], group_id: int, count: int = 20) -> Any:
-  '''Returns a list of the current user's conversations that match search criteria.'''
- def send(self, user_id: int, random_id: int, peer_id: int, peer_ids: List[int], domain: str, chat_id: int, user_ids: List[int], message: str, lat: float, long: float, attachment: str, reply_to: int, forward_messages: List[int], forward: str, sticker_id: int, group_id: int, keyboard: str, template: str, payload: str, content_source: str, subscribe_id: int, dont_parse_links: bool = False, disable_mentions: bool = False, intent: str = 'default') -> Any:
-  '''Sends a message.'''
- def sendMessageEventAnswer(self, event_id: str, user_id: int, peer_id: int, event_data: str) -> Any: ...
- def setActivity(self, user_id: int, type: str, peer_id: int, group_id: int) -> Any:
-  '''Changes the status of a user as typing in a conversation.'''
- def setChatPhoto(self, file: str) -> Any:
-  '''Sets a previously-uploaded picture as the cover picture of a chat.'''
- def unpin(self, peer_id: int, group_id: int) -> Any: ...
+    async def addChatUser(self, *, chat_id: int, user_id: Optional[int] = None, visible_messages_count: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Adds a new user to a chat.'''
+
+    async def allowMessagesFromGroup(self, *, group_id: int, key: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Allows sending messages from community to the current user.'''
+
+    async def createChat(self, *, user_ids: Optional[Union[List[int], str]] = None, title: Optional[str] = None, group_id: Optional[int] = None) -> 'responses.messages_createChat_response':
+        '''Creates a chat with several participants.'''
+
+    async def delete(self, *, message_ids: Optional[Union[List[int], str]] = None, spam: Optional[bool] = None, group_id: Optional[int] = None, peer_id: Optional[int] = None, cmids: Optional[Union[List[int], str]] = None, delete_for_all: bool = False) -> 'responses.messages_delete_response':
+        '''Deletes one or more messages.'''
+
+    async def deleteChatPhoto(self, *, chat_id: int, group_id: Optional[int] = None) -> 'responses.messages_deleteChatPhoto_response':
+        '''Deletes a chat's cover picture.'''
+
+    async def deleteConversation(self, *, user_id: Optional[int] = None, peer_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.messages_deleteConversation_response':
+        '''Deletes all private messages in a conversation.'''
+
+    async def denyMessagesFromGroup(self, *, group_id: int) -> 'responses.base_ok_response':
+        '''Denies sending message from community to the current user.'''
+
+    async def edit(self, *, peer_id: int, message: Optional[str] = None, lat: Optional[float] = None, long: Optional[float] = None, attachment: Optional[str] = None, keep_forward_messages: Optional[bool] = None, keep_snippets: Optional[bool] = None, group_id: Optional[int] = None, message_id: Optional[int] = None, conversation_message_id: Optional[int] = None, template: Optional[str] = None, keyboard: Optional[str] = None, dont_parse_links: bool = False, disable_mentions: bool = False) -> 'responses.messages_edit_response':
+        '''Edits the message.'''
+
+    async def editChat(self, *, chat_id: int, title: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Edits the title of a chat.'''
+
+    async def getByConversationMessageId(self, *, peer_id: int, conversation_message_ids: Union[List[int], str], extended: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, group_id: Optional[int] = None) -> 'responses.messages_getByConversationMessageId_response':
+        '''Returns messages by their IDs within the conversation.'''
+
+    async def getById(self, *, message_ids: Union[List[int], str], extended: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, group_id: Optional[int] = None, preview_length: int = 0) -> 'responses.messages_getById_response':
+        '''Returns messages by their IDs.'''
+
+    async def getChatPreview(self, *, peer_id: Optional[int] = None, link: Optional[str] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None) -> 'responses.messages_getChatPreview_response': ...
+
+    async def getConversationMembers(self, *, peer_id: int, fields: Optional[Union[List['objects.users_fields'], str]] = None, group_id: Optional[int] = None) -> 'responses.messages_getConversationMembers_response':
+        '''Returns a list of IDs of users participating in a chat.'''
+
+    async def getConversations(self, *, extended: Optional[bool] = None, start_message_id: Optional[int] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, group_id: Optional[int] = None, offset: int = 0, count: int = 20, filter: Literal['all', 'archive', 'important', 'unanswered', 'unread'] = 'all') -> 'responses.messages_getConversations_response':
+        '''Returns a list of the current user's conversations.'''
+
+    async def getConversationsById(self, *, peer_ids: Union[List[int], str], extended: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, group_id: Optional[int] = None) -> 'responses.messages_getConversationsById_response':
+        '''Returns conversations by their IDs'''
+
+    async def getHistory(self, *, offset: Optional[int] = None, user_id: Optional[int] = None, peer_id: Optional[int] = None, start_message_id: Optional[int] = None, rev: Optional[Literal[1, 0]] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, group_id: Optional[int] = None, count: int = 20) -> 'responses.messages_getHistory_response':
+        '''Returns message history for the specified user or group chat.'''
+
+    async def getHistoryAttachments(self, *, peer_id: int, start_from: Optional[str] = None, photo_sizes: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, group_id: Optional[int] = None, preserve_order: Optional[bool] = None, media_type: Literal['audio', 'audio_message', 'doc', 'graffiti', 'link', 'market', 'photo', 'share', 'video', 'wall'] = 'photo', count: int = 30, max_forwards_level: int = 45) -> 'responses.messages_getHistoryAttachments_response':
+        '''Returns media files from the dialog or group chat.'''
+
+    async def getImportantMessages(self, *, offset: Optional[int] = None, start_message_id: Optional[int] = None, preview_length: Optional[int] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, extended: Optional[bool] = None, group_id: Optional[int] = None, count: int = 20) -> 'responses.messages_getImportantMessages_response':
+        '''Returns a list of user's important messages.'''
+
+    async def getIntentUsers(self, *, intent: Literal['confirmed_notification', 'non_promo_newsletter', 'promo_newsletter'], subscribe_id: Optional[int] = None, extended: Optional[bool] = None, name_case: Optional[Union[List[str], str]] = None, fields: Optional[Union[List[str], str]] = None, offset: int = 0, count: int = 20) -> 'responses.messages_getIntentUsers_response': ...
+
+    async def getInviteLink(self, *, peer_id: int, group_id: Optional[int] = None, reset: bool = False) -> 'responses.messages_getInviteLink_response': ...
+
+    async def getLastActivity(self, *, user_id: int) -> 'responses.messages_getLastActivity_response':
+        '''Returns a user's current status and date of last activity.'''
+
+    async def getLongPollHistory(self, *, ts: Optional[int] = None, pts: Optional[int] = None, preview_length: Optional[int] = None, onlines: Optional[bool] = None, max_msg_id: Optional[int] = None, group_id: Optional[int] = None, lp_version: Optional[int] = None, credentials: Optional[bool] = None, fields: List['objects.users_fields'] = 'photo,photo_medium_rec,sex,online,screen_name', events_limit: int = 1000, msgs_limit: int = 200, last_n: int = 0) -> 'responses.messages_getLongPollHistory_response':
+        '''Returns updates in user's private messages.'''
+
+    async def getLongPollServer(self, *, need_pts: Optional[bool] = None, group_id: Optional[int] = None, lp_version: int = 0) -> 'responses.messages_getLongPollServer_response':
+        '''Returns data required for connection to a Long Poll server.'''
+
+    async def isMessagesFromGroupAllowed(self, *, group_id: int, user_id: int) -> 'responses.messages_isMessagesFromGroupAllowed_response':
+        '''Returns information whether sending messages from the community to current user is allowed.'''
+
+    async def joinChatByInviteLink(self, *, link: str) -> 'responses.messages_joinChatByInviteLink_response': ...
+
+    async def markAsAnsweredConversation(self, *, peer_id: int, group_id: Optional[int] = None, answered: bool = 1) -> 'responses.base_ok_response':
+        '''Marks and unmarks conversations as unanswered.'''
+
+    async def markAsImportant(self, *, important: Optional[int] = None, message_ids: List[int] = []) -> 'responses.messages_markAsImportant_response':
+        '''Marks and unmarks messages as important (starred).'''
+
+    async def markAsImportantConversation(self, *, peer_id: int, group_id: Optional[int] = None, important: bool = 1) -> 'responses.base_ok_response':
+        '''Marks and unmarks conversations as important.'''
+
+    async def markAsRead(self, *, peer_id: Optional[int] = None, start_message_id: Optional[int] = None, group_id: Optional[int] = None, mark_conversation_as_read: Optional[bool] = None, message_ids: List[int] = []) -> 'responses.base_ok_response':
+        '''Marks messages as read.'''
+
+    async def pin(self, *, peer_id: int, message_id: Optional[int] = None, conversation_message_id: Optional[int] = None) -> 'responses.messages_pin_response':
+        '''Pin a message.'''
+
+    async def removeChatUser(self, *, chat_id: int, user_id: Optional[int] = None, member_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Allows the current user to leave a chat or, if the current user started the chat, allows the user to remove another user from the chat.'''
+
+    async def restore(self, *, message_id: int, group_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Restores a deleted message.'''
+
+    async def search(self, *, q: Optional[str] = None, peer_id: Optional[int] = None, date: Optional[int] = None, extended: Optional[bool] = None, fields: Optional[Union[List[str], str]] = None, group_id: Optional[int] = None, preview_length: int = 0, offset: int = 0, count: int = 20) -> 'responses.messages_search_response':
+        '''Returns a list of the current user's private messages that match search criteria.'''
+
+    async def searchConversations(self, *, q: Optional[str] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, group_id: Optional[int] = None, count: int = 20) -> 'responses.messages_searchConversations_response':
+        '''Returns a list of the current user's conversations that match search criteria.'''
+
+    async def send(self, *, user_id: Optional[int] = None, random_id: Optional[int] = None, peer_id: Optional[int] = None, peer_ids: Optional[Union[List[int], str]] = None, domain: Optional[str] = None, chat_id: Optional[int] = None, user_ids: Optional[Union[List[int], str]] = None, message: Optional[str] = None, lat: Optional[float] = None, long: Optional[float] = None, attachment: Optional[str] = None, reply_to: Optional[int] = None, forward_messages: Optional[Union[List[int], str]] = None, forward: Optional['objects.messages_forward'] = None, sticker_id: Optional[int] = None, group_id: Optional[int] = None, keyboard: Optional['objects.messages_keyboard'] = None, template: Optional[str] = None, payload: Optional[str] = None, content_source: Optional[str] = None, subscribe_id: Optional[int] = None, dont_parse_links: bool = False, disable_mentions: bool = False, intent: Literal['account_update', 'bot_ad_invite', 'bot_ad_promo', 'confirmed_notification', 'customer_support', 'default', 'game_notification', 'moderated_newsletter', 'non_promo_newsletter', 'promo_newsletter', 'purchase_update'] = 'default') -> 'responses.messages_send_response':
+        '''Sends a message.'''
+
+    async def sendMessageEventAnswer(self, *, event_id: str, user_id: int, peer_id: int, event_data: Optional[str] = None) -> 'responses.base_ok_response': ...
+
+    async def setActivity(self, *, user_id: Optional[int] = None, type: Optional[Literal['audiomessage', 'file', 'photo', 'typing', 'video']] = None, peer_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Changes the status of a user as typing in a conversation.'''
+
+    async def setChatPhoto(self, *, file: str) -> 'responses.messages_setChatPhoto_response':
+        '''Sets a previously-uploaded picture as the cover picture of a chat.'''
+
+    async def unpin(self, *, peer_id: int, group_id: Optional[int] = None) -> 'responses.base_ok_response': ...
 
 class newsfeed:
- def addBan(self, user_ids: List[int], group_ids: List[int]) -> Any:
-  '''Prevents news from specified users and communities from appearing in the current user's newsfeed.'''
- def deleteBan(self, user_ids: List[int], group_ids: List[int]) -> Any:
-  '''Allows news from previously banned users and communities to be shown in the current user's newsfeed.'''
- def deleteList(self, list_id: int) -> Any: ...
- def get(self, filters: Dict[str, Any], return_banned: bool, start_time: int, end_time: int, max_photos: int, source_ids: str, start_from: str, count: int, fields: Dict[str, Any], section: str) -> Any:
-  '''Returns data required to show newsfeed for the current user.'''
- def getBanned(self, extended: bool, fields: Dict[str, Any], name_case: str) -> Any:
-  '''Returns a list of users and communities banned from the current user's newsfeed.'''
- def getComments(self, filters: Dict[str, Any], reposts: str, start_time: int, end_time: int, start_from: str, fields: Dict[str, Any], count: int = 30, last_comments_count: int = 0) -> Any:
-  '''Returns a list of comments in the current user's newsfeed.'''
- def getLists(self, list_ids: List[int], extended: bool = 0) -> Any:
-  '''Returns a list of newsfeeds followed by the current user.'''
- def getMentions(self, owner_id: int, start_time: int, end_time: int, offset: int, count: int = 20) -> Any:
-  '''Returns a list of posts on user walls in which the current user is mentioned.'''
- def getRecommended(self, start_time: int, end_time: int, max_photos: int, start_from: str, count: int, fields: Dict[str, Any]) -> Any:
-  ''', Returns a list of newsfeeds recommended to the current user.'''
- def getSuggestedSources(self, offset: int, shuffle: bool, fields: Dict[str, Any], count: int = 20) -> Any:
-  '''Returns communities and users that current user is suggested to follow.'''
- def ignoreItem(self, type: str, owner_id: int = 0, item_id: int = 0) -> Any:
-  '''Hides an item from the newsfeed.'''
- def saveList(self, list_id: int, title: str, source_ids: List[int], no_reposts: bool) -> Any:
-  '''Creates and edits user newsfeed lists'''
- def search(self, q: str, extended: bool, latitude: float, longitude: float, start_time: int, end_time: int, start_from: str, fields: Dict[str, Any], count: int = 30) -> Any:
-  '''Returns search results by statuses.'''
- def unignoreItem(self, type: str, owner_id: int, item_id: int, track_code: str) -> Any:
-  '''Returns a hidden item to the newsfeed.'''
- def unsubscribe(self, type: str, owner_id: int, item_id: int) -> Any:
-  '''Unsubscribes the current user from specified newsfeeds.'''
+    async def addBan(self, *, user_ids: Optional[Union[List[int], str]] = None, group_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response':
+        '''Prevents news from specified users and communities from appearing in the current user's newsfeed.'''
+
+    async def deleteBan(self, *, user_ids: Optional[Union[List[int], str]] = None, group_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response':
+        '''Allows news from previously banned users and communities to be shown in the current user's newsfeed.'''
+
+    async def deleteList(self, *, list_id: int) -> 'responses.base_ok_response': ...
+
+    async def get(self, *, filters: Optional[Union[List['objects.newsfeed_newsfeed_item_type'], str]] = None, return_banned: Optional[bool] = None, start_time: Optional[int] = None, end_time: Optional[int] = None, max_photos: Optional[int] = None, source_ids: Optional[str] = None, start_from: Optional[str] = None, count: Optional[int] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, section: Optional[str] = None) -> 'responses.newsfeed_get_response':
+        '''Returns data required to show newsfeed for the current user.'''
+
+    async def getBanned(self, *, extended: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None) -> 'responses.newsfeed_getBanned_response':
+        '''Returns a list of users and communities banned from the current user's newsfeed.'''
+
+    async def getComments(self, *, filters: Optional[Union[List['objects.newsfeed_comments_filters'], str]] = None, reposts: Optional[str] = None, start_time: Optional[int] = None, end_time: Optional[int] = None, start_from: Optional[str] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, count: int = 30, last_comments_count: int = 0) -> 'responses.newsfeed_getComments_response':
+        '''Returns a list of comments in the current user's newsfeed.'''
+
+    async def getLists(self, *, list_ids: Optional[Union[List[int], str]] = None, extended: bool = 0) -> 'responses.newsfeed_getLists_response':
+        '''Returns a list of newsfeeds followed by the current user.'''
+
+    async def getMentions(self, *, owner_id: Optional[int] = None, start_time: Optional[int] = None, end_time: Optional[int] = None, offset: Optional[int] = None, count: int = 20) -> 'responses.newsfeed_getMentions_response':
+        '''Returns a list of posts on user walls in which the current user is mentioned.'''
+
+    async def getRecommended(self, *, start_time: Optional[int] = None, end_time: Optional[int] = None, max_photos: Optional[int] = None, start_from: Optional[str] = None, count: Optional[int] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None) -> 'responses.newsfeed_getRecommended_response':
+        ''', Returns a list of newsfeeds recommended to the current user.'''
+
+    async def getSuggestedSources(self, *, offset: Optional[int] = None, shuffle: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, count: int = 20) -> 'responses.newsfeed_getSuggestedSources_response':
+        '''Returns communities and users that current user is suggested to follow.'''
+
+    async def ignoreItem(self, *, type: 'objects.newsfeed_ignore_item_type', owner_id: int = 0, item_id: int = 0) -> 'responses.base_ok_response':
+        '''Hides an item from the newsfeed.'''
+
+    async def saveList(self, *, title: str, list_id: Optional[int] = None, source_ids: Optional[Union[List[int], str]] = None, no_reposts: Optional[bool] = None) -> 'responses.newsfeed_saveList_response':
+        '''Creates and edits user newsfeed lists'''
+
+    async def search(self, *, q: Optional[str] = None, extended: Optional[bool] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, start_time: Optional[int] = None, end_time: Optional[int] = None, start_from: Optional[str] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, count: int = 30) -> 'responses.newsfeed_search_response':
+        '''Returns search results by statuses.'''
+
+    async def unignoreItem(self, *, type: 'objects.newsfeed_ignore_item_type', owner_id: int, item_id: int, track_code: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Returns a hidden item to the newsfeed.'''
+
+    async def unsubscribe(self, *, type: Literal['note', 'photo', 'post', 'topic', 'video'], item_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Unsubscribes the current user from specified newsfeeds.'''
 
 class notes:
- def add(self, title: str, text: str, privacy_view: List[str], privacy_comment: List[str]) -> Any:
-  '''Creates a new note for the current user.'''
- def createComment(self, note_id: int, owner_id: int, reply_to: int, message: str, guid: str) -> Any:
-  '''Adds a new comment on a note.'''
- def delete(self, note_id: int) -> Any:
-  '''Deletes a note of the current user.'''
- def deleteComment(self, comment_id: int, owner_id: int) -> Any:
-  '''Deletes a comment on a note.'''
- def edit(self, note_id: int, title: str, text: str, privacy_view: List[str], privacy_comment: List[str]) -> Any:
-  '''Edits a note of the current user.'''
- def editComment(self, comment_id: int, owner_id: int, message: str) -> Any:
-  '''Edits a comment on a note.'''
- def get(self, note_ids: List[int], user_id: int, offset: int = 0, count: int = 20, sort: int = 0) -> Any:
-  '''Returns a list of notes created by a user.'''
- def getById(self, note_id: int, owner_id: int, need_wiki: bool = 0) -> Any:
-  '''Returns a note by its ID.'''
- def getComments(self, note_id: int, owner_id: int, sort: int = 0, offset: int = 0, count: int = 20) -> Any:
-  '''Returns a list of comments on a note.'''
- def restoreComment(self, comment_id: int, owner_id: int) -> Any:
-  '''Restores a deleted comment on a note.'''
+    async def add(self, *, title: str, text: str, privacy_view: List[str] = 'all', privacy_comment: List[str] = 'all') -> 'responses.notes_add_response':
+        '''Creates a new note for the current user.'''
+
+    async def createComment(self, *, note_id: int, message: str, owner_id: Optional[int] = None, reply_to: Optional[int] = None, guid: Optional[str] = None) -> 'responses.notes_createComment_response':
+        '''Adds a new comment on a note.'''
+
+    async def delete(self, *, note_id: int) -> 'responses.base_ok_response':
+        '''Deletes a note of the current user.'''
+
+    async def deleteComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a comment on a note.'''
+
+    async def edit(self, *, note_id: int, title: str, text: str, privacy_view: List[str] = 'all', privacy_comment: List[str] = 'all') -> 'responses.base_ok_response':
+        '''Edits a note of the current user.'''
+
+    async def editComment(self, *, comment_id: int, message: str, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Edits a comment on a note.'''
+
+    async def get(self, *, note_ids: Optional[Union[List[int], str]] = None, user_id: Optional[int] = None, offset: int = 0, count: int = 20, sort: Literal[0, 1] = 0) -> 'responses.notes_get_response':
+        '''Returns a list of notes created by a user.'''
+
+    async def getById(self, *, note_id: int, owner_id: Optional[int] = None, need_wiki: bool = 0) -> 'responses.notes_getById_response':
+        '''Returns a note by its ID.'''
+
+    async def getComments(self, *, note_id: int, owner_id: Optional[int] = None, sort: Literal[0, 1] = 0, offset: int = 0, count: int = 20) -> 'responses.notes_getComments_response':
+        '''Returns a list of comments on a note.'''
+
+    async def restoreComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Restores a deleted comment on a note.'''
 
 class notifications:
- def get(self, start_from: str, filters: List[str], start_time: int, end_time: int, count: int = 30) -> Any:
-  '''Returns a list of notifications about other users' feedback to the current user's wall posts.'''
- def markAsViewed(self) -> Any:
-  '''Resets the counter of new notifications about other users' feedback to the current user's wall posts.'''
- def sendMessage(self, user_ids: List[int], message: str, fragment: str, group_id: int, random_id: int, sending_mode: str = 'immediately') -> Any: ...
+    filters_enum = Literal['wall', 'mentions', 'comments', 'likes', 'reposted', 'followers', 'friends']
+    async def get(self, *, start_from: Optional[str] = None, filters: Optional[filters_enum] = None, start_time: Optional[int] = None, end_time: Optional[int] = None, count: int = 30) -> 'responses.notifications_get_response':
+        '''Returns a list of notifications about other users' feedback to the current user's wall posts.'''
+
+    async def markAsViewed(self) -> 'responses.notifications_markAsViewed_response':
+        '''Resets the counter of new notifications about other users' feedback to the current user's wall posts.'''
+
+    async def sendMessage(self, *, user_ids: Union[List[int], str], message: str, fragment: Optional[str] = None, group_id: Optional[int] = None, random_id: Optional[int] = None, sending_mode: Literal['delayed', 'delayed_push', 'immediately'] = 'immediately') -> 'responses.notifications_sendMessage_response': ...
 
 class orders:
- def cancelSubscription(self, user_id: int, subscription_id: int, pending_cancel: bool = 0) -> Any: ...
- def changeState(self, order_id: int, action: str, app_order_id: int, test_mode: bool) -> Any:
-  '''Changes order status.'''
- def get(self, test_mode: bool, offset: int = 0, count: int = 100) -> Any:
-  '''Returns a list of orders.'''
- def getAmount(self, user_id: int, votes: List[str]) -> Any: ...
- def getById(self, order_id: int, order_ids: List[int], test_mode: bool) -> Any:
-  '''Returns information about orders by their IDs.'''
- def getUserSubscriptionById(self, user_id: int, subscription_id: int) -> Any: ...
- def getUserSubscriptions(self, user_id: int) -> Any: ...
- def updateSubscription(self, user_id: int, subscription_id: int, price: int) -> Any: ...
+    async def cancelSubscription(self, *, user_id: int, subscription_id: int, pending_cancel: bool = 0) -> 'responses.orders_cancelSubscription_response': ...
+
+    async def changeState(self, *, order_id: int, action: Literal['cancel', 'charge', 'refund'], app_order_id: Optional[int] = None, test_mode: Optional[bool] = None) -> 'responses.orders_changeState_response':
+        '''Changes order status.'''
+
+    async def get(self, *, test_mode: Optional[bool] = None, offset: int = 0, count: int = 100) -> 'responses.orders_get_response':
+        '''Returns a list of orders.'''
+
+    async def getAmount(self, *, user_id: int, votes: Union[List[str], str]) -> 'responses.orders_getAmount_response': ...
+
+    async def getById(self, *, order_id: Optional[int] = None, order_ids: Optional[Union[List[int], str]] = None, test_mode: Optional[bool] = None) -> 'responses.orders_getById_response':
+        '''Returns information about orders by their IDs.'''
+
+    async def getUserSubscriptionById(self, *, user_id: int, subscription_id: int) -> 'responses.orders_getUserSubscriptionById_response': ...
+
+    async def getUserSubscriptions(self, *, user_id: int) -> 'responses.orders_getUserSubscriptions_response': ...
+
+    async def updateSubscription(self, *, user_id: int, subscription_id: int, price: int) -> 'responses.orders_updateSubscription_response': ...
 
 class pages:
- def clearCache(self, url: str) -> Any:
-  '''Allows to clear the cache of particular 'external' pages which may be attached to VK posts.'''
- def get(self, owner_id: int, page_id: int, site_preview: bool, title: str, need_source: bool, need_html: bool) -> Any:
-  '''Returns information about a wiki page.'''
- def getHistory(self, page_id: int, group_id: int, user_id: int) -> Any:
-  '''Returns a list of all previous versions of a wiki page.'''
- def getTitles(self, group_id: int) -> Any:
-  '''Returns a list of wiki pages in a group.'''
- def getVersion(self, version_id: int, group_id: int, user_id: int, need_html: bool) -> Any:
-  '''Returns the text of one of the previous versions of a wiki page.'''
- def parseWiki(self, text: str, group_id: int) -> Any:
-  '''Returns HTML representation of the wiki markup.'''
- def save(self, text: str, page_id: int, group_id: int, user_id: int, title: str) -> Any:
-  '''Saves the text of a wiki page.'''
- def saveAccess(self, page_id: int, group_id: int, user_id: int, view: int, edit: int) -> Any:
-  '''Saves modified read and edit access settings for a wiki page.'''
+    async def clearCache(self, *, url: str) -> 'responses.base_ok_response':
+        '''Allows to clear the cache of particular 'external' pages which may be attached to VK posts.'''
+
+    async def get(self, *, owner_id: Optional[int] = None, page_id: Optional[int] = None, site_preview: Optional[bool] = None, title: Optional[str] = None, need_source: Optional[bool] = None, need_html: Optional[bool] = None) -> 'responses.pages_get_response':
+        '''Returns information about a wiki page.'''
+
+    async def getHistory(self, *, page_id: int, group_id: Optional[int] = None, user_id: Optional[int] = None) -> 'responses.pages_getHistory_response':
+        '''Returns a list of all previous versions of a wiki page.'''
+
+    async def getTitles(self, *, group_id: Optional[int] = None) -> 'responses.pages_getTitles_response':
+        '''Returns a list of wiki pages in a group.'''
+
+    async def getVersion(self, *, version_id: int, group_id: Optional[int] = None, user_id: Optional[int] = None, need_html: Optional[bool] = None) -> 'responses.pages_getVersion_response':
+        '''Returns the text of one of the previous versions of a wiki page.'''
+
+    async def parseWiki(self, *, text: str, group_id: Optional[int] = None) -> 'responses.pages_parseWiki_response':
+        '''Returns HTML representation of the wiki markup.'''
+
+    async def save(self, *, text: Optional[str] = None, page_id: Optional[int] = None, group_id: Optional[int] = None, user_id: Optional[int] = None, title: Optional[str] = None) -> 'responses.pages_save_response':
+        '''Saves the text of a wiki page.'''
+
+    async def saveAccess(self, *, page_id: int, group_id: Optional[int] = None, user_id: Optional[int] = None, view: Optional[Literal[0, 1, 2]] = None, edit: Optional[Literal[0, 1, 2]] = None) -> 'responses.pages_saveAccess_response':
+        '''Saves modified read and edit access settings for a wiki page.'''
 
 class photos:
- def confirmTag(self, owner_id: int, photo_id: str, tag_id: int) -> Any:
-  '''Confirms a tag on a photo.'''
- def copy(self, owner_id: int, photo_id: int, access_key: str) -> Any:
-  '''Allows to copy a photo to the "Saved photos" album'''
- def createAlbum(self, title: str, group_id: int, description: str, privacy_view: List[str], privacy_comment: List[str], upload_by_admins_only: bool, comments_disabled: bool) -> Any:
-  '''Creates an empty photo album.'''
- def createComment(self, owner_id: int, photo_id: int, message: str, attachments: List[str], from_group: bool, reply_to_comment: int, sticker_id: int, access_key: str, guid: str) -> Any:
-  '''Adds a new comment on the photo.'''
- def delete(self, owner_id: int, photo_id: int) -> Any:
-  '''Deletes a photo.'''
- def deleteAlbum(self, album_id: int, group_id: int) -> Any:
-  '''Deletes a photo album belonging to the current user.'''
- def deleteComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Deletes a comment on the photo.'''
- def edit(self, owner_id: int, photo_id: int, caption: str, latitude: float, longitude: float, place_str: str, foursquare_id: str, delete_place: bool) -> Any:
-  '''Edits the caption of a photo.'''
- def editAlbum(self, album_id: int, title: str, description: str, owner_id: int, privacy_view: List[str], privacy_comment: List[str], upload_by_admins_only: bool, comments_disabled: bool) -> Any:
-  '''Edits information about a photo album.'''
- def editComment(self, owner_id: int, comment_id: int, message: str, attachments: List[str]) -> Any:
-  '''Edits a comment on a photo.'''
- def get(self, owner_id: int, album_id: str, photo_ids: List[str], rev: bool, extended: bool, feed_type: str, feed: int, photo_sizes: bool, offset: int, count: int = 50) -> Any:
-  '''Returns a list of a user's or community's photos.'''
- def getAlbums(self, owner_id: int, album_ids: List[int], offset: int, count: int, need_system: bool, need_covers: bool, photo_sizes: bool) -> Any:
-  '''Returns a list of a user's or community's photo albums.'''
- def getAlbumsCount(self, user_id: int, group_id: int) -> Any:
-  '''Returns the number of photo albums belonging to a user or community.'''
- def getAll(self, owner_id: int, extended: bool, offset: int, photo_sizes: bool, no_service_albums: bool, need_hidden: bool, skip_hidden: bool, count: int = 20) -> Any:
-  '''Returns a list of photos belonging to a user or community, in reverse chronological order.'''
- def getAllComments(self, owner_id: int, album_id: int, need_likes: bool, offset: int, count: int) -> Any:
-  '''Returns a list of comments on a specific photo album or all albums of the user sorted in reverse chronological order.'''
- def getById(self, photos: List[str], extended: bool, photo_sizes: bool) -> Any:
-  '''Returns information about photos by their IDs.'''
- def getChatUploadServer(self, chat_id: int, crop_x: int, crop_y: int, crop_width: int) -> Any:
-  '''Returns an upload link for chat cover pictures.'''
- def getComments(self, owner_id: int, photo_id: int, need_likes: bool, start_comment_id: int, offset: int, sort: str, access_key: str, extended: bool, fields: Dict[str, Any], count: int = '20') -> Any:
-  '''Returns a list of comments on a photo.'''
- def getMarketAlbumUploadServer(self, group_id: int) -> Any:
-  '''Returns the server address for market album photo upload.'''
- def getMarketUploadServer(self, group_id: int, main_photo: bool, crop_x: int, crop_y: int, crop_width: int) -> Any:
-  '''Returns the server address for market photo upload.'''
- def getMessagesUploadServer(self, peer_id: int) -> Any:
-  '''Returns the server address for photo upload in a private message for a user.'''
- def getNewTags(self, offset: int, count: int = 20) -> Any:
-  '''Returns a list of photos with tags that have not been viewed.'''
- def getOwnerCoverPhotoUploadServer(self, group_id: int, crop_x: int = 0, crop_y: int = 0, crop_x2: int = 795, crop_y2: int = 200) -> Any:
-  '''Returns the server address for owner cover upload.'''
- def getOwnerPhotoUploadServer(self, owner_id: int) -> Any:
-  '''Returns an upload server address for a profile or community photo.'''
- def getTags(self, owner_id: int, photo_id: int, access_key: str) -> Any:
-  '''Returns a list of tags on a photo.'''
- def getUploadServer(self, album_id: int, group_id: int) -> Any:
-  '''Returns the server address for photo upload.'''
- def getUserPhotos(self, user_id: int, offset: int, extended: bool, sort: str, count: int = 20) -> Any:
-  '''Returns a list of photos in which a user is tagged.'''
- def getWallUploadServer(self, group_id: int) -> Any:
-  '''Returns the server address for photo upload onto a user's wall.'''
- def makeCover(self, owner_id: int, photo_id: int, album_id: int) -> Any:
-  '''Makes a photo into an album cover.'''
- def move(self, owner_id: int, target_album_id: int, photo_id: int) -> Any:
-  '''Moves a photo from one album to another.'''
- def putTag(self, owner_id: int, photo_id: int, user_id: int, x: float, y: float, x2: float, y2: float) -> Any:
-  '''Adds a tag on the photo.'''
- def removeTag(self, owner_id: int, photo_id: int, tag_id: int) -> Any:
-  '''Removes a tag from a photo.'''
- def reorderAlbums(self, owner_id: int, album_id: int, before: int, after: int) -> Any:
-  '''Reorders the album in the list of user albums.'''
- def reorderPhotos(self, owner_id: int, photo_id: int, before: int, after: int) -> Any:
-  '''Reorders the photo in the list of photos of the user album.'''
- def report(self, owner_id: int, photo_id: int, reason: int) -> Any:
-  '''Reports (submits a complaint about) a photo.'''
- def reportComment(self, owner_id: int, comment_id: int, reason: int) -> Any:
-  '''Reports (submits a complaint about) a comment on a photo.'''
- def restore(self, owner_id: int, photo_id: int) -> Any:
-  '''Restores a deleted photo.'''
- def restoreComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Restores a deleted comment on a photo.'''
- def save(self, album_id: int, group_id: int, server: int, photos_list: str, hash: str, latitude: float, longitude: float, caption: str) -> Any:
-  '''Saves photos after successful uploading.'''
- def saveMarketAlbumPhoto(self, group_id: int, photo: str, server: int, hash: str) -> Any:
-  '''Saves market album photos after successful uploading.'''
- def saveMarketPhoto(self, group_id: int, photo: str, server: int, hash: str, crop_data: str, crop_hash: str) -> Any:
-  '''Saves market photos after successful uploading.'''
- def saveMessagesPhoto(self, photo: str, server: int, hash: str) -> Any:
-  '''Saves a photo after being successfully uploaded. URL obtained with [vk.com/dev/photos.getMessagesUploadServer|photos.getMessagesUploadServer] method.'''
- def saveOwnerCoverPhoto(self, hash: str, photo: str) -> Any:
-  '''Saves cover photo after successful uploading.'''
- def saveOwnerPhoto(self, server: str, hash: str, photo: str) -> Any:
-  '''Saves a profile or community photo. Upload URL can be got with the [vk.com/dev/photos.getOwnerPhotoUploadServer|photos.getOwnerPhotoUploadServer] method.'''
- def saveWallPhoto(self, user_id: int, group_id: int, photo: str, server: int, hash: str, latitude: float, longitude: float, caption: str) -> Any:
-  '''Saves a photo to a user's or community's wall after being uploaded.'''
- def search(self, q: str, lat: float, long: float, start_time: int, end_time: int, sort: int, offset: int, count: int = 100, radius: int = 5000) -> Any:
-  '''Returns a list of photos.'''
+    async def confirmTag(self, *, photo_id: str, tag_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Confirms a tag on a photo.'''
+
+    async def copy(self, *, owner_id: int, photo_id: int, access_key: Optional[str] = None) -> 'responses.photos_copy_response':
+        '''Allows to copy a photo to the "Saved photos" album'''
+
+    async def createAlbum(self, *, title: str, group_id: Optional[int] = None, description: Optional[str] = None, upload_by_admins_only: Optional[bool] = None, comments_disabled: Optional[bool] = None, privacy_view: List[str] = 'all', privacy_comment: List[str] = 'all') -> 'responses.photos_createAlbum_response':
+        '''Creates an empty photo album.'''
+
+    async def createComment(self, *, photo_id: int, owner_id: Optional[int] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, from_group: Optional[bool] = None, reply_to_comment: Optional[int] = None, sticker_id: Optional[int] = None, access_key: Optional[str] = None, guid: Optional[str] = None) -> 'responses.photos_createComment_response':
+        '''Adds a new comment on the photo.'''
+
+    async def delete(self, *, photo_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a photo.'''
+
+    async def deleteAlbum(self, *, album_id: int, group_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a photo album belonging to the current user.'''
+
+    async def deleteComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.photos_deleteComment_response':
+        '''Deletes a comment on the photo.'''
+
+    async def edit(self, *, photo_id: int, owner_id: Optional[int] = None, caption: Optional[str] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, place_str: Optional[str] = None, foursquare_id: Optional[str] = None, delete_place: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Edits the caption of a photo.'''
+
+    async def editAlbum(self, *, album_id: int, title: Optional[str] = None, description: Optional[str] = None, owner_id: Optional[int] = None, privacy_view: Optional[Union[List[str], str]] = None, privacy_comment: Optional[Union[List[str], str]] = None, upload_by_admins_only: Optional[bool] = None, comments_disabled: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Edits information about a photo album.'''
+
+    async def editComment(self, *, comment_id: int, owner_id: Optional[int] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Edits a comment on a photo.'''
+
+    async def get(self, *, owner_id: Optional[int] = None, album_id: Optional[str] = None, photo_ids: Optional[Union[List[str], str]] = None, rev: Optional[bool] = None, extended: Optional[bool] = None, feed_type: Optional[str] = None, feed: Optional[int] = None, photo_sizes: Optional[bool] = None, offset: Optional[int] = None, count: int = 50) -> 'responses.photos_get_response':
+        '''Returns a list of a user's or community's photos.'''
+
+    async def getAlbums(self, *, owner_id: Optional[int] = None, album_ids: Optional[Union[List[int], str]] = None, offset: Optional[int] = None, count: Optional[int] = None, need_system: Optional[bool] = None, need_covers: Optional[bool] = None, photo_sizes: Optional[bool] = None) -> 'responses.photos_getAlbums_response':
+        '''Returns a list of a user's or community's photo albums.'''
+
+    async def getAlbumsCount(self, *, user_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.photos_getAlbumsCount_response':
+        '''Returns the number of photo albums belonging to a user or community.'''
+
+    async def getAll(self, *, owner_id: Optional[int] = None, extended: Optional[bool] = None, offset: Optional[int] = None, photo_sizes: Optional[bool] = None, no_service_albums: Optional[bool] = None, need_hidden: Optional[bool] = None, skip_hidden: Optional[bool] = None, count: int = 20) -> 'responses.photos_getAll_response':
+        '''Returns a list of photos belonging to a user or community, in reverse chronological order.'''
+
+    async def getAllComments(self, *, owner_id: Optional[int] = None, album_id: Optional[int] = None, need_likes: Optional[bool] = None, offset: Optional[int] = None, count: Optional[int] = None) -> 'responses.photos_getAllComments_response':
+        '''Returns a list of comments on a specific photo album or all albums of the user sorted in reverse chronological order.'''
+
+    async def getById(self, *, photos: Union[List[str], str], extended: Optional[bool] = None, photo_sizes: Optional[bool] = None) -> 'responses.photos_getById_legacy_response':
+        '''Returns information about photos by their IDs.'''
+
+    async def getChatUploadServer(self, *, chat_id: int, crop_x: Optional[int] = None, crop_y: Optional[int] = None, crop_width: Optional[int] = None) -> 'responses.base_getUploadServer_response':
+        '''Returns an upload link for chat cover pictures.'''
+
+    async def getComments(self, *, photo_id: int, owner_id: Optional[int] = None, need_likes: Optional[bool] = None, start_comment_id: Optional[int] = None, offset: Optional[int] = None, sort: Optional[Literal['asc', 'desc']] = None, access_key: Optional[str] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, count: int = '20') -> 'responses.photos_getComments_response':
+        '''Returns a list of comments on a photo.'''
+
+    async def getMarketAlbumUploadServer(self, *, group_id: int) -> 'responses.base_getUploadServer_response':
+        '''Returns the server address for market album photo upload.'''
+
+    async def getMarketUploadServer(self, *, group_id: int, main_photo: Optional[bool] = None, crop_x: Optional[int] = None, crop_y: Optional[int] = None, crop_width: Optional[int] = None) -> 'responses.photos_getMarketUploadServer_response':
+        '''Returns the server address for market photo upload.'''
+
+    async def getMessagesUploadServer(self, *, peer_id: Optional[int] = None) -> 'responses.photos_getMessagesUploadServer_response':
+        '''Returns the server address for photo upload in a private message for a user.'''
+
+    async def getNewTags(self, *, offset: Optional[int] = None, count: int = 20) -> 'responses.photos_getNewTags_response':
+        '''Returns a list of photos with tags that have not been viewed.'''
+
+    async def getOwnerCoverPhotoUploadServer(self, *, group_id: int, crop_x: int = 0, crop_y: int = 0, crop_x2: int = 795, crop_y2: int = 200) -> 'responses.base_getUploadServer_response':
+        '''Returns the server address for owner cover upload.'''
+
+    async def getOwnerPhotoUploadServer(self, *, owner_id: Optional[int] = None) -> 'responses.base_getUploadServer_response':
+        '''Returns an upload server address for a profile or community photo.'''
+
+    async def getTags(self, *, photo_id: int, owner_id: Optional[int] = None, access_key: Optional[str] = None) -> 'responses.photos_getTags_response':
+        '''Returns a list of tags on a photo.'''
+
+    async def getUploadServer(self, *, album_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.photos_getUploadServer_response':
+        '''Returns the server address for photo upload.'''
+
+    async def getUserPhotos(self, *, user_id: Optional[int] = None, offset: Optional[int] = None, extended: Optional[bool] = None, sort: Optional[str] = None, count: int = 20) -> 'responses.photos_getUserPhotos_response':
+        '''Returns a list of photos in which a user is tagged.'''
+
+    async def getWallUploadServer(self, *, group_id: Optional[int] = None) -> 'responses.photos_getWallUploadServer_response':
+        '''Returns the server address for photo upload onto a user's wall.'''
+
+    async def makeCover(self, *, photo_id: int, owner_id: Optional[int] = None, album_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Makes a photo into an album cover.'''
+
+    async def move(self, *, target_album_id: int, photo_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Moves a photo from one album to another.'''
+
+    async def putTag(self, *, photo_id: int, user_id: int, owner_id: Optional[int] = None, x: Optional[float] = None, y: Optional[float] = None, x2: Optional[float] = None, y2: Optional[float] = None) -> 'responses.photos_putTag_response':
+        '''Adds a tag on the photo.'''
+
+    async def removeTag(self, *, photo_id: int, tag_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Removes a tag from a photo.'''
+
+    async def reorderAlbums(self, *, album_id: int, owner_id: Optional[int] = None, before: Optional[int] = None, after: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Reorders the album in the list of user albums.'''
+
+    async def reorderPhotos(self, *, photo_id: int, owner_id: Optional[int] = None, before: Optional[int] = None, after: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Reorders the photo in the list of photos of the user album.'''
+
+    async def report(self, *, owner_id: int, photo_id: int, reason: Optional[Literal[0, 1, 2, 3, 4, 5, 6]] = None) -> 'responses.base_ok_response':
+        '''Reports (submits a complaint about) a photo.'''
+
+    async def reportComment(self, *, owner_id: int, comment_id: int, reason: Optional[Literal[0, 1, 2, 3, 4, 5, 6]] = None) -> 'responses.base_ok_response':
+        '''Reports (submits a complaint about) a comment on a photo.'''
+
+    async def restore(self, *, photo_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Restores a deleted photo.'''
+
+    async def restoreComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.photos_restoreComment_response':
+        '''Restores a deleted comment on a photo.'''
+
+    async def save(self, *, album_id: Optional[int] = None, group_id: Optional[int] = None, server: Optional[int] = None, photos_list: Optional[str] = None, hash: Optional[str] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, caption: Optional[str] = None) -> 'responses.photos_save_response':
+        '''Saves photos after successful uploading.'''
+
+    async def saveMarketAlbumPhoto(self, *, group_id: int, photo: str, server: int, hash: str) -> 'responses.photos_saveMarketAlbumPhoto_response':
+        '''Saves market album photos after successful uploading.'''
+
+    async def saveMarketPhoto(self, *, photo: str, server: int, hash: str, group_id: Optional[int] = None, crop_data: Optional[str] = None, crop_hash: Optional[str] = None) -> 'responses.photos_saveMarketPhoto_response':
+        '''Saves market photos after successful uploading.'''
+
+    async def saveMessagesPhoto(self, *, photo: str, server: Optional[int] = None, hash: Optional[str] = None) -> 'responses.photos_saveMessagesPhoto_response':
+        '''Saves a photo after being successfully uploaded. URL obtained with [vk.com/dev/photos.getMessagesUploadServer|photos.getMessagesUploadServer] method.'''
+
+    async def saveOwnerCoverPhoto(self, *, hash: str, photo: str) -> 'responses.photos_saveOwnerCoverPhoto_response':
+        '''Saves cover photo after successful uploading.'''
+
+    async def saveOwnerPhoto(self, *, server: Optional[str] = None, hash: Optional[str] = None, photo: Optional[str] = None) -> 'responses.photos_saveOwnerPhoto_response':
+        '''Saves a profile or community photo. Upload URL can be got with the [vk.com/dev/photos.getOwnerPhotoUploadServer|photos.getOwnerPhotoUploadServer] method.'''
+
+    async def saveWallPhoto(self, *, photo: str, user_id: Optional[int] = None, group_id: Optional[int] = None, server: Optional[int] = None, hash: Optional[str] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, caption: Optional[str] = None) -> 'responses.photos_saveWallPhoto_response':
+        '''Saves a photo to a user's or community's wall after being uploaded.'''
+
+    async def search(self, *, q: Optional[str] = None, lat: Optional[float] = None, long: Optional[float] = None, start_time: Optional[int] = None, end_time: Optional[int] = None, sort: Optional[int] = None, offset: Optional[int] = None, count: int = 100, radius: int = 5000) -> 'responses.photos_search_response':
+        '''Returns a list of photos.'''
 
 class podcasts:
- def searchPodcast(self, search_string: str, offset: int = 0, count: int = 20) -> Any: ...
+    async def searchPodcast(self, *, search_string: str, offset: int = 0, count: int = 20) -> 'responses.podcasts_searchPodcast_response': ...
 
 class polls:
- def addVote(self, owner_id: int, poll_id: int, answer_ids: List[int], is_board: bool) -> Any:
-  '''Adds the current user's vote to the selected answer in the poll.'''
- def create(self, question: str, is_anonymous: bool, is_multiple: bool, end_date: int, owner_id: int, app_id: int, add_answers: str, photo_id: int, background_id: str, disable_unvote: bool) -> Any:
-  '''Creates polls that can be attached to the users' or communities' posts.'''
- def deleteVote(self, owner_id: int, poll_id: int, answer_id: int, is_board: bool) -> Any:
-  '''Deletes the current user's vote from the selected answer in the poll.'''
- def edit(self, owner_id: int, poll_id: int, question: str, add_answers: str, edit_answers: str, delete_answers: str, end_date: int, photo_id: int, background_id: str) -> Any:
-  '''Edits created polls'''
- def getBackgrounds(self) -> Any: ...
- def getById(self, owner_id: int, is_board: bool, poll_id: int, extended: bool, fields: List[str], friends_count: int = 3, name_case: str = 'nom') -> Any:
-  '''Returns detailed information about a poll by its ID.'''
- def getPhotoUploadServer(self, owner_id: int) -> Any: ...
- def getVoters(self, owner_id: int, poll_id: int, answer_ids: List[int], is_board: bool, friends_only: bool, offset: int, count: int, fields: Dict[str, Any], name_case: str) -> Any:
-  '''Returns a list of IDs of users who selected specific answers in the poll.'''
- def savePhoto(self, photo: str, hash: str) -> Any: ...
+    async def addVote(self, *, poll_id: int, answer_ids: Union[List[int], str], owner_id: Optional[int] = None, is_board: Optional[bool] = None) -> 'responses.polls_addVote_response':
+        '''Adds the current user's vote to the selected answer in the poll.'''
+
+    async def create(self, *, question: Optional[str] = None, is_anonymous: Optional[bool] = None, is_multiple: Optional[bool] = None, end_date: Optional[int] = None, owner_id: Optional[int] = None, app_id: Optional[int] = None, add_answers: Optional[str] = None, photo_id: Optional[int] = None, background_id: Optional[Literal['1', '2', '3', '4', '6', '8', '9']] = None, disable_unvote: Optional[bool] = None) -> 'responses.polls_create_response':
+        '''Creates polls that can be attached to the users' or communities' posts.'''
+
+    async def deleteVote(self, *, poll_id: int, answer_id: int, owner_id: Optional[int] = None, is_board: Optional[bool] = None) -> 'responses.polls_deleteVote_response':
+        '''Deletes the current user's vote from the selected answer in the poll.'''
+
+    async def edit(self, *, poll_id: int, owner_id: Optional[int] = None, question: Optional[str] = None, add_answers: Optional[str] = None, edit_answers: Optional[str] = None, delete_answers: Optional[str] = None, end_date: Optional[int] = None, photo_id: Optional[int] = None, background_id: Optional[Literal['0', '1', '2', '3', '4', '6', '8', '9']] = None) -> 'responses.base_ok_response':
+        '''Edits created polls'''
+
+    async def getBackgrounds(self) -> 'responses.polls_getBackgrounds_response': ...
+
+    async def getById(self, *, poll_id: int, owner_id: Optional[int] = None, is_board: Optional[bool] = None, extended: Optional[bool] = None, fields: Optional[Union[List[str], str]] = None, friends_count: int = 3, name_case: Literal['abl', 'acc', 'dat', 'gen', 'ins', 'nom'] = 'nom') -> 'responses.polls_getById_response':
+        '''Returns detailed information about a poll by its ID.'''
+
+    async def getPhotoUploadServer(self, *, owner_id: Optional[int] = None) -> 'responses.base_getUploadServer_response': ...
+
+    async def getVoters(self, *, poll_id: int, answer_ids: Union[List[int], str], owner_id: Optional[int] = None, is_board: Optional[bool] = None, friends_only: Optional[bool] = None, offset: Optional[int] = None, count: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None) -> 'responses.polls_getVoters_response':
+        '''Returns a list of IDs of users who selected specific answers in the poll.'''
+
+    async def savePhoto(self, *, photo: str, hash: str) -> 'responses.polls_savePhoto_response': ...
 
 class prettyCards:
- def create(self, owner_id: int, photo: str, title: str, link: str, price: str, price_old: str, button: str) -> Any: ...
- def delete(self, owner_id: int, card_id: int) -> Any: ...
- def edit(self, owner_id: int, card_id: int, photo: str, title: str, link: str, price: str, price_old: str, button: str) -> Any: ...
- def get(self, owner_id: int, offset: int = 0, count: int = 10) -> Any: ...
- def getById(self, owner_id: int, card_ids: List[int]) -> Any: ...
- def getUploadURL(self) -> Any: ...
+    async def create(self, *, owner_id: int, photo: str, title: str, link: str, price: Optional[str] = None, price_old: Optional[str] = None, button: Optional[str] = None) -> 'responses.prettyCards_create_response': ...
+
+    async def delete(self, *, owner_id: int, card_id: int) -> 'responses.prettyCards_delete_response': ...
+
+    async def edit(self, *, owner_id: int, card_id: int, photo: Optional[str] = None, title: Optional[str] = None, link: Optional[str] = None, price: Optional[str] = None, price_old: Optional[str] = None, button: Optional[str] = None) -> 'responses.prettyCards_edit_response': ...
+
+    async def get(self, *, owner_id: int, offset: int = 0, count: int = 10) -> 'responses.prettyCards_get_response': ...
+
+    async def getById(self, *, owner_id: int, card_ids: Union[List[int], str]) -> 'responses.prettyCards_getById_response': ...
+
+    async def getUploadURL(self) -> 'responses.prettyCards_getUploadURL_response': ...
 
 class search:
- def getHints(self, q: str, offset: int, filters: List[str], fields: List[str], limit: int = 9, search_global: bool = 1) -> Any:
-  '''Allows the programmer to do a quick search for any substring.'''
+    async def getHints(self, *, q: Optional[str] = None, offset: Optional[int] = None, filters: Optional[Union[List[str], str]] = None, fields: Optional[Union[List[str], str]] = None, limit: int = 9, search_global: bool = 1) -> 'responses.search_getHints_response':
+        '''Allows the programmer to do a quick search for any substring.'''
 
 class secure:
- def addAppEvent(self, user_id: int, activity_id: int, value: int) -> Any:
-  '''Adds user activity information to an application'''
- def checkToken(self, token: str, ip: str) -> Any:
-  '''Checks the user authentication in 'IFrame' and 'Flash' apps using the 'access_token' parameter.'''
- def getAppBalance(self) -> Any:
-  '''Returns payment balance of the application in hundredth of a vote.'''
- def getSMSHistory(self, user_id: int, date_from: int, date_to: int, limit: int = 1000) -> Any:
-  '''Shows a list of SMS notifications sent by the application using [vk.com/dev/secure.sendSMSNotification|secure.sendSMSNotification] method.'''
- def getTransactionsHistory(self, type: int, uid_from: int, uid_to: int, date_from: int, date_to: int, limit: int = 1000) -> Any:
-  '''Shows history of votes transaction between users and the application.'''
- def getUserLevel(self, user_ids: List[int]) -> Any:
-  '''Returns one of the previously set game levels of one or more users in the application.'''
- def giveEventSticker(self, user_ids: List[int], achievement_id: int) -> Any:
-  '''Opens the game achievement and gives the user a sticker'''
- def sendNotification(self, user_ids: List[int], user_id: int, message: str) -> Any:
-  '''Sends notification to the user.'''
- def sendSMSNotification(self, user_id: int, message: str) -> Any:
-  '''Sends 'SMS' notification to a user's mobile device.'''
- def setCounter(self, counters: List[str], user_id: int, counter: int, increment: bool) -> Any:
-  '''Sets a counter which is shown to the user in bold in the left menu.'''
+    async def addAppEvent(self, *, user_id: int, activity_id: int, value: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Adds user activity information to an application'''
+
+    async def checkToken(self, *, token: Optional[str] = None, ip: Optional[str] = None) -> 'responses.secure_checkToken_response':
+        '''Checks the user authentication in 'IFrame' and 'Flash' apps using the 'access_token' parameter.'''
+
+    async def getAppBalance(self) -> 'responses.secure_getAppBalance_response':
+        '''Returns payment balance of the application in hundredth of a vote.'''
+
+    async def getSMSHistory(self, *, user_id: Optional[int] = None, date_from: Optional[int] = None, date_to: Optional[int] = None, limit: int = 1000) -> 'responses.secure_getSMSHistory_response':
+        '''Shows a list of SMS notifications sent by the application using [vk.com/dev/secure.sendSMSNotification|secure.sendSMSNotification] method.'''
+
+    async def getTransactionsHistory(self, *, type: Optional[int] = None, uid_from: Optional[int] = None, uid_to: Optional[int] = None, date_from: Optional[int] = None, date_to: Optional[int] = None, limit: int = 1000) -> 'responses.secure_getTransactionsHistory_response':
+        '''Shows history of votes transaction between users and the application.'''
+
+    async def getUserLevel(self, *, user_ids: Union[List[int], str]) -> 'responses.secure_getUserLevel_response':
+        '''Returns one of the previously set game levels of one or more users in the application.'''
+
+    async def giveEventSticker(self, *, user_ids: Union[List[int], str], achievement_id: int) -> 'responses.secure_giveEventSticker_response':
+        '''Opens the game achievement and gives the user a sticker'''
+
+    async def sendNotification(self, *, message: str, user_ids: Optional[Union[List[int], str]] = None, user_id: Optional[int] = None) -> 'responses.secure_sendNotification_response':
+        '''Sends notification to the user.'''
+
+    async def sendSMSNotification(self, *, user_id: int, message: str) -> 'responses.base_ok_response':
+        '''Sends 'SMS' notification to a user's mobile device.'''
+
+    async def setCounter(self, *, counters: Optional[Union[List[str], str]] = None, user_id: Optional[int] = None, counter: Optional[int] = None, increment: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Sets a counter which is shown to the user in bold in the left menu.'''
 
 class stats:
- def get(self, group_id: int, app_id: int, timestamp_from: int, timestamp_to: int, intervals_count: int, filters: List[str], stats_groups: List[str], interval: str = 'day', extended: bool = True) -> Any:
-  '''Returns statistics of a community or an application.'''
- def getPostReach(self, owner_id: str, post_ids: List[int]) -> Any:
-  '''Returns stats for a wall post.'''
- def trackVisitor(self, id: str) -> Any: ...
+    async def get(self, *, group_id: Optional[int] = None, app_id: Optional[int] = None, timestamp_from: Optional[int] = None, timestamp_to: Optional[int] = None, intervals_count: Optional[int] = None, filters: Optional[Union[List[str], str]] = None, stats_groups: Optional[Union[List[str], str]] = None, interval: Literal['all', 'day', 'month', 'week', 'year'] = 'day', extended: bool = True) -> 'responses.stats_get_response':
+        '''Returns statistics of a community or an application.'''
+
+    async def getPostReach(self, *, owner_id: str, post_ids: Union[List[int], str]) -> 'responses.stats_getPostReach_response':
+        '''Returns stats for a wall post.'''
+
+    async def trackVisitor(self, *, id: str) -> 'responses.base_ok_response': ...
 
 class status:
- def get(self, user_id: int, group_id: int) -> Any:
-  '''Returns data required to show the status of a user or community.'''
- def set(self, text: str, group_id: int) -> Any:
-  '''Sets a new status for the current user.'''
+    async def get(self, *, user_id: Optional[int] = None, group_id: Optional[int] = None) -> 'responses.status_get_response':
+        '''Returns data required to show the status of a user or community.'''
+
+    async def set(self, *, text: Optional[str] = None, group_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Sets a new status for the current user.'''
 
 class storage:
- def get(self, key: str, keys: List[str], user_id: int) -> Any:
-  '''Returns a value of variable with the name set by key parameter.'''
- def getKeys(self, user_id: int, offset: int = 0, count: int = 100) -> Any:
-  '''Returns the names of all variables.'''
- def set(self, key: str, value: str, user_id: int) -> Any:
-  '''Saves a value of variable with the name set by 'key' parameter.'''
+    async def get(self, *, key: Optional[str] = None, keys: Optional[Union[List[str], str]] = None, user_id: Optional[int] = None) -> 'responses.storage_get_response':
+        '''Returns a value of variable with the name set by key parameter.'''
+
+    async def getKeys(self, *, user_id: Optional[int] = None, offset: int = 0, count: int = 100) -> 'responses.storage_getKeys_response':
+        '''Returns the names of all variables.'''
+
+    async def set(self, *, key: str, value: Optional[str] = None, user_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Saves a value of variable with the name set by 'key' parameter.'''
 
 class store:
- def addStickersToFavorite(self, sticker_ids: List[int]) -> Any:
-  '''Adds given sticker IDs to the list of user's favorite stickers'''
- def getFavoriteStickers(self) -> Any: ...
- def getProducts(self, type: str, merchant: str, section: str, product_ids: List[int], filters: List[str], extended: bool = 0) -> Any: ...
- def getStickersKeywords(self, stickers_ids: List[int], products_ids: List[int], all_products: bool, aliases: bool = True, need_stickers: bool = True) -> Any: ...
- def removeStickersFromFavorite(self, sticker_ids: List[int]) -> Any:
-  '''Removes given sticker IDs from the list of user's favorite stickers'''
+    async def addStickersToFavorite(self, *, sticker_ids: Union[List[int], str]) -> 'responses.base_ok_response':
+        '''Adds given sticker IDs to the list of user's favorite stickers'''
+
+    async def getFavoriteStickers(self) -> 'responses.store_getFavoriteStickers_response': ...
+
+    async def getProducts(self, *, type: Optional[str] = None, merchant: Optional[str] = None, section: Optional[str] = None, product_ids: Optional[Union[List[int], str]] = None, filters: Optional[Union[List[str], str]] = None, extended: bool = 0) -> 'responses.store_getProducts_response': ...
+
+    async def getStickersKeywords(self, *, stickers_ids: Optional[Union[List[int], str]] = None, products_ids: Optional[Union[List[int], str]] = None, all_products: Optional[bool] = None, aliases: bool = True, need_stickers: bool = True) -> 'responses.store_getStickersKeywords_response': ...
+
+    async def removeStickersFromFavorite(self, *, sticker_ids: Union[List[int], str]) -> 'responses.base_ok_response':
+        '''Removes given sticker IDs from the list of user's favorite stickers'''
 
 class stories:
- def banOwner(self, owners_ids: List[int]) -> Any:
-  '''Allows to hide stories from chosen sources from current user's feed.'''
- def delete(self, owner_id: int, story_id: int, stories: List[str]) -> Any:
-  '''Allows to delete story.'''
- def get(self, owner_id: int, fields: Dict[str, Any], extended: bool = False) -> Any:
-  '''Returns stories available for current user.'''
- def getBanned(self, extended: bool, fields: Dict[str, Any]) -> Any:
-  '''Returns list of sources hidden from current user's feed.'''
- def getById(self, stories: List[str], fields: Dict[str, Any], extended: bool = False) -> Any:
-  '''Returns story by its ID.'''
- def getPhotoUploadServer(self, add_to_news: bool, user_ids: List[int], reply_to_story: str, link_text: str, link_url: str, group_id: int, clickable_stickers: str) -> Any:
-  '''Returns URL for uploading a story with photo.'''
- def getReplies(self, owner_id: int, story_id: int, access_key: str, fields: Dict[str, Any], extended: bool = False) -> Any:
-  '''Returns replies to the story.'''
- def getStats(self, owner_id: int, story_id: int) -> Any:
-  '''Returns stories available for current user.'''
- def getVideoUploadServer(self, add_to_news: bool, user_ids: List[int], reply_to_story: str, link_text: str, link_url: str, group_id: int, clickable_stickers: str) -> Any:
-  '''Allows to receive URL for uploading story with video.'''
- def getViewers(self, owner_id: int, story_id: int, count: int = 100, offset: int = 0, extended: bool = 0) -> Any:
-  '''Returns a list of story viewers.'''
- def hideAllReplies(self, owner_id: int, group_id: int) -> Any:
-  '''Hides all replies in the last 24 hours from the user to current user's stories.'''
- def hideReply(self, owner_id: int, story_id: int) -> Any:
-  '''Hides the reply to the current user's story.'''
- def save(self, upload_results: List[str], extended: bool, fields: List[str]) -> Any: ...
- def search(self, q: str, place_id: int, latitude: float, longitude: float, radius: int, mentioned_id: int, extended: bool, fields: List[str], count: int = 20) -> Any: ...
- def sendInteraction(self, access_key: str, message: str, is_broadcast: bool = False, is_anonymous: bool = False, unseen_marker: bool = False) -> Any: ...
- def unbanOwner(self, owners_ids: List[int]) -> Any:
-  '''Allows to show stories from hidden sources in current user's feed.'''
+    async def banOwner(self, *, owners_ids: Union[List[int], str]) -> 'responses.base_ok_response':
+        '''Allows to hide stories from chosen sources from current user's feed.'''
+
+    async def delete(self, *, owner_id: Optional[int] = None, story_id: Optional[int] = None, stories: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Allows to delete story.'''
+
+    async def get(self, *, owner_id: Optional[int] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, extended: bool = False) -> 'responses.stories_get_V5113_response':
+        '''Returns stories available for current user.'''
+
+    async def getBanned(self, *, extended: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None) -> 'responses.stories_getBanned_response':
+        '''Returns list of sources hidden from current user's feed.'''
+
+    async def getById(self, *, stories: Union[List[str], str], fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, extended: bool = False) -> 'responses.stories_getById_response':
+        '''Returns story by its ID.'''
+
+    async def getPhotoUploadServer(self, *, add_to_news: Optional[bool] = None, user_ids: Optional[Union[List[int], str]] = None, reply_to_story: Optional[str] = None, link_text: Optional['objects.stories_upload_link_text'] = None, link_url: Optional[str] = None, group_id: Optional[int] = None, clickable_stickers: Optional[str] = None) -> 'responses.stories_getPhotoUploadServer_response':
+        '''Returns URL for uploading a story with photo.'''
+
+    async def getReplies(self, *, owner_id: int, story_id: int, access_key: Optional[str] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, extended: bool = False) -> 'responses.stories_get_V5113_response':
+        '''Returns replies to the story.'''
+
+    async def getStats(self, *, owner_id: int, story_id: int) -> 'responses.stories_getStats_response':
+        '''Returns stories available for current user.'''
+
+    async def getVideoUploadServer(self, *, add_to_news: Optional[bool] = None, user_ids: Optional[Union[List[int], str]] = None, reply_to_story: Optional[str] = None, link_text: Optional['objects.stories_upload_link_text'] = None, link_url: Optional[str] = None, group_id: Optional[int] = None, clickable_stickers: Optional[str] = None) -> 'responses.stories_getVideoUploadServer_response':
+        '''Allows to receive URL for uploading story with video.'''
+
+    async def getViewers(self, *, owner_id: int, story_id: int, count: int = 100, offset: int = 0, extended: bool = 0) -> 'responses.stories_getViewers_extended_V5115_response':
+        '''Returns a list of story viewers.'''
+
+    async def hideAllReplies(self, *, owner_id: int, group_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Hides all replies in the last 24 hours from the user to current user's stories.'''
+
+    async def hideReply(self, *, owner_id: int, story_id: int) -> 'responses.base_ok_response':
+        '''Hides the reply to the current user's story.'''
+
+    async def save(self, *, upload_results: Union[List[str], str], extended: Optional[bool] = None, fields: Optional[Union[List[str], str]] = None) -> 'responses.stories_save_response': ...
+
+    async def search(self, *, q: Optional[str] = None, place_id: Optional[int] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, radius: Optional[int] = None, mentioned_id: Optional[int] = None, extended: Optional[bool] = None, fields: Optional[Union[List[str], str]] = None, count: int = 20) -> 'responses.stories_get_V5113_response': ...
+
+    async def sendInteraction(self, *, access_key: str, message: Optional[str] = None, is_broadcast: bool = False, is_anonymous: bool = False, unseen_marker: bool = False) -> 'responses.base_ok_response': ...
+
+    async def unbanOwner(self, *, owners_ids: Union[List[int], str]) -> 'responses.base_ok_response':
+        '''Allows to show stories from hidden sources in current user's feed.'''
 
 class streaming:
- def getServerUrl(self) -> Any:
-  '''Allows to receive data for the connection to Streaming API.'''
- def setSettings(self, monthly_tier: str) -> Any: ...
+    async def getServerUrl(self) -> 'responses.streaming_getServerUrl_response':
+        '''Allows to receive data for the connection to Streaming API.'''
+
+    async def setSettings(self, *, monthly_tier: Optional[Literal['tier_1', 'tier_2', 'tier_3', 'tier_4', 'tier_5', 'tier_6', 'unlimited']] = None) -> 'responses.base_ok_response': ...
 
 class users:
- def get(self, user_ids: List[str], fields: Dict[str, Any], name_case: str) -> Any:
-  '''Returns detailed information on users.'''
- def getFollowers(self, user_id: int, offset: int, fields: Dict[str, Any], name_case: str, count: int = 100) -> Any:
-  '''Returns a list of IDs of followers of the user in question, sorted by date added, most recent first.'''
- def getSubscriptions(self, user_id: int, extended: bool, offset: int, fields: Dict[str, Any], count: int = 20) -> Any:
-  '''Returns a list of IDs of users and communities followed by the user.'''
- def report(self, user_id: int, type: str, comment: str) -> Any:
-  '''Reports (submits a complain about) a user.'''
- def search(self, q: str, sort: int, offset: int, fields: Dict[str, Any], city: int, country: int, hometown: str, university_country: int, university: int, university_year: int, university_faculty: int, university_chair: int, sex: int, status: int, age_from: int, age_to: int, birth_day: int, birth_month: int, birth_year: int, online: bool, has_photo: bool, school_country: int, school_city: int, school_class: int, school: int, school_year: int, religion: str, company: str, position: str, group_id: int, from_list: List[str], count: int = 20) -> Any:
-  '''Returns a list of users matching the search criteria.'''
+    async def get(self, *, user_ids: Optional[Union[List[str], str]] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None) -> 'responses.users_get_response':
+        '''Returns detailed information on users.'''
+
+    async def getFollowers(self, *, user_id: Optional[int] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, count: int = 100) -> 'responses.users_getFollowers_response':
+        '''Returns a list of IDs of followers of the user in question, sorted by date added, most recent first.'''
+
+    async def getSubscriptions(self, *, user_id: Optional[int] = None, extended: Optional[bool] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, count: int = 20) -> 'responses.users_getSubscriptions_response':
+        '''Returns a list of IDs of users and communities followed by the user.'''
+
+    async def report(self, *, user_id: int, type: Literal['porn', 'spam', 'insult', 'advertisement'], comment: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Reports (submits a complain about) a user.'''
+
+    async def search(self, *, q: Optional[str] = None, sort: Optional[Literal[0, 1]] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, city: Optional[int] = None, country: Optional[int] = None, hometown: Optional[str] = None, university_country: Optional[int] = None, university: Optional[int] = None, university_year: Optional[int] = None, university_faculty: Optional[int] = None, university_chair: Optional[int] = None, sex: Optional[Literal[0, 1, 2]] = None, status: Optional[Literal[0, 1, 2, 3, 4, 5, 6, 7]] = None, age_from: Optional[int] = None, age_to: Optional[int] = None, birth_day: Optional[int] = None, birth_month: Optional[int] = None, birth_year: Optional[int] = None, online: Optional[bool] = None, has_photo: Optional[bool] = None, school_country: Optional[int] = None, school_city: Optional[int] = None, school_class: Optional[int] = None, school: Optional[int] = None, school_year: Optional[int] = None, religion: Optional[str] = None, company: Optional[str] = None, position: Optional[str] = None, group_id: Optional[int] = None, from_list: Optional[Union[List[str], str]] = None, count: int = 20) -> 'responses.users_search_response':
+        '''Returns a list of users matching the search criteria.'''
 
 class utils:
- def checkLink(self, url: str) -> Any:
-  '''Checks whether a link is blocked in VK.'''
- def deleteFromLastShortened(self, key: str) -> Any:
-  '''Deletes shortened link from user's list.'''
- def getLastShortenedLinks(self, count: int = 10, offset: int = 0) -> Any:
-  '''Returns a list of user's shortened links.'''
- def getLinkStats(self, key: str, access_key: str, source: str = 'vk_cc', interval: str = 'day', intervals_count: int = 1, extended: bool = False) -> Any:
-  '''Returns stats data for shortened link.'''
- def getServerTime(self) -> Any:
-  '''Returns the current time of the VK server.'''
- def getShortLink(self, url: str, private: bool = False) -> Any:
-  '''Allows to receive a link shortened via vk.cc.'''
- def resolveScreenName(self, screen_name: str) -> Any:
-  '''Detects a type of object (e.g., user, community, application) and its ID by screen name.'''
+    async def checkLink(self, *, url: str) -> 'responses.utils_checkLink_response':
+        '''Checks whether a link is blocked in VK.'''
+
+    async def deleteFromLastShortened(self, *, key: str) -> 'responses.base_ok_response':
+        '''Deletes shortened link from user's list.'''
+
+    async def getLastShortenedLinks(self, *, count: int = 10, offset: int = 0) -> 'responses.utils_getLastShortenedLinks_response':
+        '''Returns a list of user's shortened links.'''
+
+    async def getLinkStats(self, *, key: str, access_key: Optional[str] = None, source: Literal['vk_cc', 'vk_link'] = 'vk_cc', interval: Literal['day', 'forever', 'hour', 'month', 'week'] = 'day', intervals_count: int = 1, extended: bool = False) -> 'responses.utils_getLinkStats_response':
+        '''Returns stats data for shortened link.'''
+
+    async def getServerTime(self) -> 'responses.utils_getServerTime_response':
+        '''Returns the current time of the VK server.'''
+
+    async def getShortLink(self, *, url: str, private: bool = False) -> 'responses.utils_getShortLink_response':
+        '''Allows to receive a link shortened via vk.cc.'''
+
+    async def resolveScreenName(self, *, screen_name: str) -> 'responses.utils_resolveScreenName_response':
+        '''Detects a type of object (e.g., user, community, application) and its ID by screen name.'''
 
 class video:
- def add(self, target_id: int, video_id: int, owner_id: int) -> Any:
-  '''Adds a video to a user or community page.'''
- def addAlbum(self, group_id: int, title: str, privacy: List[str]) -> Any:
-  '''Creates an empty album for videos.'''
- def addToAlbum(self, target_id: int, album_id: int, album_ids: List[int], owner_id: int, video_id: int) -> Any: ...
- def createComment(self, owner_id: int, video_id: int, message: str, attachments: List[str], from_group: bool, reply_to_comment: int, sticker_id: int, guid: str) -> Any:
-  '''Adds a new comment on a video.'''
- def delete(self, video_id: int, owner_id: int, target_id: int) -> Any:
-  '''Deletes a video from a user or community page.'''
- def deleteAlbum(self, group_id: int, album_id: int) -> Any:
-  '''Deletes a video album.'''
- def deleteComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Deletes a comment on a video.'''
- def edit(self, owner_id: int, video_id: int, name: str, desc: str, privacy_view: List[str], privacy_comment: List[str], no_comments: bool, repeat: bool) -> Any:
-  '''Edits information about a video on a user or community page.'''
- def editAlbum(self, group_id: int, album_id: int, title: str, privacy: List[str]) -> Any:
-  '''Edits the title of a video album.'''
- def editComment(self, owner_id: int, comment_id: int, message: str, attachments: List[str]) -> Any:
-  '''Edits the text of a comment on a video.'''
- def get(self, owner_id: int, videos: List[str], album_id: int, offset: int, extended: bool, fields: List[str], count: int = 100) -> Any:
-  '''Returns detailed information about videos.'''
- def getAlbumById(self, owner_id: int, album_id: int) -> Any:
-  '''Returns video album info'''
- def getAlbums(self, owner_id: int, offset: int, extended: bool, count: int = 50, need_system: bool = 0) -> Any:
-  '''Returns a list of video albums owned by a user or community.'''
- def getAlbumsByVideo(self, target_id: int, owner_id: int, video_id: int, extended: bool = 0) -> Any: ...
- def getComments(self, owner_id: int, video_id: int, need_likes: bool, start_comment_id: int, offset: int, sort: str, extended: bool, fields: List[str], count: int = 20) -> Any:
-  '''Returns a list of comments on a video.'''
- def removeFromAlbum(self, target_id: int, album_id: int, album_ids: List[int], owner_id: int, video_id: int) -> Any: ...
- def reorderAlbums(self, owner_id: int, album_id: int, before: int, after: int) -> Any:
-  '''Reorders the album in the list of user video albums.'''
- def reorderVideos(self, target_id: int, owner_id: int, video_id: int, before_owner_id: int, before_video_id: int, after_owner_id: int, after_video_id: int, album_id: int = -2) -> Any:
-  '''Reorders the video in the video album.'''
- def report(self, owner_id: int, video_id: int, reason: int, comment: str, search_query: str) -> Any:
-  '''Reports (submits a complaint about) a video.'''
- def reportComment(self, owner_id: int, comment_id: int, reason: int) -> Any:
-  '''Reports (submits a complaint about) a comment on a video.'''
- def restore(self, video_id: int, owner_id: int) -> Any:
-  '''Restores a previously deleted video.'''
- def restoreComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Restores a previously deleted comment on a video.'''
- def save(self, name: str, description: str, is_private: bool, wallpost: bool, link: str, group_id: int, album_id: int, privacy_view: List[str], privacy_comment: List[str], no_comments: bool, repeat: bool, compression: bool) -> Any:
-  '''Returns a server address (required for upload) and video data.'''
- def search(self, q: str, sort: int, hd: int, adult: bool, live: bool, filters: List[str], search_own: bool, offset: int, longer: int, shorter: int, count: int = 20, extended: bool = 0) -> Any:
-  '''Returns a list of videos under the set search criterion.'''
+    async def add(self, *, video_id: int, owner_id: int, target_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Adds a video to a user or community page.'''
+
+    privacy_enum = Literal['0', '1', '2', '3']
+    async def addAlbum(self, *, group_id: Optional[int] = None, title: Optional[str] = None, privacy: Optional[privacy_enum] = None) -> 'responses.video_addAlbum_response':
+        '''Creates an empty album for videos.'''
+
+    async def addToAlbum(self, *, owner_id: int, video_id: int, target_id: Optional[int] = None, album_id: Optional[int] = None, album_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response': ...
+
+    async def createComment(self, *, video_id: int, owner_id: Optional[int] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, from_group: Optional[bool] = None, reply_to_comment: Optional[int] = None, sticker_id: Optional[int] = None, guid: Optional[str] = None) -> 'responses.video_createComment_response':
+        '''Adds a new comment on a video.'''
+
+    async def delete(self, *, video_id: int, owner_id: Optional[int] = None, target_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a video from a user or community page.'''
+
+    async def deleteAlbum(self, *, album_id: int, group_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a video album.'''
+
+    async def deleteComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a comment on a video.'''
+
+    async def edit(self, *, video_id: int, owner_id: Optional[int] = None, name: Optional[str] = None, desc: Optional[str] = None, privacy_view: Optional[Union[List[str], str]] = None, privacy_comment: Optional[Union[List[str], str]] = None, no_comments: Optional[bool] = None, repeat: Optional[bool] = None) -> 'responses.base_ok_response':
+        '''Edits information about a video on a user or community page.'''
+
+    privacy_enum = Literal['0', '1', '2', '3']
+    async def editAlbum(self, *, album_id: int, title: str, group_id: Optional[int] = None, privacy: Optional[privacy_enum] = None) -> 'responses.base_ok_response':
+        '''Edits the title of a video album.'''
+
+    async def editComment(self, *, comment_id: int, owner_id: Optional[int] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Edits the text of a comment on a video.'''
+
+    async def get(self, *, owner_id: Optional[int] = None, videos: Optional[Union[List[str], str]] = None, album_id: Optional[int] = None, offset: Optional[int] = None, extended: Optional[bool] = None, fields: Optional[Union[List[str], str]] = None, count: int = 100) -> 'responses.video_get_response':
+        '''Returns detailed information about videos.'''
+
+    async def getAlbumById(self, *, album_id: int, owner_id: Optional[int] = None) -> 'responses.video_getAlbumById_response':
+        '''Returns video album info'''
+
+    async def getAlbums(self, *, owner_id: Optional[int] = None, offset: Optional[int] = None, extended: Optional[bool] = None, count: int = 50, need_system: bool = 0) -> 'responses.video_getAlbums_response':
+        '''Returns a list of video albums owned by a user or community.'''
+
+    async def getAlbumsByVideo(self, *, owner_id: int, video_id: int, target_id: Optional[int] = None, extended: bool = 0) -> 'responses.video_getAlbumsByVideo_response': ...
+
+    async def getComments(self, *, video_id: int, owner_id: Optional[int] = None, need_likes: Optional[bool] = None, start_comment_id: Optional[int] = None, offset: Optional[int] = None, sort: Optional[Literal['asc', 'desc']] = None, extended: Optional[bool] = None, fields: Optional[Union[List[str], str]] = None, count: int = 20) -> 'responses.video_getComments_response':
+        '''Returns a list of comments on a video.'''
+
+    async def removeFromAlbum(self, *, owner_id: int, video_id: int, target_id: Optional[int] = None, album_id: Optional[int] = None, album_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response': ...
+
+    async def reorderAlbums(self, *, album_id: int, owner_id: Optional[int] = None, before: Optional[int] = None, after: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Reorders the album in the list of user video albums.'''
+
+    async def reorderVideos(self, *, owner_id: int, video_id: int, target_id: Optional[int] = None, before_owner_id: Optional[int] = None, before_video_id: Optional[int] = None, after_owner_id: Optional[int] = None, after_video_id: Optional[int] = None, album_id: int = -2) -> 'responses.base_ok_response':
+        '''Reorders the video in the video album.'''
+
+    async def report(self, *, owner_id: int, video_id: int, reason: Optional[Literal[0, 1, 2, 3, 4, 5, 6]] = None, comment: Optional[str] = None, search_query: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Reports (submits a complaint about) a video.'''
+
+    async def reportComment(self, *, owner_id: int, comment_id: int, reason: Optional[Literal[0, 1, 2, 3, 4, 5, 6]] = None) -> 'responses.base_ok_response':
+        '''Reports (submits a complaint about) a comment on a video.'''
+
+    async def restore(self, *, video_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Restores a previously deleted video.'''
+
+    async def restoreComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.video_restoreComment_response':
+        '''Restores a previously deleted comment on a video.'''
+
+    async def save(self, *, name: Optional[str] = None, description: Optional[str] = None, is_private: Optional[bool] = None, wallpost: Optional[bool] = None, link: Optional[str] = None, group_id: Optional[int] = None, album_id: Optional[int] = None, privacy_view: Optional[Union[List[str], str]] = None, privacy_comment: Optional[Union[List[str], str]] = None, no_comments: Optional[bool] = None, repeat: Optional[bool] = None, compression: Optional[bool] = None) -> 'responses.video_save_response':
+        '''Returns a server address (required for upload) and video data.'''
+
+    filters_enum = Literal['youtube', 'vimeo', 'short', 'long']
+    async def search(self, *, q: Optional[str] = None, sort: Optional[Literal[1, 2, 0]] = None, hd: Optional[int] = None, adult: Optional[bool] = None, live: Optional[bool] = None, filters: Optional[filters_enum] = None, search_own: Optional[bool] = None, offset: Optional[int] = None, longer: Optional[int] = None, shorter: Optional[int] = None, count: int = 20, extended: bool = 0) -> 'responses.video_search_response':
+        '''Returns a list of videos under the set search criterion.'''
 
 class wall:
- def checkCopyrightLink(self, link: str) -> Any: ...
- def closeComments(self, owner_id: int, post_id: int) -> Any: ...
- def createComment(self, owner_id: int, post_id: int, from_group: int, message: str, reply_to_comment: int, attachments: List[str], sticker_id: int, guid: str) -> Any:
-  '''Adds a comment to a post on a user wall or community wall.'''
- def delete(self, owner_id: int, post_id: int) -> Any:
-  '''Deletes a post from a user wall or community wall.'''
- def deleteComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Deletes a comment on a post on a user wall or community wall.'''
- def edit(self, owner_id: int, post_id: int, friends_only: bool, message: str, attachments: List[str], services: str, signed: bool, publish_date: int, lat: float, long: float, place_id: int, mark_as_ads: bool, close_comments: bool, donut_paid_duration: int, poster_bkg_id: int, poster_bkg_owner_id: int, poster_bkg_access_hash: str, copyright: str, topic_id: int) -> Any:
-  '''Edits a post on a user wall or community wall.'''
- def editAdsStealth(self, owner_id: int, post_id: int, message: str, attachments: List[str], signed: bool, lat: float, long: float, place_id: int, link_button: str, link_title: str, link_image: str, link_video: str) -> Any:
-  '''Allows to edit hidden post.'''
- def editComment(self, owner_id: int, comment_id: int, message: str, attachments: List[str]) -> Any:
-  '''Edits a comment on a user wall or community wall.'''
- def get(self, owner_id: int, domain: str, offset: int, count: int, filter: str, extended: bool, fields: Dict[str, Any]) -> Any:
-  '''Returns a list of posts on a user wall or community wall.'''
- def getById(self, posts: List[str], extended: bool, fields: Dict[str, Any], copy_history_depth: int = 2) -> Any:
-  '''Returns a list of posts from user or community walls by their IDs.'''
- def getComment(self, owner_id: int, comment_id: int, extended: bool, fields: Dict[str, Any]) -> Any:
-  '''Returns a comment on a post on a user wall or community wall.'''
- def getComments(self, owner_id: int, post_id: int, need_likes: bool, start_comment_id: int, offset: int, count: int, sort: str, preview_length: int, extended: bool, fields: Dict[str, Any], comment_id: int, thread_items_count: int = 0) -> Any:
-  '''Returns a list of comments on a post on a user wall or community wall.'''
- def getReposts(self, owner_id: int, post_id: int, offset: int, count: int = 20) -> Any:
-  '''Returns information about reposts of a post on user wall or community wall.'''
- def openComments(self, owner_id: int, post_id: int) -> Any: ...
- def pin(self, owner_id: int, post_id: int) -> Any:
-  '''Pins the post on wall.'''
- def post(self, owner_id: int, friends_only: bool, from_group: bool, message: str, attachments: List[str], services: str, signed: bool, publish_date: int, lat: float, long: float, place_id: int, post_id: int, guid: str, close_comments: bool, donut_paid_duration: int, mute_notifications: bool, copyright: str, topic_id: int, mark_as_ads: bool = False) -> Any:
-  '''Adds a new post on a user wall or community wall. Can also be used to publish suggested or scheduled posts.'''
- def postAdsStealth(self, owner_id: int, message: str, attachments: List[str], signed: bool, lat: float, long: float, place_id: int, guid: str, link_button: str, link_title: str, link_image: str, link_video: str) -> Any:
-  '''Allows to create hidden post which will not be shown on the community's wall and can be used for creating an ad with type "Community post".'''
- def reportComment(self, owner_id: int, comment_id: int, reason: int) -> Any:
-  '''Reports (submits a complaint about) a comment on a post on a user wall or community wall.'''
- def reportPost(self, owner_id: int, post_id: int, reason: int) -> Any:
-  '''Reports (submits a complaint about) a post on a user wall or community wall.'''
- def repost(self, object: str, message: str, group_id: int, mute_notifications: bool, mark_as_ads: bool = False) -> Any:
-  '''Reposts (copies) an object to a user wall or community wall.'''
- def restore(self, owner_id: int, post_id: int) -> Any:
-  '''Restores a post deleted from a user wall or community wall.'''
- def restoreComment(self, owner_id: int, comment_id: int) -> Any:
-  '''Restores a comment deleted from a user wall or community wall.'''
- def search(self, owner_id: int, domain: str, query: str, owners_only: bool, extended: bool, fields: Dict[str, Any], count: int = 20, offset: int = 0) -> Any:
-  '''Allows to search posts on user or community walls.'''
- def unpin(self, owner_id: int, post_id: int) -> Any:
-  '''Unpins the post on wall.'''
+    async def checkCopyrightLink(self, *, link: str) -> 'responses.base_bool_response': ...
+
+    async def closeComments(self, *, owner_id: int, post_id: int) -> 'responses.base_bool_response': ...
+
+    async def createComment(self, *, post_id: int, owner_id: Optional[int] = None, from_group: Optional[int] = None, message: Optional[str] = None, reply_to_comment: Optional[int] = None, attachments: Optional[Union[List[str], str]] = None, sticker_id: Optional[int] = None, guid: Optional[str] = None) -> 'responses.wall_createComment_response':
+        '''Adds a comment to a post on a user wall or community wall.'''
+
+    async def delete(self, *, owner_id: Optional[int] = None, post_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a post from a user wall or community wall.'''
+
+    async def deleteComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Deletes a comment on a post on a user wall or community wall.'''
+
+    async def edit(self, *, post_id: int, owner_id: Optional[int] = None, friends_only: Optional[bool] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, services: Optional[str] = None, signed: Optional[bool] = None, publish_date: Optional[int] = None, lat: Optional[float] = None, long: Optional[float] = None, place_id: Optional[int] = None, mark_as_ads: Optional[bool] = None, close_comments: Optional[bool] = None, donut_paid_duration: Optional[int] = None, poster_bkg_id: Optional[int] = None, poster_bkg_owner_id: Optional[int] = None, poster_bkg_access_hash: Optional[str] = None, copyright: Optional[str] = None, topic_id: Optional[Literal[0, 1, 7, 12, 16, 19, 21, 23, 25, 26, 32, 43]] = None) -> 'responses.wall_edit_response':
+        '''Edits a post on a user wall or community wall.'''
+
+    async def editAdsStealth(self, *, post_id: int, owner_id: Optional[int] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, signed: Optional[bool] = None, lat: Optional[float] = None, long: Optional[float] = None, place_id: Optional[int] = None, link_button: Optional[str] = None, link_title: Optional[str] = None, link_image: Optional[str] = None, link_video: Optional[str] = None) -> 'responses.base_ok_response':
+        '''Allows to edit hidden post.'''
+
+    async def editComment(self, *, comment_id: int, owner_id: Optional[int] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None) -> 'responses.base_ok_response':
+        '''Edits a comment on a user wall or community wall.'''
+
+    async def get(self, *, owner_id: Optional[int] = None, domain: Optional[str] = None, offset: Optional[int] = None, count: Optional[int] = None, filter: Optional['objects.wall_get_filter'] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None) -> 'responses.wall_get_response':
+        '''Returns a list of posts on a user wall or community wall.'''
+
+    async def getById(self, *, posts: Union[List[str], str], extended: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, copy_history_depth: int = 2) -> 'responses.wall_getById_legacy_response':
+        '''Returns a list of posts from user or community walls by their IDs.'''
+
+    async def getComment(self, *, comment_id: int, owner_id: Optional[int] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None) -> 'responses.wall_getComment_response':
+        '''Returns a comment on a post on a user wall or community wall.'''
+
+    async def getComments(self, *, owner_id: Optional[int] = None, post_id: Optional[int] = None, need_likes: Optional[bool] = None, start_comment_id: Optional[int] = None, offset: Optional[int] = None, count: Optional[int] = None, sort: Optional[Literal['asc', 'desc']] = None, preview_length: Optional[int] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, comment_id: Optional[int] = None, thread_items_count: int = 0) -> 'responses.wall_getComments_response':
+        '''Returns a list of comments on a post on a user wall or community wall.'''
+
+    async def getReposts(self, *, owner_id: Optional[int] = None, post_id: Optional[int] = None, offset: Optional[int] = None, count: int = 20) -> 'responses.wall_getReposts_response':
+        '''Returns information about reposts of a post on user wall or community wall.'''
+
+    async def openComments(self, *, owner_id: int, post_id: int) -> 'responses.base_bool_response': ...
+
+    async def pin(self, *, post_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Pins the post on wall.'''
+
+    async def post(self, *, owner_id: Optional[int] = None, friends_only: Optional[bool] = None, from_group: Optional[bool] = None, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, services: Optional[str] = None, signed: Optional[bool] = None, publish_date: Optional[int] = None, lat: Optional[float] = None, long: Optional[float] = None, place_id: Optional[int] = None, post_id: Optional[int] = None, guid: Optional[str] = None, close_comments: Optional[bool] = None, donut_paid_duration: Optional[int] = None, mute_notifications: Optional[bool] = None, copyright: Optional[str] = None, topic_id: Optional[Literal[0, 1, 7, 12, 16, 19, 21, 23, 25, 26, 32, 43]] = None, mark_as_ads: bool = False) -> 'responses.wall_post_response':
+        '''Adds a new post on a user wall or community wall. Can also be used to publish suggested or scheduled posts.'''
+
+    async def postAdsStealth(self, *, owner_id: int, message: Optional[str] = None, attachments: Optional[Union[List[str], str]] = None, signed: Optional[bool] = None, lat: Optional[float] = None, long: Optional[float] = None, place_id: Optional[int] = None, guid: Optional[str] = None, link_button: Optional[str] = None, link_title: Optional[str] = None, link_image: Optional[str] = None, link_video: Optional[str] = None) -> 'responses.wall_postAdsStealth_response':
+        '''Allows to create hidden post which will not be shown on the community's wall and can be used for creating an ad with type "Community post".'''
+
+    async def reportComment(self, *, owner_id: int, comment_id: int, reason: Optional[Literal[0, 1, 2, 3, 4, 5, 6]] = None) -> 'responses.base_ok_response':
+        '''Reports (submits a complaint about) a comment on a post on a user wall or community wall.'''
+
+    async def reportPost(self, *, owner_id: int, post_id: int, reason: Optional[Literal[0, 1, 2, 3, 4, 5, 6]] = None) -> 'responses.base_ok_response':
+        '''Reports (submits a complaint about) a post on a user wall or community wall.'''
+
+    async def repost(self, *, object: str, message: Optional[str] = None, group_id: Optional[int] = None, mute_notifications: Optional[bool] = None, mark_as_ads: bool = False) -> 'responses.wall_repost_response':
+        '''Reposts (copies) an object to a user wall or community wall.'''
+
+    async def restore(self, *, owner_id: Optional[int] = None, post_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Restores a post deleted from a user wall or community wall.'''
+
+    async def restoreComment(self, *, comment_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Restores a comment deleted from a user wall or community wall.'''
+
+    async def search(self, *, owner_id: Optional[int] = None, domain: Optional[str] = None, query: Optional[str] = None, owners_only: Optional[bool] = None, extended: Optional[bool] = None, fields: Optional[Union[List['objects.base_user_group_fields'], str]] = None, count: int = 20, offset: int = 0) -> 'responses.wall_search_response':
+        '''Allows to search posts on user or community walls.'''
+
+    async def unpin(self, *, post_id: int, owner_id: Optional[int] = None) -> 'responses.base_ok_response':
+        '''Unpins the post on wall.'''
 
 class widgets:
- def getComments(self, widget_api_id: int, url: str, page_id: str, fields: Dict[str, Any], order: str = 'date', offset: int = 0, count: int = 10) -> Any:
-  '''Gets a list of comments for the page added through the [vk.com/dev/Comments|Comments widget].'''
- def getPages(self, widget_api_id: int, order: str = 'friend_likes', period: str = 'week', offset: int = 0, count: int = 10) -> Any:
-  '''Gets a list of application/site pages where the [vk.com/dev/Comments|Comments widget] or [vk.com/dev/Like|Like widget] is installed.'''
+    async def getComments(self, *, widget_api_id: Optional[int] = None, url: Optional[str] = None, page_id: Optional[str] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, order: str = 'date', offset: int = 0, count: int = 10) -> 'responses.widgets_getComments_response':
+        '''Gets a list of comments for the page added through the [vk.com/dev/Comments|Comments widget].'''
+
+    async def getPages(self, *, widget_api_id: Optional[int] = None, order: str = 'friend_likes', period: str = 'week', offset: int = 0, count: int = 10) -> 'responses.widgets_getPages_response':
+        '''Gets a list of application/site pages where the [vk.com/dev/Comments|Comments widget] or [vk.com/dev/Like|Like widget] is installed.'''
+

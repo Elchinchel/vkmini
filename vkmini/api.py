@@ -62,7 +62,8 @@ class VkApi:
         if session is not None:
             self._session = session
 
-        self._sleep_lock = asyncio.Lock()
+        if retries > 0:
+            self._sleep_lock = asyncio.Lock()
 
     def _set_method_groups(self):
         for group in MethodGroup._get_all(self):
@@ -99,12 +100,17 @@ class VkApi:
                 )
             if self.excepts:
                 raise VkResponseException(resp_body['error'], kwargs) from None
+            else:
+                return resp_body['error']
         else:
             if self.logger:
                 self.logger.debug(f"Запрос {method} выполнен")
             return response
 
     async def __retryer(self, method: str, **kwargs) -> Any:
+        if self.retries == 0:
+            return await self._method(method, **kwargs)
+
         retry = 0
         while True:
             try:

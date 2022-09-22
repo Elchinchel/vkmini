@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from .types.api import VkApi  # type: ignore
-    VkGroupApi = VkApi
+    class VkGroupApi(VkApi): ...
 else:
     from .api import VkApi, VkGroupApi
 

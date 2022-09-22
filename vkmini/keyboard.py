@@ -55,7 +55,7 @@ class Keyboard:
     inline: bool
 
     def __init__(self,
-                 buttons: Union[Button, List[Button]] = None,
+                 buttons: Union[Button, List[Button], List[List[Button]]] = None,
                  inline: bool = True,
                  one_time: bool = False) -> None:
         self.buttons = []

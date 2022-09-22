@@ -28,6 +28,7 @@ _method_groups = {
     'polls': '',
     'search': '',
     'secure': '',
+    'store': '',
     'stats': '',
     'status': '',
     'storage': '',
@@ -55,15 +56,15 @@ class MethodGroup:
             return MethodGroup(name, vk)
         return None
 
-    @staticmethod
-    def _get_all(vk: 'VkApi') -> List['MethodGroup']:
-        return [MethodGroup(name, vk) for name in _method_groups.keys()]
+    @classmethod
+    def _get_all(cls, vk: 'VkApi') -> List['MethodGroup']:
+        return [cls(name, vk) for name in _method_groups.keys()]
 
     def __init__(self, name, vk) -> None:
         self.name = name
         self.vk = vk
 
     def __getattr__(self, method: str) -> Coroutine:
-        async def method_call(**kwargs):
-            return await self.vk(f'{self.name}.{method}', **kwargs)
+        def method_call(**kwargs):
+            return self.vk(f'{self.name}.{method}', **kwargs)
         return method_call
