@@ -1,7 +1,8 @@
 import json
 
-from typing import Tuple, Union
+from typing import Optional, Tuple, Union
 from aiohttp import ClientSession
+from warnings import warn
 
 from vkmini.exceptions import NetworkError
 
@@ -23,7 +24,7 @@ def set_session(session: ClientSession) -> None:
     """
     Устанавливает сессию, которая будет использоваться по умолчанию при
     любых запросах к API, в т.ч. LongPoll (исключение - обращение к API c
-    помощью обектов, при инстанциировании которых была явно передана сессия)
+    помощью обектов, при создании которых была явно передана сессия)
 
     Разумеется, стоит позаботиться о закрытии этой сессии перед завершением
     работы приложения
@@ -41,6 +42,15 @@ async def _get_session(session) -> Tuple[ClientSession, bool]:
     if not (default_session or session):
         return ClientSession(), True
     return (session or default_session), False
+
+
+def _check_longpoll_session(session: Optional[ClientSession]):
+    if not (session or default_session):
+        warn(ResourceWarning(
+            'При создании экземпляра LP не была указана сессия, при этом '
+            'сессия default_session также не задана. Это приведёт к '
+            'созданию новой сессии на каждый запрос.'
+        ))
 
 
 async def post(url: str,

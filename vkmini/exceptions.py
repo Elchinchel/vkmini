@@ -1,4 +1,12 @@
 class VkResponseException(Exception):
+    """
+    Описывает ошибку VK API
+
+    `request_data` -- параметры запроса
+    `error_code` -- код ошибки
+    `error_msg` -- сообщение ошибки
+    `error_data` -- объект из поля 'error' ответа VK API, описывающий ошибку
+    """
     request_data: dict
     error_code: int
     error_msg: str
@@ -32,7 +40,7 @@ class VkResponseException(Exception):
 
 
 class NetworkError(Exception):
-    '''Ошибка сети при выполнении запроса'''
+    """Ошибка сети при выполнении запроса"""
     code: int
 
     def __init__(self, code: int):
@@ -40,10 +48,10 @@ class NetworkError(Exception):
 
 
 class TokenInvalid(VkResponseException):
-    '''
+    """
     Общая ошибка недействительного токена для групп, пользователей
     и приложений (коды 5, 27, 28)
-    '''
+    """
 
 
 class VkErrorUnknown(VkResponseException):  # общая ошибка

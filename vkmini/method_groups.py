@@ -4,47 +4,47 @@ if TYPE_CHECKING:
     from .api import VkApi
 
 
-_method_groups = {
-    'account': '',
-    'ads': '',
-    'apps': '',
-    'audio': '',
-    'board': '',
-    'database': '',
-    'docs': '',
-    'fave': '',
-    'friends': '',
-    'gifts': '',
-    'groups': '',
-    'likes': '',
-    'market': '',
-    'messages': 'Методы для работы с личными сообщениями',
-    'newsfeed': '',
-    'notes': '',
-    'notifications': '',
-    'pages': '',
-    'photos': '',
-    'places': 'Методы для работы с местами',
-    'polls': '',
-    'search': '',
-    'secure': '',
-    'store': '',
-    'stats': '',
-    'status': '',
-    'storage': '',
-    'users': '',
-    'utils': '',
-    'video': '',
-    'podcasts': '',
-    'leadforms': '',
-    'prettycards': '',
-    'stories': '',
-    'appwidgets': '',
-    'streaming': '',
-    'orders': '',
-    'wall': '',
-    'widgets': ''
-}
+_API_METHOD_GROUPS = (
+    'account',
+    'ads',
+    'apps',
+    'audio',
+    'board',
+    'database',
+    'docs',
+    'fave',
+    'friends',
+    'gifts',
+    'groups',
+    'likes',
+    'market',
+    'messages',
+    'newsfeed',
+    'notes',
+    'notifications',
+    'pages',
+    'photos',
+    'places',
+    'polls',
+    'search',
+    'secure',
+    'store',
+    'stats',
+    'status',
+    'storage',
+    'users',
+    'utils',
+    'video',
+    'podcasts',
+    'leadforms',
+    'prettycards',
+    'stories',
+    'appwidgets',
+    'streaming',
+    'orders',
+    'wall',
+    'widgets'
+)
 
 
 class MethodGroup:
@@ -52,13 +52,13 @@ class MethodGroup:
 
     @staticmethod
     def _get(vk: 'VkApi', name: str) -> Optional['MethodGroup']:
-        if name in _method_groups:
+        if name in _API_METHOD_GROUPS:
             return MethodGroup(name, vk)
         return None
 
     @classmethod
     def _get_all(cls, vk: 'VkApi') -> List['MethodGroup']:
-        return [cls(name, vk) for name in _method_groups.keys()]
+        return [cls(name, vk) for name in _API_METHOD_GROUPS.keys()]
 
     def __init__(self, name, vk) -> None:
         self.name = name

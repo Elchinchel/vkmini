@@ -3,14 +3,19 @@ import json
 from typing import List, Union, Literal
 
 
-button_colors = Literal[
+ButtonColors = Literal[
     'primary',  # Обычная
     'secondary',  # "Бледная"
     'positive',  # Зелёная
-    'negative'  # Красная
+    'negative',  # Красная
 ]
-button_types = Literal[
-    'text', 'open_link', 'location', 'vkpay', 'open_app', 'callback'
+ButtonTypes = Literal[
+    'text',
+    'vkpay',
+    'location',
+    'callback',
+    'open_app',
+    'open_link',
 ]
 
 
@@ -20,22 +25,22 @@ class Button:
     label: str
     type: str
 
-    PRIMARY = 'primary'
-    SECONDARY = 'secondary'
-    NEGATIVE = 'negative'
-    POSITIVE = 'positive'
-
-    def __init__(self,
-                 label: str,
-                 payload: Union[str, dict],
-                 type: button_types = 'text',
-                 color: button_colors = 'primary') -> None:
+    def __init__(
+            self,
+            label: str,
+            payload: Union[str, dict],
+            type: ButtonTypes = 'text',
+            color: ButtonColors = 'primary'
+    ):
         self.payload = payload
         if isinstance(self.payload, dict):
             self.payload = json.dumps(self.payload, ensure_ascii=False)
         self.color = color
         self.label = label
         self.type = type
+
+    def __str__(self) -> str:
+        return json.dumps(self.obj, ensure_ascii=False)
 
     @property
     def obj(self):
@@ -54,10 +59,12 @@ class Keyboard:
     one_time: bool
     inline: bool
 
-    def __init__(self,
-                 buttons: Union[Button, List[Button], List[List[Button]]] = None,
-                 inline: bool = True,
-                 one_time: bool = False) -> None:
+    def __init__(
+            self,
+            buttons: Union[Button, List[Button], List[List[Button]]] = None,
+            inline: bool = True,
+            one_time: bool = False
+    ):
         self.buttons = []
         if buttons is not None:
             self.add_buttons(buttons)
@@ -72,11 +79,13 @@ class Keyboard:
         return self.jsonize()
 
     def add_buttons(self, buttons: Union[Button, List[Button]]):
+        # TODO: возможность использовать описание кнопки вместо объекта
         if isinstance(buttons, Button):
             buttons = [buttons]
         self.buttons.append(buttons)
 
     def jsonize(self, alt_buttons: List[List[Button]] = None) -> str:
+        # XXX: зачем здесь аргумент alt_buttons?
         if alt_buttons is None:
             alt_buttons = self.buttons
         return json.dumps({
@@ -86,6 +95,7 @@ class Keyboard:
         }, ensure_ascii=False)
 
     def format_label(self, data: Union[tuple, dict]) -> 'Keyboard':
+        # XXX: это должно быть в кнопках
         for line in self.buttons:
             for button in line:
                 try:
@@ -95,10 +105,11 @@ class Keyboard:
         return self
 
     def format_payload(self, data: Union[tuple, dict]) -> 'Keyboard':
+        # XXX: это должно быть в кнопках
         for line in self.buttons:
             for button in line:
                 try:
-                    button.payload = button.label % data
+                    button.payload = button.payload % data
                 except TypeError:
                     pass
         return self

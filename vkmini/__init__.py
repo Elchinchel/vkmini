@@ -1,15 +1,6 @@
-from .api import VkResponseException, set_loop
-
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from .types.api import VkApi  # type: ignore
-    class VkGroupApi(VkApi): ...
-else:
-    from .api import VkApi, VkGroupApi
-
-from .exceptions import *
-from .user_longpoll import LP
-from .request import set_session, set_decoder
-from .group_longpoll import GroupLP
-from .keyboard import Keyboard, Button
+from vkmini.api import VkApi, VkGroupApi, set_loop
+from vkmini.request import set_session, set_decoder
+from vkmini.keyboard import Keyboard, Button
+from vkmini.exceptions import VkResponseException
+from vkmini.user_longpoll import LP
+from vkmini.group_longpoll import GroupLP
