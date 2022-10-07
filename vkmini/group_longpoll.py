@@ -2,7 +2,7 @@ from typing import AsyncGenerator, Union
 
 from aiohttp.client import ClientSession
 
-from vkmini import VkApi
+from vkmini import VkApi, GroupVkApi
 from vkmini.utils import AbstractLogger
 from vkmini.request import longpoll_get, _check_longpoll_session
 
@@ -19,14 +19,14 @@ class GroupLP:
     key: str
     ts: int
 
-    _vk: VkApi
+    _vk: GroupVkApi
     _session: Union[ClientSession, None]
 
     __session_owner: bool = False
 
     def __init__(
             self,
-            vk: VkApi,
+            vk: GroupVkApi,
             group_id: int = None,
             wait: int = 25,
             logger: AbstractLogger = None,
@@ -47,7 +47,21 @@ class GroupLP:
         2. Сессия переданного экземпляра VkApi
         3. Общая сессия (см vkmini.set_session)
         """
-        self._vk = vk
+        if not isinstance(vk, VkApi):
+            raise TypeError('Аргумент vk должен быть экземпляром VkApi, '
+                            'передан %s' % repr(vk))
+
+        if isinstance(vk, GroupVkApi):
+            self._vk = vk
+        else:
+            self._vk = GroupVkApi(
+                vk.access_token,
+                vk.excepts,
+                vk.version,
+                vk.retries,
+                vk.logger,
+                vk._session,
+            )
 
         if wait > 90:
             raise ValueError('Параметр wait не может превышать 90 секунд')
@@ -64,7 +78,7 @@ class GroupLP:
         """
         _check_longpoll_session(self._session)
         if self.group_id is None:
-            self.group_id = await self._vk.get_user_id()
+            self.group_id = await self._vk.get_vk_id()
         await self._set_longpoll_data(True)
         self.check = self._check
         return await self.check()

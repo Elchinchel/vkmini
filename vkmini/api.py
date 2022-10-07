@@ -21,7 +21,7 @@ class VkApi:
     URL: str = 'https://api.vk.com/method/%s?v=%s&lang=%s'
     rps_delay: int = 1 / 3
 
-    user_id: Union[int, None] = None
+    _vk_id: Union[int, None] = None
 
     version: str
     lang: str = 'ru'
@@ -39,7 +39,7 @@ class VkApi:
             self,
             access_token: str,
             excepts: bool = False,
-            version: str = '5.130',
+            version: str = '5.131',
             retries: int = 0,
             sync_mode: bool = None,
             logger: AbstractLogger = None,
@@ -47,8 +47,8 @@ class VkApi:
     ):
         self.access_token = access_token
         self.excepts = excepts
-        self.retries = retries
         self.version = version
+        self.retries = retries
         self.logger = logger
         self._session = session
 
@@ -123,16 +123,19 @@ class VkApi:
     async def __call__(self, method, **kwargs) -> Any:
         return await self.__retryer(method, **kwargs)
 
+    async def get_vk_id(self) -> int:
+        if self._vk_id is None:
+            self._vk_id = (await self.users.get())[0]['id']
+        return self._vk_id
+
     async def get_user_id(self) -> int:
-        if self.user_id is None:
-            self.user_id = (await self.users.get())[0]['id']
-        return self.user_id
+        return self.get_vk_id()
 
 
-class VkGroupApi(VkApi):
+class GroupVkApi(VkApi):
     rps_delay: int = 1 / 20
 
-    async def get_user_id(self) -> int:
-        if self.user_id is None:
-            self.user_id = (await self.groups.getById())[0]['id']
-        return self.user_id
+    async def get_vk_id(self) -> int:
+        if self._vk_id is None:
+            self._vk_id = (await self.groups.getById())[0]['id']
+        return self._vk_id

@@ -109,10 +109,10 @@ class VkApi:
         `method` -- название метода, например 'messages.send'
         """
 
-    async def get_user_id(self) -> int: ...
+    async def get_vk_id(self) -> int: ...
 
 
-class VkGroupApi(VkApi):
+class GroupVkApi(VkApi):
     """
     Класс для обращения к API с увеличенным количеством запросов в секунду
     """
