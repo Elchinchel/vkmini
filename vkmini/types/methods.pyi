@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Union, Literal, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Union, Literal, Optional, overload
 from typing_extensions import TypedDict, NotRequired
 
 if TYPE_CHECKING:
@@ -452,7 +452,10 @@ class friends:
     async def editList(self, *, list_id: int, name: Optional[str] = None, user_ids: Optional[Union[List[int], str]] = None, add_user_ids: Optional[Union[List[int], str]] = None, delete_user_ids: Optional[Union[List[int], str]] = None) -> 'responses.base_ok_response':
         '''Edits a friend list of the current user.'''
 
-    async def get(self, *, user_id: Optional[int] = None, order: Optional[Literal['hints', 'random', 'mobile', 'name', 'smart']] = None, list_id: Optional[int] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, ref: Optional[str] = None, count: int = 5000) -> 'responses.friends_get_response':
+    @overload
+    async def get(self, *, fields: Union[List['objects.users_fields'], str], user_id: Optional[int] = None, order: Optional[Literal['hints', 'random', 'mobile', 'name', 'smart']] = None, list_id: Optional[int] = None, offset: Optional[int] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, ref: Optional[str] = None, count: int = 5000) -> 'responses.friends_get_fields_response': ...
+    @overload
+    async def get(self, *, user_id: Optional[int] = None, order: Optional[Literal['hints', 'random', 'mobile', 'name', 'smart']] = None, list_id: Optional[int] = None, offset: Optional[int] = None, fields: Optional[None] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, ref: Optional[str] = None, count: int = 5000) -> 'responses.friends_get_response':
         '''Returns a list of user IDs or detailed information about a user's friends.'''
 
     async def getAppUsers(self) -> 'responses.friends_getAppUsers_response':
@@ -565,10 +568,16 @@ class groups:
     async def getLongPollSettings(self, *, group_id: int) -> 'responses.groups_getLongPollSettings_response':
         '''Returns Long Poll notification settings'''
 
-    async def getMembers(self, *, group_id: Optional[str] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, filter: Optional[Literal['friends', 'unsure', 'managers', 'donut']] = None, sort: Literal['id_asc', 'id_desc', 'time_asc', 'time_desc'] = 'id_asc', count: int = 1000) -> 'responses.groups_getMembers_response':
+    @overload
+    async def getMembers(self, *, fields: Union[List['objects.users_fields'], str], group_id: Optional[str] = None, offset: Optional[int] = None, filter: Optional[Literal['friends', 'unsure', 'managers', 'donut']] = None, sort: Literal['id_asc', 'id_desc', 'time_asc', 'time_desc'] = 'id_asc', count: int = 1000) -> 'responses.groups_getMembers_fields_response': ...
+    @overload
+    async def getMembers(self, *, group_id: Optional[str] = None, offset: Optional[int] = None, fields: Optional[None] = None, filter: Optional[Literal['friends', 'unsure', 'managers', 'donut']] = None, sort: Literal['id_asc', 'id_desc', 'time_asc', 'time_desc'] = 'id_asc', count: int = 1000) -> 'responses.groups_getMembers_response':
         '''Returns a list of community members.'''
 
-    async def getRequests(self, *, group_id: int, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, count: int = 20) -> 'responses.groups_getRequests_response':
+    @overload
+    async def getRequests(self, *, group_id: int, fields: Union[List['objects.users_fields'], str], offset: Optional[int] = None, count: int = 20) -> 'responses.groups_getRequests_fields_response': ...
+    @overload
+    async def getRequests(self, *, group_id: int, offset: Optional[int] = None, fields: Optional[None] = None, count: int = 20) -> 'responses.groups_getRequests_response':
         '''Returns a list of requests to the community.'''
 
     async def getSettings(self, *, group_id: int) -> 'responses.groups_getSettings_response':
@@ -1297,7 +1306,10 @@ class users:
     async def get(self, *, user_ids: Optional[Union[List[str], str]] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None) -> 'responses.users_get_response':
         '''Returns detailed information on users.'''
 
-    async def getFollowers(self, *, user_id: Optional[int] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, count: int = 100) -> 'responses.users_getFollowers_response':
+    @overload
+    async def getFollowers(self, *, fields: Union[List['objects.users_fields'], str], user_id: Optional[int] = None, offset: Optional[int] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, count: int = 100) -> 'responses.users_getFollowers_fields_response': ...
+    @overload
+    async def getFollowers(self, *, user_id: Optional[int] = None, offset: Optional[int] = None, fields: Optional[None] = None, name_case: Optional[Literal['nom', 'gen', 'dat', 'acc', 'ins', 'abl']] = None, count: int = 100) -> 'responses.users_getFollowers_response':
         '''Returns a list of IDs of followers of the user in question, sorted by date added, most recent first.'''
 
     async def getSubscriptions(self, *, user_id: Optional[int] = None, extended: Optional[bool] = None, offset: Optional[int] = None, fields: Optional[Union[List['objects.users_fields'], str]] = None, count: int = 20) -> 'responses.users_getSubscriptions_response':

@@ -1,17 +1,32 @@
-import asyncio
-
-from typing import Union, Any
+from abc import ABC, abstractmethod
+from typing import List, Optional, Union, Any
 
 from aiohttp.client import ClientSession
 
 from vkmini.types import methods
 from vkmini.utils import AbstractLogger
+from vkmini.exceptions import VkResponseException, VkErrorCaptcha
 
 
-def set_loop(loop: asyncio.AbstractEventLoop) -> None:
+class ExecuteResult:
+    """Содержит результаты выполнения метода `execute`"""
+    response: Optional[Any]
+    errors: List[VkResponseException]
+
+
+class CaptchaHandler(ABC):
     """
-    Устанавливает цикл событий, который будет использоваться библиотекой
+    Обработчик ошибки #14 (Captcha needed)
+
+    Для обработки этой ошибки в конструктор класса `VkApi` необходимо
+    передать объект, реализующий метод `solve_captcha`
     """
+    RETRY_COUNT = 5
+
+    @abstractmethod
+    async def solve_captcha(self, error: VkErrorCaptcha) -> str:
+        """Возвращает строку -- решение капчи (captcha_key)"""
+        raise NotImplementedError
 
 
 class VkApi:
@@ -82,7 +97,8 @@ class VkApi:
             retries: int = 0,
             sync_mode: bool = None,
             logger: AbstractLogger = None,
-            session: ClientSession = None
+            session: ClientSession = None,
+            captcha_handler: Union[CaptchaHandler, None] = None
     ):
         """
         `access_token` -- ключ доступа VK API
@@ -99,7 +115,10 @@ class VkApi:
         `logger` -- любой объект, имеющий атрибуты info, debug и warning,
         по умолчанию None, то есть логирование не ведется
 
-        `session` -- aiohttp.ClientSession, см. описание vkmini.set_session
+        `session` -- aiohttp.ClientSession, см. описание `vkmini.set_session`
+
+        `captcha_handler` -- экземпляр `vkmini.api.CaptchaHandler`, используемый
+        для обработки ошибки #14 (Captcha needed)
         """
 
     async def __call__(self, method: str, **kwargs) -> Any:
@@ -109,7 +128,18 @@ class VkApi:
         `method` -- название метода, например 'messages.send'
         """
 
+    async def execute(self, code: str) -> ExecuteResult:
+        """
+        Выполняет код на языке VKScript
+
+        Описание метода: https://dev.vk.com/method/execute
+
+        Возвращает объект `vkmini.api.ExecuteResult`
+        """
+
     async def get_vk_id(self) -> int: ...
+
+    async def wait_request_delay(self) -> None: ...
 
 
 class GroupVkApi(VkApi):
