@@ -16,11 +16,11 @@ def set_loop(loop):
 
 
 class ExecuteResult:
-    response: Optional[Any]
+    response: Any
     errors: List[VkResponseException]
 
     def __init__(self, data: Dict[str, Any]) -> None:
-        self.response = data.get('response')
+        self.response = data['response']
         self.errors = [
             VkResponseException(err) for err in data.get('execute_errors', [])
         ]
@@ -28,6 +28,7 @@ class ExecuteResult:
 
 class CaptchaHandler(ABC):
     RETRY_COUNT = 5
+
 
     @abstractmethod
     async def solve_captcha(self, error: VkErrorCaptcha) -> str:

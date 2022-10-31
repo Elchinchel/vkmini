@@ -10,7 +10,7 @@ from vkmini.exceptions import VkResponseException, VkErrorCaptcha
 
 class ExecuteResult:
     """Содержит результаты выполнения метода `execute`"""
-    response: Optional[Any]
+    response: Any
     errors: List[VkResponseException]
 
 
