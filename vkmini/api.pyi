@@ -14,7 +14,7 @@ class ExecuteResult:
     errors: List[VkResponseException]
 
 
-class CaptchaHandler(ABC):
+class BaseCaptchaHandler(ABC):
     """
     Обработчик ошибки #14 (Captcha needed)
 
@@ -24,7 +24,7 @@ class CaptchaHandler(ABC):
     RETRY_COUNT = 5
 
     @abstractmethod
-    async def solve_captcha(self, error: VkErrorCaptcha) -> str:
+    async def solve_captcha(self, error: VkErrorCaptcha) -> Optional[str]:
         """Возвращает строку -- решение капчи (captcha_key)"""
         raise NotImplementedError
 
@@ -98,7 +98,7 @@ class VkApi:
             sync_mode: bool = None,
             logger: AbstractLogger = None,
             session: ClientSession = None,
-            captcha_handler: Union[CaptchaHandler, None] = None
+            captcha_handler: Union[BaseCaptchaHandler, None] = None
     ):
         """
         `access_token` -- ключ доступа VK API
@@ -117,8 +117,8 @@ class VkApi:
 
         `session` -- aiohttp.ClientSession, см. описание `vkmini.set_session`
 
-        `captcha_handler` -- экземпляр `vkmini.api.CaptchaHandler`, используемый
-        для обработки ошибки #14 (Captcha needed)
+        `captcha_handler` -- экземпляр `vkmini.api.BaseCaptchaHandler`,
+        используемый для обработки ошибки #14 (Captcha needed)
         """
 
     async def __call__(self, method: str, **kwargs) -> Any:

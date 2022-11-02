@@ -1,30 +1,19 @@
 import time
 
-from abc import ABC, abstractmethod
-from typing import Any, Callable, Deque
+from typing import Any, Callable, Protocol, Deque
 from asyncio import Future
 from collections import deque
 
 
-class AbstractLogger(ABC):
-    @abstractmethod
-    def debug(self, msg: str):
+class AbstractLogger(Protocol):
+    def debug(self, __msg: str):
         raise NotImplementedError
 
-    @abstractmethod
-    def info(self, msg: str):
-        raise NotImplementedError
-
-    @abstractmethod
-    def warning(self, msg: str):
-        raise NotImplementedError
-
-    @abstractmethod
-    def error(self, msg: str):
+    def warning(self, __msg: str):
         raise NotImplementedError
 
 
-class Printer(AbstractLogger):
+class Printer:
     """
     Реализует распространённый интерфейс логгера,
     выводит логируемые сообщения в sys.stdout

@@ -26,12 +26,11 @@ class ExecuteResult:
         ]
 
 
-class CaptchaHandler(ABC):
+class BaseCaptchaHandler(ABC):
     RETRY_COUNT = 5
 
-
     @abstractmethod
-    async def solve_captcha(self, error: VkErrorCaptcha) -> str:
+    async def solve_captcha(self, error: VkErrorCaptcha) -> Optional[str]:
         raise NotImplementedError
 
 
@@ -53,7 +52,7 @@ class VkApi:
     _blocker: Blocker
     _session: ClientSession
     _releaser: asyncio.Task
-    _captcha_handler: Optional[CaptchaHandler]
+    _captcha_handler: Optional[BaseCaptchaHandler]
 
     def __init__(
             self,
@@ -64,7 +63,7 @@ class VkApi:
             sync_mode: bool = None,
             logger: AbstractLogger = None,
             session: ClientSession = None,
-            captcha_handler: Union[CaptchaHandler, None] = None
+            captcha_handler: Union[BaseCaptchaHandler, None] = None
     ):
         self.access_token = access_token
         self.excepts = excepts
@@ -117,8 +116,8 @@ class VkApi:
                     f"Запрос {method} не выполнен: {resp_body['error']}"
                 )
             if self.excepts:
-                raise VkResponseException(resp_body['error'], kwargs) from None
-            return resp_body['error']
+                raise VkResponseException(resp_body['error'], kwargs)
+            return {'response': resp_body['error']}
 
         raise ValueError('Неизвестный формат ответа VK API')
 
@@ -142,18 +141,19 @@ class VkApi:
             except VkErrorCaptcha as e:
                 if not self._captcha_handler or \
                         captcha_retry == self._captcha_handler.RETRY_COUNT:
-                    raise e from None
-                kwargs['captcha_key'] = await self._captcha_handler.solve_captcha(e)
+                    raise
+                if (key := await self._captcha_handler.solve_captcha(e)) is None:
+                    raise
+                kwargs['captcha_key'] = key
                 kwargs['captcha_sid'] = e.error_data['captcha_sid']
 
     def __release_blocker(self):
         if not self._releaser:
             blocker = self._blocker
-            wait_delay = self.wait_request_delay
 
             async def releaser():
                 while not blocker.is_allowed():
-                    await wait_delay()
+                    await self.wait_request_delay()
                     blocker.release_one()
                 self._releaser = None
 
