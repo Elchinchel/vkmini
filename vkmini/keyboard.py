@@ -51,12 +51,12 @@ class Button:
             self,
             label: str,
             payload: Union[str, dict],
-            type: Type = Type.TEXT,
-            color: Color = Color.PRIMARY
+            type: str = Type.TEXT,
+            color: str = Color.PRIMARY
     ):
+        if isinstance(payload, dict):
+            payload = json.dumps(payload, ensure_ascii=False)
         self.payload = payload
-        if isinstance(self.payload, dict):
-            self.payload = json.dumps(self.payload, ensure_ascii=False)
         self.color = color
         self.label = label
         self.type = type
@@ -123,13 +123,18 @@ class Keyboard:
 
     def __init__(
             self,
-            buttons: Union[Button, List[Button], List[List[Button]]] = None,
+            buttons: Union[Button, List[Button], List[List[Button]], None] = None,
             inline: bool = True,
             one_time: bool = False
     ):
-        self.buttons = []
-        if buttons is not None:
-            self.add_buttons(buttons)
+        if not buttons:
+            self.buttons = []
+        elif isinstance(buttons, list) and isinstance(buttons[0], list):
+            self.buttons = buttons  # type: ignore
+        else:
+            self.buttons = []
+            self.add_buttons(buttons)  # type: ignore
+
         if inline and one_time:
             raise ValueError('inline и one_time -- взаимоисключающие параметры')
         self.inline = inline
@@ -158,7 +163,9 @@ class Keyboard:
         }, ensure_ascii=False)
 
     def copy(self) -> 'Keyboard':
-        return [[btn.copy() for btn in line] for line in self.buttons]
+        return Keyboard([
+            [btn.copy() for btn in line] for line in self.buttons
+        ])
 
     def format(self, data: Dict[str, Any]) -> 'Keyboard':
         formatted_keyboard = Keyboard()
