@@ -1,6 +1,6 @@
 import asyncio
 
-from vkmini import VkApi, LP
+from vkmini import VkApi, UserLP
 from vkmini.utils import Printer
 
 
@@ -10,14 +10,13 @@ logger = Printer(level=0)
 
 vk = VkApi(
     access_token=API_ACCESS_TOKEN,  # Ключ доступа к API
-    excepts=True,  # Вызывать исключения при ошибках API
     version='5.130',  # Версия API, по умолчанию 5.130
     logger=logger,
 )
 
 
 async def main():
-    async with LP(vk) as lp:
+    async with UserLP(vk) as lp:
         # контекст-менеджер используется для создания новой сессии и её закрытия
 
         async for event in lp.listen():  # lp.listen() создаёт асинхронный генератор событий,

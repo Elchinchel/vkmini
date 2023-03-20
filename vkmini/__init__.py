@@ -8,15 +8,16 @@ __all__: Tuple[str, ...] = (
     'set_decoder',
     'Keyboard',
     'Button',
+    'FormattableButton',
     'VkResponseException',
-    'LP',
+    'UserLP',
     'GroupLP',
 )
 
 
-from vkmini.api import VkApi, GroupVkApi, set_loop
+from vkmini.api import VkApi, GroupVkApi
 from vkmini.request import set_session, set_decoder
-from vkmini.keyboard import Keyboard, Button
+from vkmini.keyboard import Keyboard, Button, FormattableButton
 from vkmini.exceptions import VkResponseException
-from vkmini.user_longpoll import LP
+from vkmini.user_longpoll import UserLP
 from vkmini.group_longpoll import GroupLP

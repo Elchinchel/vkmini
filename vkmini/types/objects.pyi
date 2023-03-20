@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Sequence, Union, Literal, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Union, Literal, TypeAlias
 from typing_extensions import TypedDict, NotRequired
 
 if TYPE_CHECKING:
-    from . import objects, methods, responses
+    from . import objects, methods, responses  # type: ignore
 
 
 class account_account_counters(TypedDict):
@@ -47,7 +47,7 @@ class account_name_request(TypedDict):
     link_href: NotRequired[str]  # href for link in lang field
     link_label: NotRequired[str]  # label to display for link in lang field
 
-account_name_request_status: Literal['success', 'processing', 'declined', 'was_accepted', 'was_declined', 'declined_with_link', 'response', 'response_with_link']  # Request status
+account_name_request_status: TypeAlias = Literal['success', 'processing', 'declined', 'was_accepted', 'was_declined', 'declined_with_link', 'response', 'response_with_link']  # Request status
 
 class account_offer(TypedDict):
     description: NotRequired[str]  # Offer description
@@ -93,11 +93,11 @@ class account_push_params(TypedDict):
     app_request: NotRequired[List['objects.account_push_params_onoff']]
     sdk_open: NotRequired[List['objects.account_push_params_onoff']]
 
-account_push_params_mode: Literal['on', 'off', 'no_sound', 'no_text']  # Settings parameters
+account_push_params_mode: TypeAlias = Literal['on', 'off', 'no_sound', 'no_text']  # Settings parameters
 
-account_push_params_onoff: Literal['on', 'off']  # Settings parameters
+account_push_params_onoff: TypeAlias = Literal['on', 'off']  # Settings parameters
 
-account_push_params_settings: Literal['on', 'off', 'fr_of_fr']  # Settings parameters
+account_push_params_settings: TypeAlias = Literal['on', 'off', 'fr_of_fr']  # Settings parameters
 
 class account_push_settings(TypedDict):
     disabled: NotRequired['objects.base_bool_int']  # Information whether notifications are disabled
@@ -124,11 +124,11 @@ class account_user_settings_interests(TypedDict):
     quotes: NotRequired['objects.account_user_settings_interest']
     about: NotRequired['objects.account_user_settings_interest']
 
-addresses_fields: Literal['id', 'title', 'address', 'additional_address', 'country_id', 'city_id', 'metro_station_id', 'latitude', 'longitude', 'distance', 'work_info_status', 'timetable', 'phone', 'time_offset']
+addresses_fields: TypeAlias = Literal['id', 'title', 'address', 'additional_address', 'country_id', 'city_id', 'metro_station_id', 'latitude', 'longitude', 'distance', 'work_info_status', 'timetable', 'phone', 'time_offset']
 
-ads_access_role: Literal['admin', 'manager', 'reports']  # Current user's role
+ads_access_role: TypeAlias = Literal['admin', 'manager', 'reports']  # Current user's role
 
-ads_access_role_public: Literal['manager', 'reports']  # Current user's role
+ads_access_role_public: TypeAlias = Literal['manager', 'reports']  # Current user's role
 
 class ads_accesses(TypedDict):
     client_id: NotRequired[str]  # Client ID
@@ -141,7 +141,7 @@ class ads_account(TypedDict):
     account_type: 'objects.ads_account_type'
     account_name: str  # Account name
 
-ads_account_type: Literal['general', 'agency']  # Account type
+ads_account_type: TypeAlias = Literal['general', 'agency']  # Account type
 
 class ads_ad(TypedDict):
     ad_format: int  # Ad format
@@ -217,7 +217,7 @@ ads_campaign_status = Literal[
     2  # deleted
 ]
 
-ads_campaign_type: Literal['normal', 'vk_apps_managed', 'mobile_apps', 'promoted_posts']  # Campaign type
+ads_campaign_type: TypeAlias = Literal['normal', 'vk_apps_managed', 'mobile_apps', 'promoted_posts']  # Campaign type
 
 class ads_category(TypedDict):
     id: int  # Category ID
@@ -311,7 +311,7 @@ class ads_musician(TypedDict):
     id: int  # Targeting music artist ID
     name: str  # Music artist name
 
-ads_object_type: Literal['ad', 'campaign', 'client', 'office']  # Object type
+ads_object_type: TypeAlias = Literal['ad', 'campaign', 'client', 'office']  # Object type
 
 class ads_paragraphs(TypedDict):
     paragraph: NotRequired[str]  # Rules paragraph
@@ -436,7 +436,7 @@ class ads_targ_suggestions_schools(TypedDict):
     parent: NotRequired[str]  # City name
     type: NotRequired['objects.ads_targ_suggestions_schools_type']
 
-ads_targ_suggestions_schools_type: Literal['school', 'university', 'faculty', 'chair']  # School type
+ads_targ_suggestions_schools_type: TypeAlias = Literal['school', 'university', 'faculty', 'chair']  # School type
 
 class ads_target_group(TypedDict):
     audience_count: NotRequired[int]  # Audience
@@ -554,7 +554,7 @@ class apps_app_min(TypedDict):
     loader_icon: NotRequired[str]  # SVG data
     icon_75: NotRequired[str]  # URL of the app icon with 75 px in width
 
-apps_app_type: Literal['app', 'game', 'site', 'standalone', 'vk_app', 'community_app', 'html5_game', 'mini_app']  # Application type
+apps_app_type: TypeAlias = Literal['app', 'game', 'site', 'standalone', 'vk_app', 'community_app', 'html5_game', 'mini_app']  # Application type
 
 class apps_leaderboard(TypedDict):
     level: NotRequired[int]  # Level
@@ -694,14 +694,14 @@ base_link_button_action_type = Literal[
     'open_url'  # open_url
 ]
 
-base_link_button_style: str  # Button style
+base_link_button_style: TypeAlias = str  # Button style
 
 class base_link_product(TypedDict):
     price: 'objects.market_price'
     merchant: NotRequired[str]
     orders_count: NotRequired[int]
 
-base_link_product_status: Literal['active', 'blocked', 'sold', 'deleted', 'archived']  # Status representation
+base_link_product_status: TypeAlias = Literal['active', 'blocked', 'sold', 'deleted', 'archived']  # Status representation
 
 class base_link_rating(TypedDict):
     reviews_count: NotRequired[int]  # Count of reviews
@@ -772,7 +772,7 @@ class base_sticker_animation(TypedDict):
 class base_upload_server(TypedDict):
     upload_url: str  # Upload URL
 
-base_user_group_fields: Literal['about', 'action_button', 'activities', 'activity', 'addresses', 'admin_level', 'age_limits', 'author_id', 'ban_info', 'bdate', 'blacklisted', 'blacklisted_by_me', 'books', 'can_create_topic', 'can_message', 'can_post', 'can_see_all_posts', 'can_see_audio', 'can_send_friend_request', 'can_upload_video', 'can_write_private_message', 'career', 'city', 'common_count', 'connections', 'contacts', 'counters', 'country', 'cover', 'crop_photo', 'deactivated', 'description', 'domain', 'education', 'exports', 'finish_date', 'fixed_post', 'followers_count', 'friend_status', 'games', 'has_market_app', 'has_mobile', 'has_photo', 'home_town', 'id', 'interests', 'is_admin', 'is_closed', 'is_favorite', 'is_friend', 'is_hidden_from_feed', 'is_member', 'is_messages_blocked', 'can_send_notify', 'is_subscribed', 'last_seen', 'links', 'lists', 'maiden_name', 'main_album_id', 'main_section', 'market', 'member_status', 'members_count', 'military', 'movies', 'music', 'name', 'nickname', 'occupation', 'online', 'online_status', 'personal', 'phone', 'photo_100', 'photo_200', 'photo_200_orig', 'photo_400_orig', 'photo_50', 'photo_id', 'photo_max', 'photo_max_orig', 'quotes', 'relation', 'relatives', 'schools', 'screen_name', 'sex', 'site', 'start_date', 'status', 'timezone', 'trending', 'tv', 'type', 'universities', 'verified', 'wall_comments', 'wiki_page', 'vk_admin_status']
+base_user_group_fields: TypeAlias = Literal['about', 'action_button', 'activities', 'activity', 'addresses', 'admin_level', 'age_limits', 'author_id', 'ban_info', 'bdate', 'blacklisted', 'blacklisted_by_me', 'books', 'can_create_topic', 'can_message', 'can_post', 'can_see_all_posts', 'can_see_audio', 'can_send_friend_request', 'can_upload_video', 'can_write_private_message', 'career', 'city', 'common_count', 'connections', 'contacts', 'counters', 'country', 'cover', 'crop_photo', 'deactivated', 'description', 'domain', 'education', 'exports', 'finish_date', 'fixed_post', 'followers_count', 'friend_status', 'games', 'has_market_app', 'has_mobile', 'has_photo', 'home_town', 'id', 'interests', 'is_admin', 'is_closed', 'is_favorite', 'is_friend', 'is_hidden_from_feed', 'is_member', 'is_messages_blocked', 'can_send_notify', 'is_subscribed', 'last_seen', 'links', 'lists', 'maiden_name', 'main_album_id', 'main_section', 'market', 'member_status', 'members_count', 'military', 'movies', 'music', 'name', 'nickname', 'occupation', 'online', 'online_status', 'personal', 'phone', 'photo_100', 'photo_200', 'photo_200_orig', 'photo_400_orig', 'photo_50', 'photo_id', 'photo_max', 'photo_max_orig', 'quotes', 'relation', 'relatives', 'schools', 'screen_name', 'sex', 'site', 'start_date', 'status', 'timezone', 'trending', 'tv', 'type', 'universities', 'verified', 'wall_comments', 'wiki_page', 'vk_admin_status']
 
 class base_user_id(TypedDict):
     user_id: NotRequired[int]  # User ID
@@ -837,7 +837,7 @@ class callback_group_join(TypedDict):
     user_id: int
     join_type: 'objects.callback_group_join_type'
 
-callback_group_join_type: Literal['join', 'unsure', 'accepted', 'approved', 'request']
+callback_group_join_type: TypeAlias = Literal['join', 'unsure', 'accepted', 'approved', 'request']
 
 class callback_group_leave(TypedDict):
     user_id: NotRequired[int]
@@ -910,7 +910,7 @@ class callback_message_base(TypedDict):
 class callback_message_deny(TypedDict):
     user_id: int
 
-callback_message_type: Literal['confirmation', 'group_change_photo', 'group_change_settings', 'group_officers_edit', 'lead_forms_new', 'market_comment_delete', 'market_comment_edit', 'market_comment_restore', 'message_allow', 'message_deny', 'message_read', 'message_reply', 'message_typing_state', 'messages_edit', 'photo_comment_delete', 'photo_comment_edit', 'photo_comment_restore', 'poll_vote_new', 'user_block', 'user_unblock', 'video_comment_delete', 'video_comment_edit', 'video_comment_restore', 'wall_reply_delete', 'wall_reply_restore', 'wall_repost']
+callback_message_type: TypeAlias = Literal['confirmation', 'group_change_photo', 'group_change_settings', 'group_officers_edit', 'lead_forms_new', 'market_comment_delete', 'market_comment_edit', 'market_comment_restore', 'message_allow', 'message_deny', 'message_read', 'message_reply', 'message_typing_state', 'messages_edit', 'photo_comment_delete', 'photo_comment_edit', 'photo_comment_restore', 'poll_vote_new', 'user_block', 'user_unblock', 'video_comment_delete', 'video_comment_edit', 'video_comment_restore', 'wall_reply_delete', 'wall_reply_restore', 'wall_repost']
 
 class callback_photo_comment(TypedDict):
     id: int
@@ -1017,7 +1017,7 @@ class docs_doc(TypedDict):
     access_key: NotRequired[str]  # Access key for the document
     tags: NotRequired[List[str]]  # Document tags
 
-docs_doc_attachment_type: Literal['doc', 'graffiti', 'audio_message']  # Doc attachment type
+docs_doc_attachment_type: TypeAlias = Literal['doc', 'graffiti', 'audio_message']  # Doc attachment type
 
 class docs_doc_preview(TypedDict):
     audio_msg: NotRequired['objects.docs_doc_preview_audio_msg']
@@ -1079,7 +1079,7 @@ class fave_bookmark(TypedDict):
     type: 'objects.fave_bookmark_type'  # Item type
     video: NotRequired['objects.video_video']
 
-fave_bookmark_type: Literal['post', 'video', 'product', 'article', 'link']
+fave_bookmark_type: TypeAlias = Literal['post', 'video', 'product', 'article', 'link']
 
 class fave_page(TypedDict):
     description: str  # Some info about user or group
@@ -1089,7 +1089,7 @@ class fave_page(TypedDict):
     updated_date: NotRequired[int]  # Timestamp, when this page was bookmarked
     user: NotRequired['objects.users_user_full']
 
-fave_page_type: Literal['user', 'group', 'hints']
+fave_page_type: TypeAlias = Literal['user', 'group', 'hints']
 
 class fave_tag(TypedDict):
     id: NotRequired[int]  # Tag id
@@ -1198,7 +1198,7 @@ class groups_address_timetable_day(TypedDict):
     close_time: int  # Close time in minutes
     open_time: int  # Open time in minutes
 
-groups_address_work_info_status: Literal['no_information', 'temporarily_closed', 'always_opened', 'timetable', 'forever_closed']  # Status of information about timetable
+groups_address_work_info_status: TypeAlias = Literal['no_information', 'temporarily_closed', 'always_opened', 'timetable', 'forever_closed']  # Status of information about timetable
 
 class groups_addresses_info(TypedDict):
     is_enabled: bool  # Information whether addresses is enabled
@@ -1221,7 +1221,7 @@ groups_ban_info_reason = Literal[
     4  # flood
 ]
 
-groups_banned_item: 'objects.groups_owner_xtr_ban_info'
+groups_banned_item: TypeAlias = 'objects.groups_owner_xtr_ban_info'
 
 class groups_callback_server(TypedDict):
     id: int
@@ -1256,9 +1256,9 @@ class groups_cover(TypedDict):
     enabled: 'objects.base_bool_int'  # Information whether cover is enabled
     images: NotRequired[List['objects.base_image']]
 
-groups_fields: Literal['market', 'member_status', 'is_favorite', 'is_subscribed', 'city', 'country', 'verified', 'description', 'wiki_page', 'members_count', 'counters', 'cover', 'can_post', 'can_see_all_posts', 'activity', 'fixed_post', 'can_create_topic', 'can_upload_video', 'has_photo', 'status', 'main_album_id', 'links', 'contacts', 'site', 'main_section', 'trending', 'can_message', 'is_market_cart_enabled', 'is_messages_blocked', 'can_send_notify', 'online_status', 'start_date', 'finish_date', 'age_limits', 'ban_info', 'action_button', 'author_id', 'phone', 'has_market_app', 'addresses', 'live_covers', 'is_adult', 'can_subscribe_posts', 'warning_notification', 'msg_push_allowed', 'stories_archive_count', 'video_live_level', 'video_live_count', 'clips_count']
+groups_fields: TypeAlias = Literal['market', 'member_status', 'is_favorite', 'is_subscribed', 'city', 'country', 'verified', 'description', 'wiki_page', 'members_count', 'counters', 'cover', 'can_post', 'can_see_all_posts', 'activity', 'fixed_post', 'can_create_topic', 'can_upload_video', 'has_photo', 'status', 'main_album_id', 'links', 'contacts', 'site', 'main_section', 'trending', 'can_message', 'is_market_cart_enabled', 'is_messages_blocked', 'can_send_notify', 'online_status', 'start_date', 'finish_date', 'age_limits', 'ban_info', 'action_button', 'author_id', 'phone', 'has_market_app', 'addresses', 'live_covers', 'is_adult', 'can_subscribe_posts', 'warning_notification', 'msg_push_allowed', 'stories_archive_count', 'video_live_level', 'video_live_count', 'clips_count']
 
-groups_filter: Literal['admin', 'editor', 'moder', 'advertiser', 'groups', 'publics', 'events', 'has_addresses']
+groups_filter: TypeAlias = Literal['admin', 'editor', 'moder', 'advertiser', 'groups', 'publics', 'events', 'has_addresses']
 
 class groups_group(TypedDict):
     admin_level: NotRequired['objects.groups_group_admin_level']
@@ -1440,7 +1440,7 @@ class groups_group_public_category_list(TypedDict):
     name: NotRequired[str]
     subcategories: NotRequired[List['objects.groups_group_category_type']]
 
-groups_group_role: Literal['moderator', 'editor', 'administrator', 'advertiser']
+groups_group_role: TypeAlias = Literal['moderator', 'editor', 'administrator', 'advertiser']
 
 groups_group_subject = Literal[
     '1',  # auto
@@ -1499,7 +1499,7 @@ groups_group_topics = Literal[
     2  # limited
 ]
 
-groups_group_type: Literal['group', 'page', 'event']  # Community type
+groups_group_type: TypeAlias = Literal['group', 'page', 'event']  # Community type
 
 groups_group_video = Literal[
     0,  # disabled
@@ -1541,7 +1541,7 @@ groups_group_xtr_invited_by_admin_level = Literal[
     3  # administrator
 ]
 
-groups_group_xtr_invited_by_type: Literal['group', 'page', 'event']  # Community type
+groups_group_xtr_invited_by_type: TypeAlias = Literal['group', 'page', 'event']  # Community type
 
 class groups_groups_array(TypedDict):
     count: int  # Communities number
@@ -1623,16 +1623,16 @@ class groups_market_info(TypedDict):
     price_max: NotRequired[str]  # Maximum price
     price_min: NotRequired[str]  # Minimum price
 
-groups_market_state: Literal['none', 'basic', 'advanced']  # Declares state if market is enabled in group.
+groups_market_state: TypeAlias = Literal['none', 'basic', 'advanced']  # Declares state if market is enabled in group.
 
 class groups_member_role(TypedDict):
     id: NotRequired[int]  # User ID
     permissions: NotRequired[List['objects.groups_member_role_permission']]
     role: NotRequired['objects.groups_member_role_status']
 
-groups_member_role_permission: Literal['ads']
+groups_member_role_permission: TypeAlias = Literal['ads']
 
-groups_member_role_status: Literal['moderator', 'editor', 'administrator', 'creator']  # User's credentials as community admin
+groups_member_role_status: TypeAlias = Literal['moderator', 'editor', 'administrator', 'creator']  # User's credentials as community admin
 
 class groups_member_status(TypedDict):
     member: 'objects.base_bool_int'  # Information whether user is a member of the group
@@ -1651,7 +1651,7 @@ class groups_online_status(TypedDict):
     minutes: NotRequired[int]  # Estimated time of answer (for status = answer_mark)
     status: 'objects.groups_online_status_type'
 
-groups_online_status_type: Literal['none', 'online', 'answer_mark']  # Type of online status of group
+groups_online_status_type: TypeAlias = Literal['none', 'online', 'answer_mark']  # Type of online status of group
 
 class groups_owner_xtr_ban_info(TypedDict):
     ban_info: NotRequired['objects.groups_ban_info']
@@ -1659,9 +1659,9 @@ class groups_owner_xtr_ban_info(TypedDict):
     profile: NotRequired['objects.users_user']  # Information about group if type = profile
     type: NotRequired['objects.groups_owner_xtr_ban_info_type']
 
-groups_owner_xtr_ban_info_type: Literal['group', 'profile']  # Owner type
+groups_owner_xtr_ban_info_type: TypeAlias = Literal['group', 'profile']  # Owner type
 
-groups_role_options: Literal['moderator', 'editor', 'administrator', 'creator']  # User's credentials as community admin
+groups_role_options: TypeAlias = Literal['moderator', 'editor', 'administrator', 'creator']  # User's credentials as community admin
 
 class groups_settings_twitter(TypedDict):
     status: Literal['loading', 'sync']
@@ -1684,7 +1684,7 @@ class leads_checked(TypedDict):
     sid: NotRequired[str]  # Session ID
     start_link: NotRequired[str]  # URL user should open to start the lead
 
-leads_checked_result: Literal['true', 'false']  # Information whether user can start the lead
+leads_checked_result: TypeAlias = Literal['true', 'false']  # Information whether user can start the lead
 
 class leads_complete(TypedDict):
     cost: NotRequired[int]  # Offer cost
@@ -1722,7 +1722,7 @@ class leads_start(TypedDict):
     test_mode: NotRequired['objects.base_bool_int']  # Information whether test mode is enabled
     vk_sid: NotRequired[str]  # Session data
 
-likes_type: Literal['post', 'comment', 'photo', 'audio', 'video', 'note', 'market', 'photo_comment', 'video_comment', 'topic_comment', 'market_comment', 'sitepage']
+likes_type: TypeAlias = Literal['post', 'comment', 'photo', 'audio', 'video', 'note', 'market', 'photo_comment', 'video_comment', 'topic_comment', 'market_comment', 'sitepage']
 
 class link_target_object(TypedDict):
     type: NotRequired[str]  # Object type
@@ -1918,7 +1918,7 @@ class messages_conversation_peer(TypedDict):
     local_id: NotRequired[int]
     type: 'objects.messages_conversation_peer_type'
 
-messages_conversation_peer_type: Literal['chat', 'email', 'user', 'group']  # Peer type
+messages_conversation_peer_type: TypeAlias = Literal['chat', 'email', 'user', 'group']  # Peer type
 
 class messages_conversation_with_message(TypedDict):
     conversation: NotRequired['objects.messages_conversation']
@@ -1965,7 +1965,7 @@ class messages_history_message_attachment(TypedDict):
     video: NotRequired['objects.video_video']
     wall: NotRequired['objects.base_link']
 
-messages_history_message_attachment_type: Literal['photo', 'video', 'audio', 'doc', 'link', 'market', 'wall', 'share', 'graffiti', 'audio_message']  # Attachments type
+messages_history_message_attachment_type: TypeAlias = Literal['photo', 'video', 'audio', 'doc', 'link', 'market', 'wall', 'share', 'graffiti', 'audio_message']  # Attachments type
 
 class messages_keyboard(TypedDict):
     author_id: NotRequired[int]  # Community or bot, which set this keyboard
@@ -2043,11 +2043,11 @@ class messages_message_action_photo(TypedDict):
     photo_200: str  # URL of the preview image with 200px in width
     photo_50: str  # URL of the preview image with 50px in width
 
-messages_message_action_status: Literal['chat_photo_update', 'chat_photo_remove', 'chat_create', 'chat_title_update', 'chat_invite_user', 'chat_kick_user', 'chat_pin_message', 'chat_unpin_message', 'chat_invite_user_by_link']  # Action status
+messages_message_action_status: TypeAlias = Literal['chat_photo_update', 'chat_photo_remove', 'chat_create', 'chat_title_update', 'chat_invite_user', 'chat_kick_user', 'chat_pin_message', 'chat_unpin_message', 'chat_invite_user_by_link']  # Action status
 
 class messages_message_attachment(TypedDict):
-    audio_message: NotRequired['objects.messages_audio_message']
     audio: NotRequired['objects.audio_audio']
+    audio_message: NotRequired['objects.messages_audio_message']
     doc: NotRequired['objects.docs_doc']
     gift: NotRequired['objects.gifts_layout']
     graffiti: NotRequired['objects.messages_graffiti']
@@ -2062,7 +2062,7 @@ class messages_message_attachment(TypedDict):
     wall: NotRequired['objects.wall_wallpost_full']
     wall_reply: NotRequired['objects.wall_wall_comment']
 
-messages_message_attachment_type: Literal['photo', 'audio', 'video', 'doc', 'link', 'market', 'market_album', 'gift', 'sticker', 'wall', 'wall_reply', 'article', 'graffiti', 'audio_message']  # Attachment type
+messages_message_attachment_type: TypeAlias = Literal['photo', 'audio', 'video', 'doc', 'link', 'market', 'market_album', 'gift', 'sticker', 'wall', 'wall_reply', 'article', 'graffiti', 'audio_message']  # Attachment type
 
 class messages_message_request_data(TypedDict):
     status: NotRequired[str]  # Status of message request
@@ -2086,12 +2086,12 @@ class messages_pinned_message(TypedDict):
     text: str  # Message text
     keyboard: NotRequired['objects.messages_keyboard']
 
-messages_template_action_type_names: Literal['text', 'start', 'location', 'vkpay', 'open_app', 'open_photo', 'open_link']  # Template action type names
+messages_template_action_type_names: TypeAlias = Literal['text', 'start', 'location', 'vkpay', 'open_app', 'open_photo', 'open_link']  # Template action type names
 
 class messages_user_xtr_invited_by(objects.users_user_xtr_type):
     invited_by: NotRequired[int]  # ID of the inviter
 
-newsfeed_comments_filters: Literal['post', 'photo', 'video', 'topic', 'note']
+newsfeed_comments_filters: TypeAlias = Literal['post', 'photo', 'video', 'topic', 'note']
 
 class newsfeed_event_activity(TypedDict):
     address: NotRequired[str]  # address of event
@@ -2101,7 +2101,7 @@ class newsfeed_event_activity(TypedDict):
     text: str  # text of attach
     time: NotRequired[int]  # event start time
 
-newsfeed_filters: Literal['post', 'photo', 'photo_tag', 'wall_photo', 'friend', 'recommended_groups', 'note', 'audio', 'video', 'audio_playlist', 'games_carousel', 'clip']
+newsfeed_filters: TypeAlias = Literal['post', 'photo', 'photo_tag', 'wall_photo', 'friend', 'recommended_groups', 'note', 'audio', 'video', 'audio_playlist', 'games_carousel', 'clip']
 
 newsfeed_ignore_item_type = Literal[
     'wall',  # post on the wall
@@ -2223,9 +2223,9 @@ class newsfeed_item_wallpost_feedback_answer(TypedDict):
     title: str
     id: str
 
-newsfeed_item_wallpost_feedback_type: Literal['buttons', 'stars']
+newsfeed_item_wallpost_feedback_type: TypeAlias = Literal['buttons', 'stars']
 
-newsfeed_item_wallpost_type: Literal['post', 'copy', 'reply']  # Post type
+newsfeed_item_wallpost_type: TypeAlias = Literal['post', 'copy', 'reply']  # Post type
 
 class newsfeed_list(TypedDict):
     id: int  # List ID
@@ -2235,9 +2235,9 @@ class newsfeed_list_full(objects.newsfeed_list):
     no_reposts: NotRequired['objects.base_bool_int']  # Information whether reposts hiding is enabled
     source_ids: NotRequired[List[int]]
 
-newsfeed_newsfeed_item: Union['objects.newsfeed_item_wallpost', 'objects.newsfeed_item_photo', 'objects.newsfeed_item_photo_tag', 'objects.newsfeed_item_friend', 'objects.newsfeed_item_audio', 'objects.newsfeed_item_video', 'objects.newsfeed_item_topic', 'objects.newsfeed_item_digest', 'objects.newsfeed_item_promo_button']
+newsfeed_newsfeed_item: TypeAlias = Union['objects.newsfeed_item_wallpost', 'objects.newsfeed_item_photo', 'objects.newsfeed_item_photo_tag', 'objects.newsfeed_item_friend', 'objects.newsfeed_item_audio', 'objects.newsfeed_item_video', 'objects.newsfeed_item_topic', 'objects.newsfeed_item_digest', 'objects.newsfeed_item_promo_button']
 
-newsfeed_newsfeed_item_type: Literal['post', 'photo', 'photo_tag', 'wall_photo', 'friend', 'note', 'audio', 'video', 'topic', 'digest', 'stories', 'tags_suggestions']  # Item type
+newsfeed_newsfeed_item_type: TypeAlias = Literal['post', 'photo', 'photo_tag', 'wall_photo', 'friend', 'note', 'audio', 'video', 'topic', 'digest', 'stories', 'tags_suggestions']  # Item type
 
 class newsfeed_newsfeed_photo(objects.photos_photo):
     likes: NotRequired['objects.base_likes']
@@ -2281,7 +2281,7 @@ class notifications_notification(TypedDict):
     reply: NotRequired['objects.notifications_reply']
     type: NotRequired[str]  # Notification type
 
-notifications_notification_item: Dict[str, Any]
+notifications_notification_item: TypeAlias = Dict[str, Any]
 
 class notifications_notification_parent(objects.wall_wallpost_to_id, objects.photos_photo, objects.board_topic, objects.video_video, objects.notifications_notifications_comment): ...
 
@@ -2415,7 +2415,7 @@ class photos_image(TypedDict):
     url: NotRequired[str]  # Photo URL.
     width: NotRequired[int]  # Width of the photo in px.
 
-photos_image_type: Literal['s', 'm', 'x', 'l', 'o', 'p', 'q', 'r', 'y', 'z', 'w']  # Photo's type.
+photos_image_type: TypeAlias = Literal['s', 'm', 'x', 'l', 'o', 'p', 'q', 'r', 'y', 'z', 'w']  # Photo's type.
 
 class photos_market_album_upload_response(TypedDict):
     gid: NotRequired[int]  # Community ID
@@ -2543,7 +2543,7 @@ class photos_photo_sizes(TypedDict):
     type: 'objects.photos_photo_sizes_type'
     width: int  # Width in px
 
-photos_photo_sizes_type: Literal['s', 'm', 'x', 'o', 'p', 'q', 'r', 'k', 'l', 'y', 'z', 'c', 'w']  # Size type
+photos_photo_sizes_type: TypeAlias = Literal['s', 'm', 'x', 'o', 'p', 'q', 'r', 'k', 'l', 'y', 'z', 'c', 'w']  # Size type
 
 class photos_photo_tag(TypedDict):
     date: int  # Date when tag has been added in Unixtime
@@ -2690,7 +2690,7 @@ class polls_poll(TypedDict):
     votes: int  # Votes number
     disable_unvote: bool
 
-polls_poll_anonymous: bool  # Information whether the field is anonymous
+polls_poll_anonymous: TypeAlias = bool  # Information whether the field is anonymous
 
 class polls_voters(TypedDict):
     answer_id: NotRequired[int]  # Answer ID
@@ -2720,9 +2720,9 @@ class search_hint(TypedDict):
     section: 'objects.search_hint_section'
     type: 'objects.search_hint_type'
 
-search_hint_section: Literal['groups', 'events', 'publics', 'correspondents', 'people', 'friends', 'mutual_friends']  # Section title
+search_hint_section: TypeAlias = Literal['groups', 'events', 'publics', 'correspondents', 'people', 'friends', 'mutual_friends']  # Section title
 
-search_hint_type: Literal['group', 'profile', 'vk_app', 'app', 'html5_game']  # Object type
+search_hint_type: TypeAlias = Literal['group', 'profile', 'vk_app', 'app', 'html5_game']  # Object type
 
 class secure_level(TypedDict):
     level: NotRequired[int]  # Level
@@ -2940,11 +2940,11 @@ class stories_story_stats_stat(TypedDict):
     count: NotRequired[int]  # Stat value
     state: 'objects.stories_story_stats_state'
 
-stories_story_stats_state: Literal['on', 'off', 'hidden']  # Statistic state
+stories_story_stats_state: TypeAlias = Literal['on', 'off', 'hidden']  # Statistic state
 
-stories_story_type: Literal['photo', 'video', 'live_active', 'live_finished', 'birthday_invite']  # Story type.
+stories_story_type: TypeAlias = Literal['photo', 'video', 'live_active', 'live_finished', 'birthday_invite']  # Story type.
 
-stories_upload_link_text: Literal['to_store', 'vote', 'more', 'book', 'order', 'enroll', 'fill', 'signup', 'buy', 'ticket', 'write', 'open', 'learn_more', 'view', 'go_to', 'contact', 'watch', 'play', 'install', 'read', 'calendar']
+stories_upload_link_text: TypeAlias = Literal['to_store', 'vote', 'more', 'book', 'order', 'enroll', 'fill', 'signup', 'buy', 'ticket', 'write', 'open', 'learn_more', 'view', 'go_to', 'contact', 'watch', 'play', 'install', 'read', 'calendar']
 
 class stories_viewers_item(TypedDict):
     is_liked: bool  # user has like for this object
@@ -2966,7 +2966,7 @@ class users_exports(TypedDict):
     livejournal: NotRequired[int]
     twitter: NotRequired[int]
 
-users_fields: Literal['photo_id', 'verified', 'sex', 'bdate', 'city', 'country', 'home_town', 'has_photo', 'photo_50', 'photo_100', 'photo_200_orig', 'photo_200', 'photo_400_orig', 'photo_max', 'photo_max_orig', 'online', 'lists', 'domain', 'has_mobile', 'contacts', 'site', 'education', 'universities', 'schools', 'status', 'last_seen', 'followers_count', 'counters', 'common_count', 'occupation', 'nickname', 'relatives', 'relation', 'personal', 'connections', 'exports', 'wall_comments', 'activities', 'interests', 'music', 'movies', 'tv', 'books', 'games', 'about', 'quotes', 'can_post', 'can_see_all_posts', 'can_see_audio', 'can_write_private_message', 'can_send_friend_request', 'is_favorite', 'is_hidden_from_feed', 'timezone', 'screen_name', 'maiden_name', 'crop_photo', 'is_friend', 'friend_status', 'career', 'military', 'blacklisted', 'blacklisted_by_me', 'can_subscribe_posts', 'descriptions', 'trending', 'mutual', 'friendship_weeks', 'can_invite_to_chats', 'stories_archive_count', 'video_live_level', 'video_live_count', 'clips_count']
+users_fields: TypeAlias = Literal['photo_id', 'verified', 'sex', 'bdate', 'city', 'country', 'home_town', 'has_photo', 'photo_50', 'photo_100', 'photo_200_orig', 'photo_200', 'photo_400_orig', 'photo_max', 'photo_max_orig', 'online', 'lists', 'domain', 'has_mobile', 'contacts', 'site', 'education', 'universities', 'schools', 'status', 'last_seen', 'followers_count', 'counters', 'common_count', 'occupation', 'nickname', 'relatives', 'relation', 'personal', 'connections', 'exports', 'wall_comments', 'activities', 'interests', 'music', 'movies', 'tv', 'books', 'games', 'about', 'quotes', 'can_post', 'can_see_all_posts', 'can_see_audio', 'can_write_private_message', 'can_send_friend_request', 'is_favorite', 'is_hidden_from_feed', 'timezone', 'screen_name', 'maiden_name', 'crop_photo', 'is_friend', 'friend_status', 'career', 'military', 'blacklisted', 'blacklisted_by_me', 'can_subscribe_posts', 'descriptions', 'trending', 'mutual', 'friendship_weeks', 'can_invite_to_chats', 'stories_archive_count', 'video_live_level', 'video_live_count', 'clips_count']
 
 class users_last_seen(TypedDict):
     platform: NotRequired[int]  # Type of the platform that used for the last authorization
@@ -3022,7 +3022,7 @@ class users_school(TypedDict):
     year_graduated: NotRequired[int]  # Graduation year
     year_to: NotRequired[int]  # Year the user finished to study
 
-users_subscriptions_item: Union['objects.users_user_xtr_type', 'objects.groups_group_full']
+users_subscriptions_item: TypeAlias = Union['objects.users_user_xtr_type', 'objects.groups_group_full']
 
 class users_university(TypedDict):
     chair: NotRequired[int]  # Chair ID
@@ -3195,7 +3195,7 @@ class users_user_settings_xtr(TypedDict):
     interests: NotRequired['objects.account_user_settings_interests']
     languages: NotRequired[List[str]]
 
-users_user_type: Literal['profile']  # Object type
+users_user_type: TypeAlias = Literal['profile']  # Object type
 
 class users_user_xtr_counters(objects.users_user_full):
     counters: NotRequired['objects.users_user_counters']
@@ -3212,7 +3212,7 @@ class utils_domain_resolved(TypedDict):
     group_id: NotRequired[int]  # Group ID
     type: NotRequired['objects.utils_domain_resolved_type']
 
-utils_domain_resolved_type: Literal['user', 'group', 'application', 'page', 'vk_app']  # Object type
+utils_domain_resolved_type: TypeAlias = Literal['user', 'group', 'application', 'page', 'vk_app']  # Object type
 
 class utils_last_shortened_link(TypedDict):
     access_key: NotRequired[str]  # Access key for private stats
@@ -3226,7 +3226,7 @@ class utils_link_checked(TypedDict):
     link: NotRequired[str]  # Link URL
     status: NotRequired['objects.utils_link_checked_status']
 
-utils_link_checked_status: Literal['not_banned', 'banned', 'processing']  # Link status
+utils_link_checked_status: TypeAlias = Literal['not_banned', 'banned', 'processing']  # Link status
 
 class utils_link_stats(TypedDict):
     key: NotRequired[str]  # Link key (characters after vk.cc/)
@@ -3389,7 +3389,7 @@ class wall_comment_attachment(TypedDict):
     type: 'objects.wall_comment_attachment_type'
     video: NotRequired['objects.video_video']
 
-wall_comment_attachment_type: Literal['photo', 'audio', 'video', 'doc', 'link', 'note', 'page', 'market_market_album', 'market', 'sticker']  # Attachment type
+wall_comment_attachment_type: TypeAlias = Literal['photo', 'audio', 'video', 'doc', 'link', 'note', 'page', 'market_market_album', 'market', 'sticker']  # Attachment type
 
 class wall_geo(TypedDict):
     coordinates: NotRequired[str]  # Coordinates as string. <latitude> <longtitude>
@@ -3415,9 +3415,9 @@ class wall_post_source(TypedDict):
     type: NotRequired['objects.wall_post_source_type']
     url: NotRequired[str]  # URL to an external site used to publish the post
 
-wall_post_source_type: Literal['vk', 'widget', 'api', 'rss', 'sms']  # Type of post source
+wall_post_source_type: TypeAlias = Literal['vk', 'widget', 'api', 'rss', 'sms']  # Type of post source
 
-wall_post_type: Literal['post', 'copy', 'reply', 'postpone', 'suggest']  # Post type
+wall_post_type: TypeAlias = Literal['post', 'copy', 'reply', 'postpone', 'suggest']  # Post type
 
 class wall_posted_photo(TypedDict):
     id: NotRequired[int]  # Photo ID
@@ -3485,7 +3485,7 @@ class wall_wallpost_attachment(TypedDict):
     type: 'objects.wall_wallpost_attachment_type'
     video: NotRequired['objects.video_video']
 
-wall_wallpost_attachment_type: Literal['photo', 'posted_photo', 'audio', 'video', 'doc', 'link', 'graffiti', 'note', 'app', 'poll', 'page', 'album', 'photos_list', 'market_market_album', 'market', 'event']  # Attachment type
+wall_wallpost_attachment_type: TypeAlias = Literal['photo', 'posted_photo', 'audio', 'video', 'doc', 'link', 'graffiti', 'note', 'app', 'poll', 'page', 'album', 'photos_list', 'market_market_album', 'market', 'event']  # Attachment type
 
 class wall_wallpost_full(objects.wall_carousel_base, objects.wall_wallpost):
     copy_history: NotRequired[List['objects.wall_wallpost']]
@@ -3523,7 +3523,7 @@ class widgets_comment_media(TypedDict):
     thumb_src: NotRequired[str]  # URL of the preview image (type=photo only)
     type: NotRequired['objects.widgets_comment_media_type']
 
-widgets_comment_media_type: Literal['audio', 'photo', 'video']  # Media type
+widgets_comment_media_type: TypeAlias = Literal['audio', 'photo', 'video']  # Media type
 
 class widgets_comment_replies(TypedDict):
     can_post: NotRequired['objects.base_bool_int']  # Information whether current user can comment the post
@@ -3567,4 +3567,3 @@ class widgets_widget_page(TypedDict):
     photo: NotRequired[str]  # URL of the preview image
     title: NotRequired[str]  # Page title
     url: NotRequired[str]  # Page absolute URL
-

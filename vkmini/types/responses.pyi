@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, Any, Dict, List, Union, Literal, Optional
-from typing_extensions import TypedDict, NotRequired
+from typing import TYPE_CHECKING, Any, Dict, List, Union, Literal
+from typing_extensions import TypedDict, TypeAlias, NotRequired
 
 if TYPE_CHECKING:
-    from . import objects, methods, responses
+    from . import objects, methods, responses  # type: ignore
 
 
 class account_changePassword_response(TypedDict):
@@ -13,7 +13,7 @@ class account_getActiveOffers_response(TypedDict):
     count: int  # Total number
     items: List['objects.account_offer']
 
-account_getAppPermissions_response: int  # Permissions mask
+account_getAppPermissions_response: TypeAlias = int  # Permissions mask
 
 class account_getBanned_response(TypedDict):
     count: int  # Total number
@@ -21,59 +21,59 @@ class account_getBanned_response(TypedDict):
     profiles: NotRequired[List['objects.users_user_min']]
     groups: NotRequired[List['objects.groups_group']]
 
-account_getCounters_response: 'objects.account_account_counters'
+account_getCounters_response: TypeAlias = 'objects.account_account_counters'
 
-account_getInfo_response: 'objects.account_info'
+account_getInfo_response: TypeAlias = 'objects.account_info'
 
-account_getProfileInfo_response: 'objects.account_user_settings'
+account_getProfileInfo_response: TypeAlias = 'objects.account_user_settings'
 
-account_getPushSettings_response: 'objects.account_push_settings'
+account_getPushSettings_response: TypeAlias = 'objects.account_push_settings'
 
 class account_saveProfileInfo_response(TypedDict):
     changed: NotRequired['objects.base_bool_int']  # 1 if changes has been processed
     name_request: NotRequired['objects.account_name_request']
 
-ads_addOfficeUsers_response: bool  # true if success
+ads_addOfficeUsers_response: TypeAlias = bool  # true if success
 
-ads_checkLink_response: 'objects.ads_link_status'
+ads_checkLink_response: TypeAlias = 'objects.ads_link_status'
 
-ads_createAds_response: List[int]
+ads_createAds_response: TypeAlias = List[int]
 
-ads_createCampaigns_response: List[int]
+ads_createCampaigns_response: TypeAlias = List[int]
 
-ads_createClients_response: List[int]
+ads_createClients_response: TypeAlias = List[int]
 
 class ads_createTargetGroup_response(TypedDict):
     id: NotRequired[int]  # Group ID
     pixel: NotRequired[str]  # Pixel code
 
-ads_deleteAds_response: List[int]
+ads_deleteAds_response: TypeAlias = List[int]
 
-ads_deleteCampaigns_response: int  # 0 if success
+ads_deleteCampaigns_response: TypeAlias = int  # 0 if success
 
-ads_deleteClients_response: int  # 0 if sucess
+ads_deleteClients_response: TypeAlias = int  # 0 if sucess
 
-ads_getAccounts_response: List['objects.ads_account']
+ads_getAccounts_response: TypeAlias = List['objects.ads_account']
 
-ads_getAdsLayout_response: List['objects.ads_ad_layout']
+ads_getAdsLayout_response: TypeAlias = List['objects.ads_ad_layout']
 
-ads_getAdsTargeting_response: List['objects.ads_targ_settings']
+ads_getAdsTargeting_response: TypeAlias = List['objects.ads_targ_settings']
 
-ads_getAds_response: List['objects.ads_ad']
+ads_getAds_response: TypeAlias = List['objects.ads_ad']
 
-ads_getBudget_response: int  # Budget
+ads_getBudget_response: TypeAlias = int  # Budget
 
-ads_getCampaigns_response: List['objects.ads_campaign']
+ads_getCampaigns_response: TypeAlias = List['objects.ads_campaign']
 
 class ads_getCategories_response(TypedDict):
     v1: NotRequired[List['objects.ads_category']]  # Old categories
     v2: NotRequired[List['objects.ads_category']]  # Actual categories
 
-ads_getClients_response: List['objects.ads_client']
+ads_getClients_response: TypeAlias = List['objects.ads_client']
 
-ads_getDemographics_response: List['objects.ads_demo_stats']
+ads_getDemographics_response: TypeAlias = List['objects.ads_demo_stats']
 
-ads_getFloodStats_response: 'objects.ads_flood_stats'
+ads_getFloodStats_response: TypeAlias = 'objects.ads_flood_stats'
 
 class ads_getLookalikeRequests_response(TypedDict):
     count: int  # Total count of found lookalike requests
@@ -82,41 +82,41 @@ class ads_getLookalikeRequests_response(TypedDict):
 class ads_getMusicians_response(TypedDict):
     items: List['objects.ads_musician']  # Musicians
 
-ads_getOfficeUsers_response: List['objects.ads_users']
+ads_getOfficeUsers_response: TypeAlias = List['objects.ads_users']
 
-ads_getPostsReach_response: List['objects.ads_promoted_post_reach']
+ads_getPostsReach_response: TypeAlias = List['objects.ads_promoted_post_reach']
 
-ads_getRejectionReason_response: 'objects.ads_reject_reason'
+ads_getRejectionReason_response: TypeAlias = 'objects.ads_reject_reason'
 
-ads_getStatistics_response: List['objects.ads_stats']
+ads_getStatistics_response: TypeAlias = List['objects.ads_stats']
 
-ads_getSuggestions_cities_response: List['objects.ads_targ_suggestions_cities']
+ads_getSuggestions_cities_response: TypeAlias = List['objects.ads_targ_suggestions_cities']
 
-ads_getSuggestions_regions_response: List['objects.ads_targ_suggestions_regions']
+ads_getSuggestions_regions_response: TypeAlias = List['objects.ads_targ_suggestions_regions']
 
-ads_getSuggestions_response: List['objects.ads_targ_suggestions']
+ads_getSuggestions_response: TypeAlias = List['objects.ads_targ_suggestions']
 
-ads_getSuggestions_schools_response: List['objects.ads_targ_suggestions_schools']
+ads_getSuggestions_schools_response: TypeAlias = List['objects.ads_targ_suggestions_schools']
 
-ads_getTargetGroups_response: List['objects.ads_target_group']
+ads_getTargetGroups_response: TypeAlias = List['objects.ads_target_group']
 
-ads_getTargetingStats_response: 'objects.ads_targ_stats'
+ads_getTargetingStats_response: TypeAlias = 'objects.ads_targ_stats'
 
-ads_getUploadURL_response: str  # Photo upload URL
+ads_getUploadURL_response: TypeAlias = str  # Photo upload URL
 
-ads_getVideoUploadURL_response: str  # Video upload URL
+ads_getVideoUploadURL_response: TypeAlias = str  # Video upload URL
 
-ads_importTargetContacts_response: int  # Imported contacts number
+ads_importTargetContacts_response: TypeAlias = int  # Imported contacts number
 
-ads_removeOfficeUsers_response: bool  # true if success
+ads_removeOfficeUsers_response: TypeAlias = bool  # true if success
 
-ads_updateAds_response: List[int]
+ads_updateAds_response: TypeAlias = List[int]
 
-ads_updateCampaigns_response: int  # Campaign ID
+ads_updateCampaigns_response: TypeAlias = int  # Campaign ID
 
-ads_updateClients_response: int  # Client ID
+ads_updateClients_response: TypeAlias = int  # Client ID
 
-ads_updateOfficeUsers_response: List['objects.ads_updateOfficeUsers_result']
+ads_updateOfficeUsers_response: TypeAlias = List['objects.ads_updateOfficeUsers_result']
 
 class adsweb_getAdCategories_response(TypedDict):
     categories: List['objects.adsweb_getAdCategories_response_categories_category']
@@ -143,18 +143,18 @@ class adsweb_getStatistics_response(TypedDict):
 class appWidgets_getAppImageUploadServer_response(TypedDict):
     upload_url: NotRequired[str]  # To upload an image, generate POST-request to upload_url with a file in photo field. Then call appWidgets.saveAppImage method
 
-appWidgets_getAppImages_response: 'objects.appWidgets_photos'
+appWidgets_getAppImages_response: TypeAlias = 'objects.appWidgets_photos'
 
 class appWidgets_getGroupImageUploadServer_response(TypedDict):
     upload_url: NotRequired[str]  # To upload an image, generate POST-request to upload_url with a file in photo field. Then call appWidgets.saveAppImage method
 
-appWidgets_getGroupImages_response: 'objects.appWidgets_photos'
+appWidgets_getGroupImages_response: TypeAlias = 'objects.appWidgets_photos'
 
-appWidgets_getImagesById_response: List['objects.appWidgets_photo']
+appWidgets_getImagesById_response: TypeAlias = List['objects.appWidgets_photo']
 
-appWidgets_saveAppImage_response: 'objects.appWidgets_photo'
+appWidgets_saveAppImage_response: TypeAlias = 'objects.appWidgets_photo'
 
-appWidgets_saveGroupImage_response: 'objects.appWidgets_photo'
+appWidgets_saveGroupImage_response: TypeAlias = 'objects.appWidgets_photo'
 
 class apps_getCatalog_response(TypedDict):
     count: NotRequired[int]  # Total number
@@ -177,27 +177,27 @@ class apps_getScopes_response(TypedDict):
     count: int  # Total number
     items: List['objects.apps_scope']
 
-apps_getScore_response: int  # Score number
+apps_getScore_response: TypeAlias = int  # Score number
 
 class apps_get_response(TypedDict):
     count: NotRequired[int]  # Total number of applications
     items: NotRequired[List['objects.apps_app']]  # List of applications
 
-apps_sendRequest_response: int  # Request ID
+apps_sendRequest_response: TypeAlias = int  # Request ID
 
 class auth_restore_response(TypedDict):
     success: NotRequired[Literal[1]]  # 1 if success
     sid: NotRequired[str]  # Parameter needed to grant access by code
 
-base_bool_response: 'objects.base_bool_int'
+base_bool_response: TypeAlias = 'objects.base_bool_int'
 
-base_getUploadServer_response: 'objects.base_upload_server'
+base_getUploadServer_response: TypeAlias = 'objects.base_upload_server'
 
-base_ok_response: Literal[1]
+base_ok_response: TypeAlias = Literal[1]
 
-board_addTopic_response: int  # Topic ID
+board_addTopic_response: TypeAlias = int  # Topic ID
 
-board_createComment_response: int  # Comment ID
+board_createComment_response: TypeAlias = int  # Comment ID
 
 class board_getComments_extended_response(TypedDict):
     count: int  # Total number
@@ -228,13 +228,13 @@ class database_getChairs_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.base_object']]
 
-database_getCitiesById_response: List['objects.base_object']
+database_getCitiesById_response: TypeAlias = List['objects.base_object']
 
 class database_getCities_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.database_city']]
 
-database_getCountriesById_response: List['objects.base_country']
+database_getCountriesById_response: TypeAlias = List['objects.base_country']
 
 class database_getCountries_response(TypedDict):
     count: NotRequired[int]  # Total number
@@ -244,7 +244,7 @@ class database_getFaculties_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.database_faculty']]
 
-database_getMetroStationsById_response: List['objects.database_station']
+database_getMetroStationsById_response: TypeAlias = List['objects.database_station']
 
 class database_getMetroStations_response(TypedDict):
     count: NotRequired[int]  # Total number
@@ -254,7 +254,7 @@ class database_getRegions_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.database_region']]
 
-database_getSchoolClasses_response: Union[str, int]
+database_getSchoolClasses_response: TypeAlias = Union[str, int]
 
 class database_getSchools_response(TypedDict):
     count: NotRequired[int]  # Total number
@@ -267,13 +267,13 @@ class database_getUniversities_response(TypedDict):
 class docs_add_response(TypedDict):
     id: NotRequired[int]  # Doc ID
 
-docs_getById_response: List['objects.docs_doc']
+docs_getById_response: TypeAlias = List['objects.docs_doc']
 
 class docs_getTypes_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.docs_doc_types']]
 
-docs_getUploadServer: 'objects.base_upload_server'
+docs_getUploadServer: TypeAlias = 'objects.base_upload_server'
 
 class docs_get_response(TypedDict):
     count: int  # Total number
@@ -292,7 +292,7 @@ class docs_search_response(TypedDict):
 class downloadedGames_paid_status_response(TypedDict):
     is_paid: bool  # Game has been paid
 
-fave_addTag_response: 'objects.fave_tag'
+fave_addTag_response: TypeAlias = 'objects.fave_tag'
 
 class fave_getPages_response(TypedDict):
     count: NotRequired[int]
@@ -315,11 +315,11 @@ class fave_get_response(TypedDict):
 class friends_addList_response(TypedDict):
     list_id: int  # List ID
 
-friends_add_response: Literal[1, 2, 4]  # Friend request status
+friends_add_response: TypeAlias = Literal[1, 2, 4]  # Friend request status
 
-friends_areFriends_extended_response: List['objects.friends_friend_extended_status']
+friends_areFriends_extended_response: TypeAlias = List['objects.friends_friend_extended_status']
 
-friends_areFriends_response: List['objects.friends_friend_status']
+friends_areFriends_response: TypeAlias = List['objects.friends_friend_status']
 
 class friends_delete_response(TypedDict):
     success: int
@@ -328,25 +328,25 @@ class friends_delete_response(TypedDict):
     in_request_deleted: NotRequired[Literal[1]]  # Returns 1 if incoming request has been declined
     suggestion_deleted: NotRequired[Literal[1]]  # Returns 1 if suggestion has been declined
 
-friends_getAppUsers_response: List[int]
+friends_getAppUsers_response: TypeAlias = List[int]
 
-friends_getByPhones_response: List['objects.friends_user_xtr_phone']
+friends_getByPhones_response: TypeAlias = List['objects.friends_user_xtr_phone']
 
 class friends_getLists_response(TypedDict):
     count: int  # Total number of friends lists
     items: List['objects.friends_friends_list']
 
-friends_getMutual_response: List[int]
+friends_getMutual_response: TypeAlias = List[int]
 
-friends_getMutual_target_uids_response: List['objects.friends_mutual_friend']
+friends_getMutual_target_uids_response: TypeAlias = List['objects.friends_mutual_friend']
 
 class friends_getOnline_online_mobile_response(TypedDict):
     online: NotRequired[List[int]]
     online_mobile: NotRequired[List[int]]
 
-friends_getOnline_response: List[int]
+friends_getOnline_response: TypeAlias = List[int]
 
-friends_getRecent_response: List[int]
+friends_getRecent_response: TypeAlias = List[int]
 
 class friends_getRequests_extended_response(TypedDict):
     count: NotRequired[int]  # Total requests number
@@ -381,16 +381,16 @@ class gifts_get_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.gifts_gift']]
 
-groups_addAddress_response: 'objects.groups_address'
+groups_addAddress_response: TypeAlias = 'objects.groups_address'
 
 class groups_addCallbackServer_response(TypedDict):
     server_id: NotRequired[int]
 
-groups_addLink_response: 'objects.groups_group_link'
+groups_addLink_response: TypeAlias = 'objects.groups_group_link'
 
-groups_create_response: 'objects.groups_group'
+groups_create_response: TypeAlias = 'objects.groups_group'
 
-groups_editAddress_response: 'objects.groups_address'  # Result
+groups_editAddress_response: TypeAlias = 'objects.groups_address'  # Result
 
 class groups_getAddresses_response(TypedDict):
     count: int  # Total count of addresses
@@ -400,7 +400,7 @@ class groups_getBanned_response(TypedDict):
     count: int  # Total users number
     items: List['objects.groups_banned_item']
 
-groups_getById_response: List['objects.groups_group_full']
+groups_getById_response: TypeAlias = List['objects.groups_group_full']
 
 class groups_getCallbackConfirmationCode_response(TypedDict):
     code: NotRequired[str]  # Confirmation code
@@ -409,7 +409,7 @@ class groups_getCallbackServers_response(TypedDict):
     count: int
     items: List['objects.groups_callback_server']
 
-groups_getCallbackSettings_response: 'objects.groups_callback_settings'
+groups_getCallbackSettings_response: TypeAlias = 'objects.groups_callback_settings'
 
 class groups_getCatalogInfo_extended_response(TypedDict):
     enabled: int  # Information whether catalog is enabled for current user
@@ -437,9 +437,9 @@ class groups_getInvites_response(TypedDict):
     count: int  # Total communities number
     items: List['objects.groups_group_xtr_invited_by']
 
-groups_getLongPollServer_response: 'objects.groups_long_poll_server'
+groups_getLongPollServer_response: TypeAlias = 'objects.groups_long_poll_server'
 
-groups_getLongPollSettings_response: 'objects.groups_long_poll_settings'
+groups_getLongPollSettings_response: TypeAlias = 'objects.groups_long_poll_settings'
 
 class groups_getMembers_fields_response(TypedDict):
     count: int  # Total members number
@@ -503,7 +503,7 @@ class groups_getSettings_response(TypedDict):
     email: NotRequired[str]  # Community email
     wiki: 'objects.groups_group_wiki'  # Wiki settings
 
-groups_getTagList_response: List['objects.groups_group_tag']
+groups_getTagList_response: TypeAlias = List['objects.groups_group_tag']
 
 class groups_getTokenPermissions_response(TypedDict):
     mask: int
@@ -524,29 +524,29 @@ class groups_isMember_extended_response(TypedDict):
     can_recall: NotRequired['objects.base_bool_int']  # Information whether user's invite to the group can be recalled
     request: NotRequired['objects.base_bool_int']  # Information whether user has sent request to the group
 
-groups_isMember_response: 'objects.base_bool_int'  # Information whether user is a member of the group
+groups_isMember_response: TypeAlias = 'objects.base_bool_int'  # Information whether user is a member of the group
 
-groups_isMember_user_ids_extended_response: List['objects.groups_member_status_full']
+groups_isMember_user_ids_extended_response: TypeAlias = List['objects.groups_member_status_full']
 
-groups_isMember_user_ids_response: List['objects.groups_member_status']
+groups_isMember_user_ids_response: TypeAlias = List['objects.groups_member_status']
 
 class groups_search_response(TypedDict):
     count: int  # Total communities number
     items: List['objects.groups_group']
 
-leads_checkUser_response: 'objects.leads_checked'
+leads_checkUser_response: TypeAlias = 'objects.leads_checked'
 
-leads_complete_response: 'objects.leads_complete'
+leads_complete_response: TypeAlias = 'objects.leads_complete'
 
-leads_getStats_response: 'objects.leads_lead'
+leads_getStats_response: TypeAlias = 'objects.leads_lead'
 
-leads_getUsers_response: List['objects.leads_entry']
+leads_getUsers_response: TypeAlias = List['objects.leads_entry']
 
 class leads_metricHit_response(TypedDict):
     result: NotRequired[bool]  # Information whether request has been processed successfully
     redirect_link: NotRequired[str]  # Redirect link
 
-leads_start_response: 'objects.leads_start'
+leads_start_response: TypeAlias = 'objects.leads_start'
 
 class likes_add_response(TypedDict):
     likes: int  # Total likes number
@@ -572,9 +572,9 @@ class market_addAlbum_response(TypedDict):
 class market_add_response(TypedDict):
     market_item_id: NotRequired[int]  # Item ID
 
-market_createComment_response: int  # Comment ID
+market_createComment_response: TypeAlias = int  # Comment ID
 
-market_deleteComment_response: 'objects.base_bool_int'  # Returns 1 if request has been processed successfully (0 if the comment is not found)
+market_deleteComment_response: TypeAlias = 'objects.base_bool_int'  # Returns 1 if request has been processed successfully (0 if the comment is not found)
 
 class market_getAlbumById_response(TypedDict):
     count: NotRequired[int]  # Total number
@@ -628,7 +628,7 @@ class market_get_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.market_market_item']]
 
-market_restoreComment_response: 'objects.base_bool_int'  # Returns 1 if request has been processed successfully (0 if the comment is not found)
+market_restoreComment_response: TypeAlias = 'objects.base_bool_int'  # Returns 1 if request has been processed successfully (0 if the comment is not found)
 
 class market_search_extended_response(TypedDict):
     count: NotRequired[int]  # Total number
@@ -638,7 +638,7 @@ class market_search_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.market_market_item']]
 
-messages_createChat_response: int  # Chat ID
+messages_createChat_response: TypeAlias = int  # Chat ID
 
 class messages_deleteChatPhoto_response(TypedDict):
     message_id: NotRequired[int]  # Service message ID
@@ -647,9 +647,9 @@ class messages_deleteChatPhoto_response(TypedDict):
 class messages_deleteConversation_response(TypedDict):
     last_deleted_id: int  # Id of the last message, that was deleted
 
-messages_delete_response: Dict[str, Any]
+messages_delete_response: TypeAlias = Dict[str, Any]
 
-messages_edit_response: 'objects.base_bool_int'  # Result
+messages_edit_response: TypeAlias = 'objects.base_bool_int'  # Result
 
 class messages_getByConversationMessageId_response(TypedDict):
     count: int  # Total number
@@ -669,13 +669,13 @@ class messages_getChatPreview_response(TypedDict):
     preview: NotRequired['objects.messages_chat_preview']
     profiles: NotRequired[List['objects.users_user_full']]
 
-messages_getChat_chat_ids_fields_response: List['objects.messages_chat_full']
+messages_getChat_chat_ids_fields_response: TypeAlias = List['objects.messages_chat_full']
 
-messages_getChat_chat_ids_response: List['objects.messages_chat']
+messages_getChat_chat_ids_response: TypeAlias = List['objects.messages_chat']
 
-messages_getChat_fields_response: 'objects.messages_chat_full'
+messages_getChat_fields_response: TypeAlias = 'objects.messages_chat_full'
 
-messages_getChat_response: 'objects.messages_chat'
+messages_getChat_response: TypeAlias = 'objects.messages_chat'
 
 class messages_getConversationMembers_response(TypedDict):
     count: int  # Chat members count
@@ -725,7 +725,7 @@ class messages_getImportantMessages_response(TypedDict):
 class messages_getInviteLink_response(TypedDict):
     link: NotRequired[str]
 
-messages_getLastActivity_response: 'objects.messages_last_activity'
+messages_getLastActivity_response: TypeAlias = 'objects.messages_last_activity'
 
 class messages_getLongPollHistory_response(TypedDict):
     history: NotRequired[int]
@@ -737,7 +737,7 @@ class messages_getLongPollHistory_response(TypedDict):
     more: NotRequired[bool]  # Has more
     conversations: NotRequired[List['objects.messages_conversation']]
 
-messages_getLongPollServer_response: 'objects.messages_longpoll_params'
+messages_getLongPollServer_response: TypeAlias = 'objects.messages_longpoll_params'
 
 class messages_isMessagesFromGroupAllowed_response(TypedDict):
     is_allowed: NotRequired['objects.base_bool_int']
@@ -745,9 +745,9 @@ class messages_isMessagesFromGroupAllowed_response(TypedDict):
 class messages_joinChatByInviteLink_response(TypedDict):
     chat_id: NotRequired[int]
 
-messages_markAsImportant_response: List[int]
+messages_markAsImportant_response: TypeAlias = List[int]
 
-messages_pin_response: 'objects.messages_pinned_message'
+messages_pin_response: TypeAlias = 'objects.messages_pinned_message'
 
 class messages_searchConversations_response(TypedDict):
     count: NotRequired[int]  # Total results number
@@ -759,9 +759,9 @@ class messages_search_response(TypedDict):
     count: int  # Total number
     items: List['objects.messages_message']
 
-messages_send_response: int  # Message ID
+messages_send_response: TypeAlias = int  # Message ID
 
-messages_send_user_ids_response: Dict[str, Any]
+messages_send_user_ids_response: TypeAlias = Dict[str, Any]
 
 class messages_setChatPhoto_response(TypedDict):
     message_id: NotRequired[int]  # Service message ID
@@ -810,7 +810,7 @@ class newsfeed_get_response(TypedDict):
     groups: NotRequired[List['objects.groups_group_full']]
     next_from: NotRequired[str]  # New from value
 
-newsfeed_saveList_response: int  # List ID
+newsfeed_saveList_response: TypeAlias = int  # List ID
 
 class newsfeed_search_extended_response(TypedDict):
     items: NotRequired[List['objects.wall_wallpost_full']]
@@ -828,11 +828,11 @@ class newsfeed_search_response(TypedDict):
     count: NotRequired[int]  # Filtered number
     total_count: NotRequired[int]  # Total number
 
-notes_add_response: int  # Note ID
+notes_add_response: TypeAlias = int  # Note ID
 
-notes_createComment_response: int  # Comment ID
+notes_createComment_response: TypeAlias = int  # Comment ID
 
-notes_getById_response: 'objects.notes_note'
+notes_getById_response: TypeAlias = 'objects.notes_note'
 
 class notes_getComments_response(TypedDict):
     count: int  # Total number
@@ -854,51 +854,51 @@ class notifications_get_response(TypedDict):
     next_from: NotRequired[str]
     ttl: NotRequired[int]
 
-notifications_markAsViewed_response: 'objects.base_bool_int'  # Result
+notifications_markAsViewed_response: TypeAlias = 'objects.base_bool_int'  # Result
 
-notifications_sendMessage_response: List['objects.notifications_send_message_item']
+notifications_sendMessage_response: TypeAlias = List['objects.notifications_send_message_item']
 
-orders_cancelSubscription_response: 'objects.base_bool_int'  # Result
+orders_cancelSubscription_response: TypeAlias = 'objects.base_bool_int'  # Result
 
-orders_changeState_response: str  # New state
+orders_changeState_response: TypeAlias = str  # New state
 
-orders_getAmount_response: 'objects.orders_amount'
+orders_getAmount_response: TypeAlias = 'objects.orders_amount'
 
-orders_getById_response: List['objects.orders_order']
+orders_getById_response: TypeAlias = List['objects.orders_order']
 
-orders_getUserSubscriptionById_response: 'objects.orders_subscription'
+orders_getUserSubscriptionById_response: TypeAlias = 'objects.orders_subscription'
 
 class orders_getUserSubscriptions_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.orders_subscription']]
 
-orders_get_response: List['objects.orders_order']
+orders_get_response: TypeAlias = List['objects.orders_order']
 
-orders_updateSubscription_response: 'objects.base_bool_int'  # Result
+orders_updateSubscription_response: TypeAlias = 'objects.base_bool_int'  # Result
 
-pages_getHistory_response: List['objects.pages_wikipage_history']
+pages_getHistory_response: TypeAlias = List['objects.pages_wikipage_history']
 
-pages_getTitles_response: List['objects.pages_wikipage']
+pages_getTitles_response: TypeAlias = List['objects.pages_wikipage']
 
-pages_getVersion_response: 'objects.pages_wikipage_full'
+pages_getVersion_response: TypeAlias = 'objects.pages_wikipage_full'
 
-pages_get_response: 'objects.pages_wikipage_full'
+pages_get_response: TypeAlias = 'objects.pages_wikipage_full'
 
-pages_parseWiki_response: str  # HTML source
+pages_parseWiki_response: TypeAlias = str  # HTML source
 
-pages_saveAccess_response: int  # Page ID
+pages_saveAccess_response: TypeAlias = int  # Page ID
 
-pages_save_response: int  # Page ID
+pages_save_response: TypeAlias = int  # Page ID
 
-photos_copy_response: int  # Photo ID
+photos_copy_response: TypeAlias = int  # Photo ID
 
-photos_createAlbum_response: 'objects.photos_photo_album_full'
+photos_createAlbum_response: TypeAlias = 'objects.photos_photo_album_full'
 
-photos_createComment_response: int  # Created comment ID
+photos_createComment_response: TypeAlias = int  # Created comment ID
 
-photos_deleteComment_response: 'objects.base_bool_int'  # Returns 1 if request has been processed successfully, 0 if the comment is not found
+photos_deleteComment_response: TypeAlias = 'objects.base_bool_int'  # Returns 1 if request has been processed successfully, 0 if the comment is not found
 
-photos_getAlbumsCount_response: int  # Albums number
+photos_getAlbumsCount_response: TypeAlias = int  # Albums number
 
 class photos_getAlbums_response(TypedDict):
     count: int  # Total number
@@ -918,9 +918,9 @@ class photos_getAll_response(TypedDict):
     items: NotRequired[List['objects.photos_photo_xtr_real_offset']]
     more: NotRequired['objects.base_bool_int']  # Information whether next page is presented
 
-photos_getById_extended_response: List['objects.photos_photo_full']
+photos_getById_extended_response: TypeAlias = List['objects.photos_photo_full']
 
-photos_getById_response: List['objects.photos_photo']
+photos_getById_response: TypeAlias = List['objects.photos_photo']
 
 class photos_getComments_extended_response(TypedDict):
     count: int  # Total number
@@ -934,17 +934,17 @@ class photos_getComments_response(TypedDict):
     real_offset: NotRequired[int]  # Real offset of the comments
     items: NotRequired[List['objects.wall_wall_comment']]
 
-photos_getMarketUploadServer_response: 'objects.base_upload_server'
+photos_getMarketUploadServer_response: TypeAlias = 'objects.base_upload_server'
 
-photos_getMessagesUploadServer_response: 'objects.photos_photo_upload'
+photos_getMessagesUploadServer_response: TypeAlias = 'objects.photos_photo_upload'
 
 class photos_getNewTags_response(TypedDict):
     count: int  # Total number
     items: List['objects.photos_photo_xtr_tag_info']
 
-photos_getTags_response: List['objects.photos_photo_tag']
+photos_getTags_response: TypeAlias = List['objects.photos_photo_tag']
 
-photos_getUploadServer_response: 'objects.photos_photo_upload'
+photos_getUploadServer_response: TypeAlias = 'objects.photos_photo_upload'
 
 class photos_getUserPhotos_extended_response(TypedDict):
     count: int  # Total number
@@ -954,7 +954,7 @@ class photos_getUserPhotos_response(TypedDict):
     count: int  # Total number
     items: List['objects.photos_photo']
 
-photos_getWallUploadServer_response: 'objects.photos_photo_upload'
+photos_getWallUploadServer_response: TypeAlias = 'objects.photos_photo_upload'
 
 class photos_get_extended_response(TypedDict):
     count: int  # Total number
@@ -964,17 +964,17 @@ class photos_get_response(TypedDict):
     count: int  # Total number
     items: List['objects.photos_photo']
 
-photos_putTag_response: int  # Created tag ID
+photos_putTag_response: TypeAlias = int  # Created tag ID
 
-photos_restoreComment_response: 'objects.base_bool_int'  # Returns 1 if request has been processed successfully, 0 if the comment is not found
+photos_restoreComment_response: TypeAlias = 'objects.base_bool_int'  # Returns 1 if request has been processed successfully, 0 if the comment is not found
 
-photos_saveMarketAlbumPhoto_response: List['objects.photos_photo']
+photos_saveMarketAlbumPhoto_response: TypeAlias = List['objects.photos_photo']
 
-photos_saveMarketPhoto_response: List['objects.photos_photo']
+photos_saveMarketPhoto_response: TypeAlias = List['objects.photos_photo']
 
-photos_saveMessagesPhoto_response: List['objects.photos_photo']
+photos_saveMessagesPhoto_response: TypeAlias = List['objects.photos_photo']
 
-photos_saveOwnerCoverPhoto_response: List['objects.base_image']
+photos_saveOwnerCoverPhoto_response: TypeAlias = List['objects.base_image']
 
 class photos_saveOwnerPhoto_response(TypedDict):
     photo_hash: str  # Photo hash
@@ -984,17 +984,17 @@ class photos_saveOwnerPhoto_response(TypedDict):
     saved: NotRequired[int]  # Returns 1 if profile photo is saved
     post_id: NotRequired[int]  # Created post ID
 
-photos_saveWallPhoto_response: List['objects.photos_photo']
+photos_saveWallPhoto_response: TypeAlias = List['objects.photos_photo']
 
-photos_save_response: List['objects.photos_photo']
+photos_save_response: TypeAlias = List['objects.photos_photo']
 
 class photos_search_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.photos_photo']]
 
-podcasts_getPopular_response: List['objects.podcast_popular_podcast']
+podcasts_getPopular_response: TypeAlias = List['objects.podcast_popular_podcast']
 
-podcasts_getRecentSearchRequests_response: List[str]
+podcasts_getRecentSearchRequests_response: TypeAlias = List[str]
 
 class podcasts_search_response(TypedDict):
     podcasts: NotRequired[List['objects.podcast_podcast']]
@@ -1002,15 +1002,15 @@ class podcasts_search_response(TypedDict):
     profiles: NotRequired[List['objects.users_user']]
     groups: NotRequired[List[Any]]
 
-polls_addVote_response: 'objects.base_bool_int'  # Result
+polls_addVote_response: TypeAlias = 'objects.base_bool_int'  # Result
 
-polls_create_response: 'objects.polls_poll'
+polls_create_response: TypeAlias = 'objects.polls_poll'
 
-polls_deleteVote_response: 'objects.base_bool_int'  # Result
+polls_deleteVote_response: TypeAlias = 'objects.base_bool_int'  # Result
 
-polls_getById_response: 'objects.polls_poll'
+polls_getById_response: TypeAlias = 'objects.polls_poll'
 
-polls_getVoters_response: List['objects.polls_voters']
+polls_getVoters_response: TypeAlias = List['objects.polls_voters']
 
 class prettyCards_create_response(TypedDict):
     owner_id: int  # Owner ID of created pretty card
@@ -1025,9 +1025,9 @@ class prettyCards_edit_response(TypedDict):
     owner_id: int  # Owner ID of edited pretty card
     card_id: str  # Card ID of edited pretty card
 
-prettyCards_getById_response: List['objects.prettyCards_prettyCard']
+prettyCards_getById_response: TypeAlias = List['objects.prettyCards_prettyCard']
 
-prettyCards_getUploadURL_response: str  # Upload URL
+prettyCards_getUploadURL_response: TypeAlias = str  # Upload URL
 
 class prettyCards_get_response(TypedDict):
     count: int  # Total number
@@ -1038,33 +1038,33 @@ class search_getHints_response(TypedDict):
     items: List['objects.search_hint']
     suggested_queries: NotRequired[List[str]]
 
-secure_checkToken_response: 'objects.secure_token_checked'
+secure_checkToken_response: TypeAlias = 'objects.secure_token_checked'
 
-secure_getAppBalance_response: int  # App balance
+secure_getAppBalance_response: TypeAlias = int  # App balance
 
-secure_getSMSHistory_response: List['objects.secure_sms_notification']
+secure_getSMSHistory_response: TypeAlias = List['objects.secure_sms_notification']
 
-secure_getTransactionsHistory_response: List['objects.secure_transaction']
+secure_getTransactionsHistory_response: TypeAlias = List['objects.secure_transaction']
 
-secure_getUserLevel_response: List['objects.secure_level']
+secure_getUserLevel_response: TypeAlias = List['objects.secure_level']
 
-secure_giveEventSticker_response: Dict[str, Any]
+secure_giveEventSticker_response: TypeAlias = Dict[str, Any]
 
-secure_sendNotification_response: List[int]
+secure_sendNotification_response: TypeAlias = List[int]
 
-stats_getPostReach_response: List['objects.stats_wallpost_stat']
+stats_getPostReach_response: TypeAlias = List['objects.stats_wallpost_stat']
 
-stats_get_response: List['objects.stats_period']
+stats_get_response: TypeAlias = List['objects.stats_period']
 
-status_get_response: 'objects.status_status'
+status_get_response: TypeAlias = 'objects.status_status'
 
-storage_getKeys_response: List[str]
+storage_getKeys_response: TypeAlias = List[str]
 
-storage_get_response: str  # Value of key
+storage_get_response: TypeAlias = str  # Value of key
 
-storage_get_v5110_response: List['objects.storage_value']
+storage_get_v5110_response: TypeAlias = List['objects.storage_value']
 
-storage_get_with_keys_response: List['objects.storage_value']
+storage_get_with_keys_response: TypeAlias = List['objects.storage_value']
 
 class stories_getBanned_extended_response(TypedDict):
     count: int  # Stories count
@@ -1090,7 +1090,7 @@ class stories_getPhotoUploadServer_response(TypedDict):
     upload_url: str  # Upload URL
     user_ids: List[int]  # Users ID who can to see story.
 
-stories_getStats_response: 'objects.stories_story_stats'
+stories_getStats_response: TypeAlias = 'objects.stories_story_stats'
 
 class stories_getVideoUploadServer_response(TypedDict):
     upload_url: str  # Upload URL
@@ -1147,40 +1147,40 @@ class users_getSubscriptions_response(TypedDict):
     users: 'objects.users_users_array'
     groups: 'objects.groups_groups_array'
 
-users_get_response: List['objects.users_user_xtr_counters']
+users_get_response: TypeAlias = List['objects.users_user_xtr_counters']
 
 class users_search_response(TypedDict):
     count: NotRequired[int]  # Total number of available results
     items: NotRequired[List['objects.users_user_full']]
 
-utils_checkLink_response: 'objects.utils_link_checked'
+utils_checkLink_response: TypeAlias = 'objects.utils_link_checked'
 
 class utils_getLastShortenedLinks_response(TypedDict):
     count: NotRequired[int]  # Total number of available results
     items: NotRequired[List['objects.utils_last_shortened_link']]
 
-utils_getLinkStats_extended_response: 'objects.utils_link_stats_extended'
+utils_getLinkStats_extended_response: TypeAlias = 'objects.utils_link_stats_extended'
 
-utils_getLinkStats_response: 'objects.utils_link_stats'
+utils_getLinkStats_response: TypeAlias = 'objects.utils_link_stats'
 
-utils_getServerTime_response: int  # Time as Unixtime
+utils_getServerTime_response: TypeAlias = int  # Time as Unixtime
 
-utils_getShortLink_response: 'objects.utils_short_link'
+utils_getShortLink_response: TypeAlias = 'objects.utils_short_link'
 
-utils_resolveScreenName_response: 'objects.utils_domain_resolved'
+utils_resolveScreenName_response: TypeAlias = 'objects.utils_domain_resolved'
 
 class video_addAlbum_response(TypedDict):
     album_id: int  # Created album ID
 
-video_createComment_response: int  # Created comment ID
+video_createComment_response: TypeAlias = int  # Created comment ID
 
-video_getAlbumById_response: 'objects.video_video_album_full'
+video_getAlbumById_response: TypeAlias = 'objects.video_video_album_full'
 
 class video_getAlbumsByVideo_extended_response(TypedDict):
     count: NotRequired[int]  # Total number
     items: NotRequired[List['objects.video_video_album_full']]
 
-video_getAlbumsByVideo_response: List[int]
+video_getAlbumsByVideo_response: TypeAlias = List[int]
 
 class video_getAlbums_extended_response(TypedDict):
     count: int  # Total number
@@ -1210,9 +1210,9 @@ class video_get_response(TypedDict):
     count: int  # Total number
     items: List['objects.video_video']
 
-video_restoreComment_response: 'objects.base_bool_int'  # Returns 1 if request has been processed successfully, 0 if the comment is not found
+video_restoreComment_response: TypeAlias = 'objects.base_bool_int'  # Returns 1 if request has been processed successfully, 0 if the comment is not found
 
-video_save_response: 'objects.video_save_result'
+video_save_response: TypeAlias = 'objects.video_save_result'
 
 class video_search_extended_response(TypedDict):
     count: int  # Total number
@@ -1235,7 +1235,7 @@ class wall_getById_extended_response(TypedDict):
     profiles: List['objects.users_user_full']
     groups: List['objects.groups_group_full']
 
-wall_getById_legacy_response: List['objects.wall_wallpost_full']
+wall_getById_legacy_response: TypeAlias = List['objects.wall_wallpost_full']
 
 class wall_getById_response(TypedDict):
     items: NotRequired[List['objects.wall_wallpost_full']]
@@ -1311,4 +1311,3 @@ class widgets_getComments_response(TypedDict):
 class widgets_getPages_response(TypedDict):
     count: int  # Total number
     pages: List['objects.widgets_widget_page']
-

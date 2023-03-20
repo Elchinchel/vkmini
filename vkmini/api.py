@@ -1,18 +1,14 @@
 import asyncio
 
 from abc import ABC, abstractmethod
-from typing import List, Any, Dict, Type, Optional, Union
+from typing import List, Any, Dict, Optional, Union
 
 from aiohttp.client import ClientSession
 
-from vkmini.utils import AbstractLogger, Blocker
-from vkmini.request import post
+from vkmini import request
+from vkmini.utils import AbstractLogger, Blocker, Version
 from vkmini.exceptions import VkResponseException, VkErrorTooMany, VkErrorCaptcha
 from vkmini.method_groups import MethodGroup
-
-
-def set_loop(loop):
-    pass
 
 
 class ExecuteResult:
@@ -46,36 +42,44 @@ class VkApi:
     access_token: str
     logger: Union[AbstractLogger, None]
 
-    excepts: bool
     retries: int
 
     _blocker: Blocker
-    _session: ClientSession
-    _releaser: asyncio.Task
+    _session: Optional[ClientSession]
+    _releaser: Optional[asyncio.Task]
     _captcha_handler: Optional[BaseCaptchaHandler]
 
     def __init__(
             self,
             access_token: str,
-            excepts: bool = False,
-            version: str = '5.131',
+            version: str = '5.130',
             retries: int = 0,
-            sync_mode: bool = None,
-            logger: AbstractLogger = None,
-            session: ClientSession = None,
+            logger: Optional[AbstractLogger] = None,
+            session: Optional[ClientSession] = None,
             captcha_handler: Union[BaseCaptchaHandler, None] = None
     ):
+        self._init_minimal(logger, session)
+
         self.access_token = access_token
-        self.excepts = excepts
+        assert isinstance(version, str), 'Параметр version должен иметь тип str'
         self.version = version
         self.retries = retries
-        self.logger = logger
-        self._session = session
         self._captcha_handler = captcha_handler
 
         if retries > 0:
-            self._blocker = Blocker(asyncio.get_event_loop().create_future)
+            self._blocker = Blocker()
             self._releaser = None
+
+    def _init_minimal(
+            self,
+            logger: Optional[AbstractLogger] = None,
+            session: Optional[ClientSession] = None,
+            vk_id: Optional[int] = None,
+    ):
+        self.logger = logger
+        self._session = session
+        if vk_id is not None:
+            self._vk_id = vk_id
 
     def _set_method_groups(self):
         for group in MethodGroup._get_all(self):
@@ -92,7 +96,7 @@ class VkApi:
             data: Dict[str, Any]
     ) -> Dict[str, Any]:
         data['access_token'] = self.access_token
-        response = await post(
+        response = await request.post(
             self.URL % (method, self.version, self.lang),
             data,
             self._session
@@ -115,9 +119,7 @@ class VkApi:
                 self.logger.warning(
                     f"Запрос {method} не выполнен: {resp_body['error']}"
                 )
-            if self.excepts:
-                raise VkResponseException(resp_body['error'], kwargs)
-            return {'response': resp_body['error']}
+            raise VkResponseException(resp_body['error'], kwargs)
 
         raise ValueError('Неизвестный формат ответа VK API')
 
@@ -182,5 +184,8 @@ class GroupVkApi(VkApi):
 
     async def get_vk_id(self) -> int:
         if self._vk_id is None:
-            self._vk_id = (await self.groups.getById())[0]['id']
+            if Version(self.version) >= Version('5.140'):
+                self._vk_id = (await self.groups.getById())['groups'][0]['id']
+            else:
+                self._vk_id = (await self.groups.getById())[0]['id']
         return self._vk_id

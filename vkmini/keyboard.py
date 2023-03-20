@@ -29,10 +29,14 @@ ButtonTypes = Literal[
 
 class Button:
     class Color(str, Enum):
-        PRIMARY = 'primary'      # Синяя, обычная
-        SECONDARY = 'secondary'  # "Бледная"
-        POSITIVE = 'positive'    # Зелёная
-        NEGATIVE = 'negative'    # Красная
+        PRIMARY = 'primary'
+        'Синяя, по умолчанию'
+        SECONDARY = 'secondary'
+        'Бледно-синяя'
+        POSITIVE = 'positive'
+        'Зеленая'
+        NEGATIVE = 'negative'
+        'Красная'
 
     class Type(str, Enum):
         TEXT = 'text'
@@ -42,7 +46,7 @@ class Button:
         OPEN_APP = 'open_app'
         OPEN_LINK = 'open_link'
 
-    payload: str
+    payload: Dict[str, Any]
     color: str
     label: str
     type: str
@@ -50,25 +54,31 @@ class Button:
     def __init__(
             self,
             label: str,
-            payload: Union[str, dict],
+            payload: dict,
             type: str = Type.TEXT,
             color: str = Color.PRIMARY
     ):
-        if isinstance(payload, dict):
-            payload = json.dumps(payload, ensure_ascii=False)
         self.payload = payload
         self.color = color
         self.label = label
         self.type = type
 
     def __str__(self) -> str:
-        return Keyboard(self).jsonize()
+        return self.as_kb().jsonize()
 
     def __format_button__(self, data: Dict[str, Any]) -> 'Button':
         return self
 
-    def copy(self) -> 'Button':
-        return Button(self.label, self.payload, self.type, self.color)
+    def as_kb(self) -> 'Keyboard':
+        """
+        Returns:
+            Keyboard: клавиатура с одной кнопкой
+        """
+        return Keyboard(self)
+
+    def copy(self):
+        cls = type(self)
+        return cls(self.label, self.payload, self.type, self.color)
 
     @property
     def obj(self):
@@ -76,7 +86,7 @@ class Button:
             'action': {
                 'type': self.type,
                 'label': self.label,
-                'payload': self.payload
+                'payload': json.dumps(self.payload, ensure_ascii=False)
             },
             'color': self.color
         }
@@ -85,35 +95,44 @@ class Button:
 class FormattableButton(Button):
     """
     Позволяет не создавать клавиатуру каждый раз, когда нужно поменять
-    пару параметров в `payload` или `label` кнопки.
+    пару параметров в `payload` кнопки.
 
-    Форматирование осуществляется вызовом метода `.format` у объектов
-    `payload` и `label`, для переопределения способа форматирования
-    можно переопределить метод `__format_button__` у этого класса или
-    при создании кнопки передавать вместо `str` экземпляры своего класса
+    Для переопределения способа форматирования нужно создать дочерний от
+    этого класс и переопределить метод `__format_button__`
+
+    По умолчанию метод обновляет ключи,
+    если они не представлены в payload, указанной при создании
 
     Использование:
     ```
     keyboard = Keyboard([
-        Button('Обычная кнопка', 'статичная нагрузочка'),
-        FormattableButton('Label с {label_var}', 'Payload с {payload_var}')
+        Button('Обычная кнопка', {'hello': 'world'}),
+        FormattableButton('Форматируемая кнопка', {'hello': 'world'})
     ])
 
     data = {
-        'label_var': 'ярлычком',
-        'payload_var': 'нагрузочкой'
+        'user_id': 8_800_555,
+        'hello': 'bye',  # уже существующий ключ не будет перезаписан
+        'type': 'xyz'
     }
     formatted_kb = keyboard.format(data)  # вернёт клавиатуру с форматированными кнопками
 
     formatted_kb.jsonize()
-    >>> ... {"label": "Label с ярлычком", "payload": "Payload с нагрузочкой"}
+    >>> ... "payload": {"hello": "world", "user_id": 8800555, "type": "xyz"}
     ```
     """
+
     def __format_button__(self, data: Dict[str, Any]) -> 'Button':
-        return Button(self.label.format(**data),
-                      self.payload.format(**data),
-                      self.type,
-                      self.color)
+        """
+        Args:
+            data -- словарь, переданный в Keyboard.format()
+
+        Returns:
+            Новый экземпляр Button, payload которого была отформатирована
+        """
+        payload = data.copy()
+        payload.update(self.payload)
+        return Button(self.label, payload, self.type, self.color)
 
 
 class Keyboard:
@@ -129,7 +148,8 @@ class Keyboard:
     ):
         if not buttons:
             self.buttons = []
-        elif isinstance(buttons, list) and isinstance(buttons[0], list):
+        elif isinstance(buttons, list) and \
+                all(isinstance(bts, list) for bts in buttons):
             self.buttons = buttons  # type: ignore
         else:
             self.buttons = []
@@ -145,7 +165,7 @@ class Keyboard:
 
     def add_new_button(self,
                        label: str,
-                       payload: Union[str, dict],
+                       payload: dict,
                        type: Button.Type = Button.Type.TEXT,
                        color: Button.Color = Button.Color.PRIMARY):
         self.add_buttons(Button(label, payload, type, color))

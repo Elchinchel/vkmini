@@ -38,13 +38,13 @@ def set_session(session: ClientSession) -> None:
     default_session = session
 
 
-async def _get_session(session) -> Tuple[ClientSession, bool]:
+async def _get_session(session: Optional[ClientSession]) -> Tuple[ClientSession, bool]:
     if not (default_session or session):
         return ClientSession(), True
-    return (session or default_session), False
+    return (session or default_session), False  # type: ignore
 
 
-def _check_longpoll_session(session: Optional[ClientSession]):
+def check_longpoll_session(session: Optional[ClientSession]):
     if not (session or default_session):
         warn(ResourceWarning(
             'При создании экземпляра LP не была указана сессия, при этом '
@@ -53,45 +53,33 @@ def _check_longpoll_session(session: Optional[ClientSession]):
         ))
 
 
-async def post(url: str,
-               data: dict,
-               client_session: ClientSession = None) -> dict:
-    session, should_close = await _get_session(client_session)
-    async with session.post(url, data=data) as resp:
-        if resp.status == 200:
-            data = await resp.json(loads=json_decoder)
-        else:
-            data = {}
-    if should_close:
-        await session.close()
-    if data:
-        return data
-    raise NetworkError(resp.status)
-
-
-async def longpoll_get(url: str,
-                       client_session: ClientSession = None) -> dict:
-    session, should_close = await _get_session(client_session)
-    async with session.get(url) as resp:
-        if resp.status == 200:
-            data = await resp.json(loads=json_decoder)
-        else:
-            data = {}
-    if should_close:
-        await session.close()
-    if data:
-        return data
-    raise NetworkError(resp.status)
-
-
-async def get(url: str, client_session: ClientSession = None) -> bytes:
+async def _make_request(client_session, caller, **caller_kwargs):
     session, should_close = await _get_session(client_session)
     try:
-        async with session.get(url) as resp:
+        async with caller(session, **caller_kwargs) as resp:
             if resp.status == 200:
-                return await resp.content.read()
+                return await resp.json(loads=json_decoder)
             else:
                 raise NetworkError(resp.status)
     finally:
         if should_close:
             await session.close()
+
+
+async def post(
+        url: str,
+        data: dict,
+        client_session: Optional[ClientSession] = None
+) -> dict:
+    return await _make_request(
+        client_session, ClientSession.post, url=url, data=data
+    )
+
+
+async def get(
+        url: str,
+        client_session: Optional[ClientSession] = None
+) -> dict:
+    return await _make_request(
+        client_session, ClientSession.get, url=url
+    )

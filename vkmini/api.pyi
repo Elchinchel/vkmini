@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Optional, Union, Any
+from typing import Dict, List, Optional, Union, Any
 
 from aiohttp.client import ClientSession
 
@@ -48,7 +48,6 @@ class VkApi:
     access_token: str
     logger: Union[AbstractLogger, None]
     retries: int
-    excepts: bool
 
     account: methods.account
     ads: methods.ads
@@ -92,20 +91,15 @@ class VkApi:
     def __init__(
             self,
             access_token: str,
-            excepts: bool = False,
             version: str = '5.131',
             retries: int = 0,
-            sync_mode: bool = None,
-            logger: AbstractLogger = None,
-            session: ClientSession = None,
+            logger: Optional[AbstractLogger] = None,
+            session: Optional[ClientSession] = None,
             captcha_handler: Union[BaseCaptchaHandler, None] = None
     ):
         """
         `access_token` -- ключ доступа VK API
         (https://dev.vk.com/api/access-token/getting-started)
-
-        `excepts` -- генерировать ли VkResponseException при ошибках VK API
-        (иначе возвращает объект ошибки, полученный от VK)
 
         `version` -- версия VK API (https://dev.vk.com/reference/versions)
 
@@ -140,6 +134,12 @@ class VkApi:
     async def get_vk_id(self) -> int: ...
 
     async def wait_request_delay(self) -> None: ...
+
+    async def _call_method(self, method: str, **kwargs) -> Any: ...
+
+    async def _send_request(self, method: str, data: Dict[str, Any]) -> Dict[str, Any]: ...
+
+    def _init_minimal(self, logger: Optional[AbstractLogger] = None, excepts: bool = False, session: Optional[ClientSession] = None, vk_id: Optional[int] = None): ...
 
 
 class GroupVkApi(VkApi):

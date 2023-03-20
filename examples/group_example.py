@@ -8,8 +8,8 @@ group_id: int = 0  # ID группы
 
 
 async def main():
-    vk = GroupVkApi(token, excepts=True)
-    async with GroupLP(vk, group_id) as lp:
+    vk = GroupVkApi(token)
+    async with GroupLP(vk) as lp:
         async for update in lp.listen():
             print(update)
 

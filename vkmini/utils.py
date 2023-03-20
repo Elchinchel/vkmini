@@ -1,7 +1,8 @@
 import time
 
-from typing import Any, Callable, Protocol, Deque
-from asyncio import Future
+from typing import Any, Protocol, Deque
+from asyncio import Future, get_running_loop
+from functools import total_ordering
 from collections import deque
 
 
@@ -54,10 +55,9 @@ class Printer:
 class Blocker:
     _waiters: Deque[Future]
 
-    def __init__(self, future_factory: Callable[[], Future]):
+    def __init__(self):
         self._allowed = True
         self._waiters = deque()
-        self._create_future = future_factory
 
     def is_allowed(self) -> bool:
         return self._allowed
@@ -76,6 +76,29 @@ class Blocker:
 
     async def wait(self):
         if not self._allowed:
-            fut = self._create_future()
+            fut = get_running_loop().create_future()
             self._waiters.append(fut)
             await fut
+
+
+@total_ordering
+class Version:
+    major: int
+    minor: int
+
+    def __init__(self, v: str) -> None:
+        major, _, minor = v.partition('.')
+        try:
+            self.major, self.minor = int(major), int(minor)
+        except ValueError:
+            raise ValueError('Unsupported version format') from None
+
+    def __eq__(self, __o: object) -> bool:
+        if not isinstance(__o, Version):
+            return NotImplemented
+        return self.major == __o.major and self.minor == __o.minor
+
+    def __lt__(self, __o: object) -> bool:
+        if not isinstance(__o, Version):
+            return NotImplemented
+        return self.major <= __o.major and self.minor < __o.minor
