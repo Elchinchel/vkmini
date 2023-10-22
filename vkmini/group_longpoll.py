@@ -35,6 +35,15 @@ class LongPoller:
         if new_ts:
             self.ts = data['ts']
 
+    async def _handle_fail(self, data):
+        if data['failed'] == 1:
+            self.ts = data['ts']
+        elif data['failed'] == 2:
+            await self._set_longpoll_data(new_ts=False)
+        else:
+            await self._set_longpoll_data(new_ts=True)
+        return []
+
     async def check(
             self,
             url_builder: 'Callable[[LongPoller], str]',
@@ -46,13 +55,7 @@ class LongPoller:
         data = await request.get(url_builder(self), session)
 
         if 'failed' in data:
-            if data['failed'] == 1:
-                self.ts = data['ts']
-            elif data['failed'] == 2:
-                await self._set_longpoll_data(new_ts=False)
-            else:
-                await self._set_longpoll_data(new_ts=True)
-            return []
+            return await self._handle_fail(data)
         else:
             self.ts = data['ts']
             return data['updates']
@@ -63,6 +66,10 @@ class BaseLP(ABC):
     __session_owner: bool = False
 
     _poller: LongPoller
+
+    @property
+    def poller(self):
+        return self._poller
 
     def set_poller(self, poller: LongPoller):
         self._poller = poller
@@ -149,7 +156,7 @@ class GroupLP(BaseLP):
         self.logger = logger or vk.logger
         self._session = session or vk._session  # type: ignore
 
-        self._poller = LongPoller(self._get_longpoll_data)
+        self._poller = LongPoller(self.get_longpoll_data)
         self._group_id = None
 
     async def check(self):
@@ -164,7 +171,7 @@ class GroupLP(BaseLP):
         return (f"{poller.server}?act=a_check&key={poller.key}"
                 f"&ts={poller.ts}&wait={self.wait}")
 
-    async def _get_longpoll_data(self):
+    async def get_longpoll_data(self):
         if self._group_id is None:
             request.check_longpoll_session(self._session)
             self._group_id = await self._vk.get_vk_id()

@@ -42,7 +42,6 @@ class VkApi:
     """
     URL: str
     rps_delay: int
-    user_id: Union[int, None]
     version: str
     lang: str
     access_token: str
