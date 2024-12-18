@@ -4,8 +4,6 @@ from typing import Tuple
 __all__: Tuple[str, ...] = (
     'VkApi',
     'GroupVkApi',
-    'set_session',
-    'set_decoder',
     'Keyboard',
     'Button',
     'FormattableButton',
@@ -16,8 +14,7 @@ __all__: Tuple[str, ...] = (
 
 
 from vkmini.api import VkApi, GroupVkApi
-from vkmini.request import set_session, set_decoder
-from vkmini.keyboard import Keyboard, Button, FormattableButton
+from vkmini.keyboard import Button, Keyboard, FormattableButton
 from vkmini.exceptions import VkResponseException
 from vkmini.user_longpoll import UserLP
 from vkmini.group_longpoll import GroupLP

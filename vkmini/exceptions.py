@@ -90,7 +90,7 @@ class VkErrorEnabledInTest(VkResponseException):  # общая ошибка
 class VkErrorCompile(VkResponseException):
     '''(код 12) Unable to compile code'''
 
-class VkErrorRuntime(VkResponseException):
+class VkErrorRuntime(VkResponseException):  # общая ошибка
     '''(код 13) Runtime error occurred during code invocation'''
 
 class VkErrorCaptcha(VkResponseException):  # общая ошибка
@@ -141,11 +141,41 @@ class VkErrorRateLimit(VkResponseException):  # общая ошибка
 class VkErrorPrivateProfile(VkResponseException):  # общая ошибка
     '''(код 30) This profile is private'''
 
+class VkErrorWait(VkResponseException):
+    '''(код 32) Need wait'''
+
 class VkErrorNotImplementedYet(VkResponseException):  # общая ошибка
     '''(код 33) Not implemented yet'''
 
+class VkErrorClientVersionDeprecated(VkResponseException):  # общая ошибка
+    '''(код 34) Client version deprecated'''
+
 class VkErrorClientUpdateNeeded(VkResponseException):
     '''(код 35) Client update needed'''
+
+class VkErrorTimeout(VkResponseException):
+    '''(код 36) Method execution was interrupted due to timeout'''
+
+class VkErrorUserBanned(VkResponseException):  # общая ошибка
+    '''(код 37) User was banned'''
+
+class VkErrorUnknownApplication(VkResponseException):  # общая ошибка
+    '''(код 38) Unknown application'''
+
+class VkErrorUnknownUser(VkResponseException):  # общая ошибка
+    '''(код 39) Unknown user'''
+
+class VkErrorUnknownGroup(VkResponseException):  # общая ошибка
+    '''(код 40) Unknown group'''
+
+class VkErrorAdditionalSignupRequired(VkResponseException):  # общая ошибка
+    '''(код 41) Additional signup required'''
+
+class VkErrorIpIsNotAllowed(VkResponseException):  # общая ошибка
+    '''(код 42) IP is not allowed'''
+
+class VkErrorSectionDisabled(VkResponseException):  # общая ошибка
+    '''(код 43) This section is temporary unavailable'''
 
 class VkErrorParam(VkResponseException):  # общая ошибка
     '''(код 100) One of the parameters specified was missing or invalid'''
@@ -200,9 +230,6 @@ class VkErrorMobileNotActivated(VkResponseException):
 
 class VkErrorInsufficientFunds(VkResponseException):
     '''(код 147) Application has insufficient funds'''
-
-class VkErrorAccessMenu(VkResponseException):
-    '''(код 148) Access to the menu of the user denied'''
 
 class VkErrorParamTimestamp(VkResponseException):  # общая ошибка
     '''(код 150) Invalid timestamp'''
@@ -285,6 +312,15 @@ class VkErrorWallReplyOwnerFlood(VkResponseException):
 class VkErrorWallAdsPostLimitReached(VkResponseException):
     '''(код 224) Too many ads posts'''
 
+class VkErrorWallDonut(VkResponseException):
+    '''(код 225) Donut is disabled'''
+
+class VkErrorLikesReactionCanNotBeApplied(VkResponseException):
+    '''(код 232) Reaction can not be applied to the object'''
+
+class VkErrorFriendsTooManyFriends(VkResponseException):
+    '''(код 242) Too many friends'''
+
 class VkErrorPollsAccess(VkResponseException):
     '''(код 250) Access to poll denied'''
 
@@ -309,9 +345,6 @@ class VkErrorAlbumsLimit(VkResponseException):
 class VkErrorVotesPermission(VkResponseException):  # общая ошибка
     '''(код 500) Permission denied. You must enable votes processing in application settings'''
 
-class VkErrorVotes(VkResponseException):
-    '''(код 503) Not enough votes'''
-
 class VkErrorAdsPermission(VkResponseException):  # общая ошибка
     '''(код 600) Permission denied. You have no access to operations specified with given object(s)'''
 
@@ -322,10 +355,31 @@ class VkErrorAdsPartialSuccess(VkResponseException):
     '''(код 602) Some part of the request has not been completed'''
 
 class VkErrorAdsSpecific(VkResponseException):  # общая ошибка
-    '''(код 603) Some ads error occured'''
+    '''(код 603) Some ads error occurs'''
 
 class VkErrorAdsObjectDeleted(VkResponseException):
     '''(код 629) Object deleted'''
+
+class VkErrorAdsLookalikeRequestAlreadyInProgress(VkResponseException):
+    '''(код 630) Lookalike request with same source already in progress'''
+
+class VkErrorAdsLookalikeRequestMaxCountPerDayReached(VkResponseException):
+    '''(код 631) Max count of lookalike requests per day reached'''
+
+class VkErrorAdsLookalikeRequestAudienceTooSmall(VkResponseException):
+    '''(код 632) Given audience is too small'''
+
+class VkErrorAdsLookalikeRequestAudienceTooLarge(VkResponseException):
+    '''(код 633) Given audience is too large'''
+
+class VkErrorAdsLookalikeRequestExportAlreadyInProgress(VkResponseException):
+    '''(код 634) Lookalike request audience save already in progress'''
+
+class VkErrorAdsLookalikeRequestExportMaxCountPerDayReached(VkResponseException):
+    '''(код 635) Max count of lookalike request audience saves per day reached'''
+
+class VkErrorAdsLookalikeRequestExportRetargetingGroupLimit(VkResponseException):
+    '''(код 636) Max count of retargeting groups reached'''
 
 class VkErrorGroupChangeCreator(VkResponseException):
     '''(код 700) Cannot edit creator role'''
@@ -402,6 +456,9 @@ class VkErrorMessagesEditKindDisallowed(VkResponseException):
 class VkErrorMessagesCantFwd(VkResponseException):
     '''(код 921) Can't forward these messages'''
 
+class VkErrorMessagesChatUserLeft(VkResponseException):
+    '''(код 922) You left this chat'''
+
 class VkErrorMessagesCantDeleteForAll(VkResponseException):
     '''(код 924) Can't delete this message for everybody'''
 
@@ -453,17 +510,44 @@ class VkErrorMessagesCantEditPinnedYet(VkResponseException):
 class VkErrorMessagesPeerBlockedReasonByTime(VkResponseException):
     '''(код 950) Can't send message, reply timed out'''
 
-class VkErrorParamPhone(VkResponseException):
-    '''(код 1000) Invalid phone number'''
+class VkErrorMessagesUserNotDon(VkResponseException):
+    '''(код 962) You can't access donut chat without subscription'''
 
-class VkErrorPhoneAlreadyUsed(VkResponseException):
-    '''(код 1004) This phone number is used by another user'''
+class VkErrorMessagesMessageCannotBeForwarded(VkResponseException):
+    '''(код 969) Message cannot be forwarded'''
+
+class VkErrorMessagesCantPinExpiringMessage(VkResponseException):
+    '''(код 970) Cannot pin an expiring message'''
+
+class VkErrorMessagesGroupForNotificationsOnly(VkResponseException):
+    '''(код 985) Cannot write to notifications only groups'''
+
+class VkErrorMessagesInvalidReactionId(VkResponseException):
+    '''(код 1009) Unknown reaction passed'''
+
+class VkErrorMessagesForbiddenReaction(VkResponseException):
+    '''(код 1010) This reaction has been disabled'''
+
+class VkErrorMessagesReactionsLimitReached(VkResponseException):
+    '''(код 1011) Reactions limit for this message has been reached'''
+
+class VkErrorMessagesWritingDisabledForChat(VkResponseException):
+    '''(код 1012) Writing is disabled for this chat'''
 
 class VkErrorAuthFloodError(VkResponseException):
     '''(код 1105) Too many auth attempts, try again later'''
 
-class VkErrorAuthDelay(VkResponseException):
-    '''(код 1112) Processing.. Try later'''
+class VkErrorAuthAnonymousTokenHasExpired(VkResponseException):  # общая ошибка
+    '''(код 1114) Anonymous token has expired'''
+
+class VkErrorAuthAnonymousTokenIsInvalid(VkResponseException):  # общая ошибка
+    '''(код 1116) Anonymous token is invalid'''
+
+class VkErrorAuthAccessTokenHasExpired(VkResponseException):  # общая ошибка
+    '''(код 1117) Access token has expired'''
+
+class VkErrorAuthAnonymousTokenIpMismatch(VkResponseException):  # общая ошибка
+    '''(код 1118) Anonymous token ip mismatch'''
 
 class VkErrorParamDocId(VkResponseException):
     '''(код 1150) Invalid document id'''
@@ -476,6 +560,12 @@ class VkErrorParamDocTitle(VkResponseException):
 
 class VkErrorParamDocAccess(VkResponseException):
     '''(код 1153) Access to document is denied'''
+
+class VkErrorParamDocRestoreAccess(VkResponseException):
+    '''(код 1154) Access to document restoring is denied'''
+
+class VkErrorParamDocRestoreTimeout(VkResponseException):
+    '''(код 1155) Document was deleted too long ago'''
 
 class VkErrorPhotoChanged(VkResponseException):
     '''(код 1160) Original photo was changed'''
@@ -494,12 +584,6 @@ class VkErrorAppsSubscriptionInvalidStatus(VkResponseException):
 
 class VkErrorInvalidAddress(VkResponseException):
     '''(код 1260) Invalid screen name'''
-
-class VkErrorCommunitiesCatalogDisabled(VkResponseException):
-    '''(код 1310) Catalog is not available for this user'''
-
-class VkErrorCommunitiesCategoriesDisabled(VkResponseException):
-    '''(код 1311) Catalog categories are not available for this user'''
 
 class VkErrorMarketRestoreTooLate(VkResponseException):
     '''(код 1400) Too late for restore'''
@@ -528,14 +612,47 @@ class VkErrorMarketTooManyAlbums(VkResponseException):
 class VkErrorMarketItemHasBadLinks(VkResponseException):
     '''(код 1408) Item has bad links in description'''
 
-class VkErrorMarketShopNotEnabled(VkResponseException):
-    '''(код 1409) Shop not enabled'''
+class VkErrorMarketExtendedNotEnabled(VkResponseException):
+    '''(код 1409) Extended market not enabled'''
+
+class VkErrorMarketVariantsNotEnabled(VkResponseException):
+    '''(код 1410) Variants not enabled'''
+
+class VkErrorMarketVariantsError(VkResponseException):
+    '''(код 1411) Variants error'''
+
+class VkErrorMarketGroupingItemsWithDifferentProperties(VkResponseException):
+    '''(код 1412) Grouping items with different properties'''
+
+class VkErrorMarketGroupingAlreadyHasSuchVariant(VkResponseException):
+    '''(код 1413) Grouping already has such variant'''
+
+class VkErrorMarketGroupingHasOtherProperties(VkResponseException):
+    '''(код 1414) Grouping has other properties'''
+
+class VkErrorMarketGroupingMustHaveVariants(VkResponseException):
+    '''(код 1415) Grouping must have variants'''
 
 class VkErrorMarketVariantNotFound(VkResponseException):
     '''(код 1416) Variant not found'''
 
 class VkErrorMarketPropertyNotFound(VkResponseException):
     '''(код 1417) Property not found'''
+
+class VkErrorMarketMaxPropertiesLimitExceed(VkResponseException):
+    '''(код 1418) Max properties limit exceeded'''
+
+class VkErrorMarketMaxVariantsLimitExceed(VkResponseException):
+    '''(код 1419) Max variant limit exceeded'''
+
+class VkErrorMarketNameTooLong(VkResponseException):
+    '''(код 1421) Name too long'''
+
+class VkErrorMarketVariantValueTooLong(VkResponseException):
+    '''(код 1423) Variant value is too long'''
+
+class VkErrorMarketUnknownPropertyType(VkResponseException):
+    '''(код 1424) Unknown property type'''
 
 class VkErrorMarketGroupingMustContainMoreThanOneItem(VkResponseException):
     '''(код 1425) Grouping must have two or more items'''
@@ -567,6 +684,24 @@ class VkErrorMarketPhotosCropOverflow(VkResponseException):
 class VkErrorMarketPhotosCropSizeTooLow(VkResponseException):
     '''(код 1435) Crop size is less than the minimum'''
 
+class VkErrorMarketNotEnabled(VkResponseException):
+    '''(код 1438) Market not enabled'''
+
+class VkErrorMarketAlbumMainHidden(VkResponseException):
+    '''(код 1446) Main album can not be hidden'''
+
+class VkErrorMarketOrdersInvalidStatus(VkResponseException):
+    '''(код 1456) Order status is invalid'''
+
+class VkErrorMarketFailedToSetAlbumAsMain(VkResponseException):
+    '''(код 1457) Failed to set album as main'''
+
+class VkErrorMarketFailedToUnsetAlbumAsMain(VkResponseException):
+    '''(код 1458) Failed to unset album as main'''
+
+class VkErrorMarketItemIsNotDeleted(VkResponseException):
+    '''(код 1518) Item is not deleted'''
+
 class VkErrorStoryExpired(VkResponseException):
     '''(код 1600) Story has already expired'''
 
@@ -584,6 +719,15 @@ class VkErrorPrettyCardsCardIsConnectedToPost(VkResponseException):
 
 class VkErrorCallbackApiServersLimit(VkResponseException):
     '''(код 2000) Servers number limit is reached'''
+
+class VkErrorStickersNotPurchased(VkResponseException):
+    '''(код 2100) Stickers are not purchased'''
+
+class VkErrorStickersTooManyFavorites(VkResponseException):
+    '''(код 2101) Too many favorite stickers'''
+
+class VkErrorStickersNotFavorite(VkResponseException):
+    '''(код 2102) Stickers are not favorite'''
 
 class VkErrorWallCheckLinkCantDetermineSource(VkResponseException):
     '''(код 3102) Specified link is incorrect (can't find source)'''
@@ -618,6 +762,42 @@ class VkErrorUserServiceDeactivated(VkResponseException):  # общая ошиб
 class VkErrorFaveAliexpressTag(VkResponseException):
     '''(код 3800) Can't set AliExpress tag to this type of object'''
 
+class VkErrorAsrAudioDurationFlooded(VkResponseException):
+    '''(код 7701) Total audio duration limit reached'''
+
+class VkErrorAsrFileIsTooBig(VkResponseException):
+    '''(код 7702) Audio file is too big'''
+
+class VkErrorAsrInvalidHash(VkResponseException):
+    '''(код 7703) Invalid hash'''
+
+class VkErrorAsrNotFound(VkResponseException):
+    '''(код 7704) Task not found'''
+
+class VkErrorNotSupportedHttpMethod(VkResponseException):  # общая ошибка
+    '''(код 9999) Not supported http method'''
+
+class VkErrorCuaConfirmationRequired(VkResponseException):  # общая ошибка
+    '''(код 11500) CheckUserAction confirmation required'''
+
+class VkErrorAppsEmptyFilterParams(VkResponseException):
+    '''(код 11003) Empty filter params'''
+
+class VkErrorAppsEmptySnippetData(VkResponseException):
+    '''(код 11004) Empty snippet data'''
+
+class VkErrorAppsTooManySnippets(VkResponseException):
+    '''(код 11005) Too many snippets'''
+
+class VkErrorAppsNotFoundSnippet(VkResponseException):
+    '''(код 11006) Not found snippet'''
+
+class VkErrorTranslationsCantTranslate(VkResponseException):
+    '''(код 11101) Can't translate.'''
+
+class VkErrorTranslationsMultipleSourceLang(VkResponseException):
+    '''(код 11102) Multiple source languages. Only one allowed.'''
+
 
 _error_map = {
     1: VkErrorUnknown,
@@ -649,8 +829,18 @@ _error_map = {
     28: VkErrorAppAuth,
     29: VkErrorRateLimit,
     30: VkErrorPrivateProfile,
+    32: VkErrorWait,
     33: VkErrorNotImplementedYet,
+    34: VkErrorClientVersionDeprecated,
     35: VkErrorClientUpdateNeeded,
+    36: VkErrorTimeout,
+    37: VkErrorUserBanned,
+    38: VkErrorUnknownApplication,
+    39: VkErrorUnknownUser,
+    40: VkErrorUnknownGroup,
+    41: VkErrorAdditionalSignupRequired,
+    42: VkErrorIpIsNotAllowed,
+    43: VkErrorSectionDisabled,
     100: VkErrorParam,
     101: VkErrorParamApiId,
     103: VkErrorLimits,
@@ -669,7 +859,6 @@ _error_map = {
     141: VkErrorAccessPage,
     146: VkErrorMobileNotActivated,
     147: VkErrorInsufficientFunds,
-    148: VkErrorAccessMenu,
     150: VkErrorParamTimestamp,
     171: VkErrorFriendsListId,
     173: VkErrorFriendsListLimit,
@@ -697,6 +886,9 @@ _error_map = {
     222: VkErrorWallLinksForbidden,
     223: VkErrorWallReplyOwnerFlood,
     224: VkErrorWallAdsPostLimitReached,
+    225: VkErrorWallDonut,
+    232: VkErrorLikesReactionCanNotBeApplied,
+    242: VkErrorFriendsTooManyFriends,
     250: VkErrorPollsAccess,
     251: VkErrorPollsPollId,
     252: VkErrorPollsAnswerId,
@@ -705,12 +897,18 @@ _error_map = {
     300: VkErrorAlbumFull,
     302: VkErrorAlbumsLimit,
     500: VkErrorVotesPermission,
-    503: VkErrorVotes,
     600: VkErrorAdsPermission,
     601: VkErrorWeightedFlood,
     602: VkErrorAdsPartialSuccess,
     603: VkErrorAdsSpecific,
     629: VkErrorAdsObjectDeleted,
+    630: VkErrorAdsLookalikeRequestAlreadyInProgress,
+    631: VkErrorAdsLookalikeRequestMaxCountPerDayReached,
+    632: VkErrorAdsLookalikeRequestAudienceTooSmall,
+    633: VkErrorAdsLookalikeRequestAudienceTooLarge,
+    634: VkErrorAdsLookalikeRequestExportAlreadyInProgress,
+    635: VkErrorAdsLookalikeRequestExportMaxCountPerDayReached,
+    636: VkErrorAdsLookalikeRequestExportRetargetingGroupLimit,
     700: VkErrorGroupChangeCreator,
     701: VkErrorGroupNotInClub,
     702: VkErrorGroupTooManyOfficers,
@@ -736,6 +934,7 @@ _error_map = {
     919: VkErrorMessagesCantSeeInviteLink,
     920: VkErrorMessagesEditKindDisallowed,
     921: VkErrorMessagesCantFwd,
+    922: VkErrorMessagesChatUserLeft,
     924: VkErrorMessagesCantDeleteForAll,
     925: VkErrorMessagesChatNotAdmin,
     927: VkErrorMessagesChatNotExist,
@@ -753,22 +952,31 @@ _error_map = {
     947: VkErrorMessagesMemberAccessToGroupDenied,
     949: VkErrorMessagesCantEditPinnedYet,
     950: VkErrorMessagesPeerBlockedReasonByTime,
-    1000: VkErrorParamPhone,
-    1004: VkErrorPhoneAlreadyUsed,
+    962: VkErrorMessagesUserNotDon,
+    969: VkErrorMessagesMessageCannotBeForwarded,
+    970: VkErrorMessagesCantPinExpiringMessage,
+    985: VkErrorMessagesGroupForNotificationsOnly,
+    1009: VkErrorMessagesInvalidReactionId,
+    1010: VkErrorMessagesForbiddenReaction,
+    1011: VkErrorMessagesReactionsLimitReached,
+    1012: VkErrorMessagesWritingDisabledForChat,
     1105: VkErrorAuthFloodError,
-    1112: VkErrorAuthDelay,
+    1114: VkErrorAuthAnonymousTokenHasExpired,
+    1116: VkErrorAuthAnonymousTokenIsInvalid,
+    1117: VkErrorAuthAccessTokenHasExpired,
+    1118: VkErrorAuthAnonymousTokenIpMismatch,
     1150: VkErrorParamDocId,
     1151: VkErrorParamDocDeleteAccess,
     1152: VkErrorParamDocTitle,
     1153: VkErrorParamDocAccess,
+    1154: VkErrorParamDocRestoreAccess,
+    1155: VkErrorParamDocRestoreTimeout,
     1160: VkErrorPhotoChanged,
     1170: VkErrorTooManyLists,
     1251: VkErrorAppsAlreadyUnlocked,
     1256: VkErrorAppsSubscriptionNotFound,
     1257: VkErrorAppsSubscriptionInvalidStatus,
     1260: VkErrorInvalidAddress,
-    1310: VkErrorCommunitiesCatalogDisabled,
-    1311: VkErrorCommunitiesCategoriesDisabled,
     1400: VkErrorMarketRestoreTooLate,
     1401: VkErrorMarketCommentsClosed,
     1402: VkErrorMarketAlbumNotFound,
@@ -778,9 +986,20 @@ _error_map = {
     1406: VkErrorMarketTooManyItemsInAlbum,
     1407: VkErrorMarketTooManyAlbums,
     1408: VkErrorMarketItemHasBadLinks,
-    1409: VkErrorMarketShopNotEnabled,
+    1409: VkErrorMarketExtendedNotEnabled,
+    1410: VkErrorMarketVariantsNotEnabled,
+    1411: VkErrorMarketVariantsError,
+    1412: VkErrorMarketGroupingItemsWithDifferentProperties,
+    1413: VkErrorMarketGroupingAlreadyHasSuchVariant,
+    1414: VkErrorMarketGroupingHasOtherProperties,
+    1415: VkErrorMarketGroupingMustHaveVariants,
     1416: VkErrorMarketVariantNotFound,
     1417: VkErrorMarketPropertyNotFound,
+    1418: VkErrorMarketMaxPropertiesLimitExceed,
+    1419: VkErrorMarketMaxVariantsLimitExceed,
+    1421: VkErrorMarketNameTooLong,
+    1423: VkErrorMarketVariantValueTooLong,
+    1424: VkErrorMarketUnknownPropertyType,
     1425: VkErrorMarketGroupingMustContainMoreThanOneItem,
     1426: VkErrorMarketGroupingItemsMustHaveDistinctProperties,
     1427: VkErrorMarketOrdersNoCartItems,
@@ -791,12 +1010,21 @@ _error_map = {
     1433: VkErrorMarketPhotosCropInvalidFormat,
     1434: VkErrorMarketPhotosCropOverflow,
     1435: VkErrorMarketPhotosCropSizeTooLow,
+    1438: VkErrorMarketNotEnabled,
+    1446: VkErrorMarketAlbumMainHidden,
+    1456: VkErrorMarketOrdersInvalidStatus,
+    1457: VkErrorMarketFailedToSetAlbumAsMain,
+    1458: VkErrorMarketFailedToUnsetAlbumAsMain,
+    1518: VkErrorMarketItemIsNotDeleted,
     1600: VkErrorStoryExpired,
     1602: VkErrorStoryIncorrectReplyPrivacy,
     1900: VkErrorPrettyCardsCardNotFound,
     1901: VkErrorPrettyCardsTooManyCards,
     1902: VkErrorPrettyCardsCardIsConnectedToPost,
     2000: VkErrorCallbackApiServersLimit,
+    2100: VkErrorStickersNotPurchased,
+    2101: VkErrorStickersTooManyFavorites,
+    2102: VkErrorStickersNotFavorite,
     3102: VkErrorWallCheckLinkCantDetermineSource,
     3300: VkErrorRecaptcha,
     3301: VkErrorPhoneValidationNeed,
@@ -808,10 +1036,16 @@ _error_map = {
     3610: VkErrorUserDeactivated,
     3611: VkErrorUserServiceDeactivated,
     3800: VkErrorFaveAliexpressTag,
+    7701: VkErrorAsrAudioDurationFlooded,
+    7702: VkErrorAsrFileIsTooBig,
+    7703: VkErrorAsrInvalidHash,
+    7704: VkErrorAsrNotFound,
+    9999: VkErrorNotSupportedHttpMethod,
+    11003: VkErrorAppsEmptyFilterParams,
+    11004: VkErrorAppsEmptySnippetData,
+    11005: VkErrorAppsTooManySnippets,
+    11006: VkErrorAppsNotFoundSnippet,
+    11101: VkErrorTranslationsCantTranslate,
+    11102: VkErrorTranslationsMultipleSourceLang,
+    11500: VkErrorCuaConfirmationRequired,
 }
-
-# для совместимости со старыми версиями
-RateLimit = VkErrorRateLimit
-FloodControl = VkErrorFlood
-CaptchaNeeded = VkErrorCaptcha
-TooManyRequests = VkErrorTooMany

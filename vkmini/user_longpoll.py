@@ -1,11 +1,9 @@
-from typing import Optional, TypeVar, Generic, List, Any
+from typing import Any, List, Generic, TypeVar, Optional
 
 from aiohttp.client import ClientSession
 
 from vkmini.api import VkApi
-from vkmini.utils import AbstractLogger
-from vkmini.request import check_longpoll_session
-from vkmini.group_longpoll import LongPoller, BaseLP
+from vkmini.group_longpoll import BaseLP, LongPoller
 
 
 PollerT = TypeVar('PollerT', bound=LongPoller)
@@ -32,31 +30,27 @@ class UserLP(BaseLP, Generic[PollerT]):
             vk: VkApi,
             wait: int = 25,
             mode: int = 2,
-            logger: Optional[AbstractLogger] = None,
             session: Optional[ClientSession] = None
         ):
         """
-        `wait` -- максимальное время ожидания события, в секундах
-        (https://dev.vk.com/api/user-long-poll/getting-started#Подключение)
+        Note:
+            Приоритет объектов сессий:
+            1. Сессия, переданная в параметре session
+            2. Сессия переданного экземпляра VkApi
 
-        `mode` -- дополнительные опции ответа
+        Args:
+            `wait`: максимальное время ожидания события, в секундах
+                (https://dev.vk.com/api/bots-long-poll/getting-started#Подключение)
 
-        `logger` -- любой объект, имеющий атрибуты info, debug и warning,
-        по умолчанию None, то есть логирование не ведется
+            `mode`: дополнительные опции ответа
 
-        `session` -- экземпляр aiohttp.ClientSession, который будет
-        использоваться при выполнении запросов к LongPoll серверу
-
-        Приоритет объектов сессий:
-        1. Сессия, переданная в параметре session
-        2. Сессия переданного экземпляра VkApi
-        3. Общая сессия (см vkmini.set_session)
+            `session`: экземпляр aiohttp.ClientSession, который будет
+                использоваться при выполнении запросов к LongPoll серверу
         """
         self._vk = vk
         self.wait = wait
         self.mode = mode
 
-        self.logger = logger or vk.logger
         self._session = session or vk._session  # type: ignore
 
         self._poller = None
@@ -68,7 +62,6 @@ class UserLP(BaseLP, Generic[PollerT]):
         (https://dev.vk.com/api/user-long-poll/getting-started#Формат%20ответа)
         """
         if self._poller is None:
-            check_longpoll_session(self._session)
             self.set_poller(LongPoller(self.get_longpoll_data))
 
         return await self._poller.check(self._get_url, self._session)  # pyright: ignore[reportOptionalMemberAccess]
@@ -79,5 +72,5 @@ class UserLP(BaseLP, Generic[PollerT]):
 
     async def get_longpoll_data(self):
         return await self._vk.messages.getLongPollServer(
-            need_pts=bool(self.mode & 32 == 32)
+            need_pts=int(self.mode & 32 == 32)
         )

@@ -1,11 +1,9 @@
 from abc import ABC, abstractmethod
-from typing import AsyncGenerator, Optional, Callable, Tuple
+from typing import Tuple, Callable, Optional, AsyncGenerator
 
 from aiohttp.client import ClientSession
 
-from vkmini import request
-from vkmini import GroupVkApi
-from vkmini.utils import AbstractLogger
+from vkmini import GroupVkApi, request
 
 
 class LongPoller:
@@ -112,48 +110,31 @@ class GroupLP(BaseLP):
             self,
             vk: GroupVkApi,
             wait: int = 25,
-            logger: Optional[AbstractLogger] = None,
             session: Optional[ClientSession] = None
     ):
         """
-        `wait` -- максимальное время ожидания события, в секундах
-        (https://dev.vk.com/api/bots-long-poll/getting-started#Подключение)
+        Note:
+            Приоритет объектов сессий:
+            1. Сессия, переданная в параметре session
+            2. Сессия переданного экземпляра VkApi
 
-        `mode` -- дополнительные опции ответа
+        Args:
+            `wait`: максимальное время ожидания события, в секундах
+                (https://dev.vk.com/api/bots-long-poll/getting-started#Подключение)
 
-        `logger` -- любой объект, имеющий атрибуты info, debug и warning,
-        по умолчанию None, то есть логирование не ведется
+            `mode`: дополнительные опции ответа
 
-        `session` -- экземпляр aiohttp.ClientSession, который будет
-        использоваться при выполнении запросов к LongPoll серверу
-
-        Приоритет объектов сессий:
-        1. Сессия, переданная в параметре session
-        2. Сессия переданного экземпляра VkApi
-        3. Общая сессия (см vkmini.set_session)
+            `session`: экземпляр aiohttp.ClientSession, который будет
+                использоваться при выполнении запросов к LongPoll серверу
         """
         if not isinstance(vk, GroupVkApi):
             raise TypeError('Аргумент vk должен быть экземпляром %s, передан %s'
                             % GroupVkApi.__qualname__, repr(vk))
 
-        if isinstance(vk, GroupVkApi):
-            self._vk = vk
-        else:
-            # с пользовательским API получение ID не сработает, поэтом приводим
-            # к нужному классу (может ломаться с пользоательскими классами)
-            self._vk = GroupVkApi(
-                vk.access_token,
-                vk.excepts,
-                vk.version,
-                vk.retries,
-                vk.logger,
-                vk._session,
-            )
-
+        self._vk = vk
         if wait > 90:
             raise ValueError('Параметр wait не может превышать 90 секунд')
         self.wait = wait
-        self.logger = logger or vk.logger
         self._session = session or vk._session  # type: ignore
 
         self._poller = LongPoller(self.get_longpoll_data)
@@ -173,7 +154,6 @@ class GroupLP(BaseLP):
 
     async def get_longpoll_data(self):
         if self._group_id is None:
-            request.check_longpoll_session(self._session)
             self._group_id = await self._vk.get_vk_id()
 
         return await self._vk.groups.getLongPollServer(

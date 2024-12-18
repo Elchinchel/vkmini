@@ -3,10 +3,10 @@
 *.pyc
 .vscode
 
-*test*.py
-tests/*
+local/*
 pylama.ini
-/json_schema
+/json_schema/*
+!/json_schema/schema_parser.py
 
 test_upload.bat
 upload.bat

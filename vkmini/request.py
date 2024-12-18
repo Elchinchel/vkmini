@@ -1,64 +1,19 @@
-import json
+from typing import Optional
 
-from typing import Optional, Tuple, Union
-from aiohttp import ClientSession
-from warnings import warn
+from aiohttp import ClientSession, ClientResponse
 
 from vkmini.exceptions import NetworkError
 
 
-default_session: Union[ClientSession, None] = None
-json_decoder = json.loads
-
-
-def set_decoder(loads) -> None:
-    """
-    Устанавливает функцию, которая будет использоваться при
-    десериализации ответа на запросы
-    """
-    global json_decoder
-    json_decoder = loads
-
-
-def set_session(session: ClientSession) -> None:
-    """
-    Устанавливает сессию, которая будет использоваться по умолчанию при
-    любых запросах к API, в т.ч. LongPoll (исключение - обращение к API c
-    помощью обектов, при создании которых была явно передана сессия)
-
-    Разумеется, стоит позаботиться о закрытии этой сессии перед завершением
-    работы приложения
-
-    Если при запросе не указана сессия (не установлена стандартная или не
-    передана в конструктор при создании класса), на каждый новый запрос
-    будет создаваться новая сессия (это плохое решение, лучше создать и
-    указать сессию)
-    """
-    global default_session
-    default_session = session
-
-
-async def _get_session(session: Optional[ClientSession]) -> Tuple[ClientSession, bool]:
-    if not (default_session or session):
-        return ClientSession(), True
-    return (session or default_session), False  # type: ignore
-
-
-def check_longpoll_session(session: Optional[ClientSession]):
-    if not (session or default_session):
-        warn(ResourceWarning(
-            'При создании экземпляра LP не была указана сессия, при этом '
-            'сессия default_session также не задана. Это приведёт к '
-            'созданию новой сессии на каждый запрос.'
-        ))
-
-
-async def _make_request(client_session, caller, **caller_kwargs):
-    session, should_close = await _get_session(client_session)
+async def _make_request(client_session: Optional[ClientSession], caller, **caller_kwargs):
+    should_close = (client_session is None)
+    session = client_session or ClientSession()
     try:
         async with caller(session, **caller_kwargs) as resp:
+            resp: ClientResponse
+
             if resp.status == 200:
-                return await resp.json(loads=json_decoder)
+                return await resp.json()
             else:
                 raise NetworkError(resp.status)
     finally:

@@ -1,14 +1,17 @@
 import asyncio
-
 from abc import ABC, abstractmethod
-from typing import List, Any, Dict, Optional, Union
+from typing import Any, Dict, List, Union, Optional, cast
+from logging import getLogger
 
 from aiohttp.client import ClientSession
 
 from vkmini import request
-from vkmini.utils import AbstractLogger, Blocker, Version
-from vkmini.exceptions import VkResponseException, VkErrorTooMany, VkErrorCaptcha
+from vkmini.utils import Blocker, parse_api_version
+from vkmini.exceptions import VkErrorCaptcha, VkErrorTooMany, VkResponseException
 from vkmini.method_groups import MethodGroup
+
+
+logger = getLogger(__name__)
 
 
 class ExecuteResult:
@@ -40,7 +43,6 @@ class VkApi:
     lang: str = 'ru'
 
     access_token: str
-    logger: Union[AbstractLogger, None]
 
     retries: int
 
@@ -52,13 +54,12 @@ class VkApi:
     def __init__(
             self,
             access_token: str,
-            version: str = '5.130',
+            version: str = '5.199',
             retries: int = 0,
-            logger: Optional[AbstractLogger] = None,
             session: Optional[ClientSession] = None,
             captcha_handler: Union[BaseCaptchaHandler, None] = None
     ):
-        self._init_minimal(logger, session)
+        self._init_minimal(session)
 
         self.access_token = access_token
         assert isinstance(version, str), 'Параметр version должен иметь тип str'
@@ -72,11 +73,9 @@ class VkApi:
 
     def _init_minimal(
             self,
-            logger: Optional[AbstractLogger] = None,
             session: Optional[ClientSession] = None,
             vk_id: Optional[int] = None,
     ):
-        self.logger = logger
         self._session = session
         if vk_id is not None:
             self._vk_id = vk_id
@@ -95,33 +94,28 @@ class VkApi:
             method: str,
             data: Dict[str, Any]
     ) -> Dict[str, Any]:
+        data = data.copy()
         data['access_token'] = self.access_token
         response = await request.post(
             self.URL % (method, self.version, self.lang),
             data,
             self._session
         )
-        del(data['access_token'])
         return response
 
     async def _call_method(self, method: str, **kwargs) -> Any:
-        if self.logger:
-            self.logger.debug(f'API.{method}({kwargs})')
+        logger.debug('API.%s(%r)', method, kwargs)
 
         resp_body = await self._send_request(method, kwargs)
 
         if 'response' in resp_body:
-            if self.logger:
-                self.logger.debug(f"Запрос {method} выполнен")
+            logger.debug('Request %r succedeed, response: %s', method, resp_body)
             return resp_body
         elif 'error' in resp_body:
-            if self.logger:
-                self.logger.warning(
-                    f"Запрос {method} не выполнен: {resp_body['error']}"
-                )
+            logger.info('Request %r failed: %s', method, resp_body['error'])
             raise VkResponseException(resp_body['error'], kwargs)
 
-        raise ValueError('Неизвестный формат ответа VK API')
+        raise ValueError('Unknown VK API response format')
 
     async def __retryer(self, method: str, **kwargs) -> Any:
         if self.retries == 0:
@@ -170,7 +164,7 @@ class VkApi:
     async def get_vk_id(self) -> int:
         if self._vk_id is None:
             self._vk_id = (await self.users.get())[0]['id']
-        return self._vk_id
+        return cast(int, self._vk_id)
 
     async def get_user_id(self) -> int:
         return await self.get_vk_id()
@@ -184,8 +178,8 @@ class GroupVkApi(VkApi):
 
     async def get_vk_id(self) -> int:
         if self._vk_id is None:
-            if Version(self.version) >= Version('5.140'):
+            if parse_api_version(self.version) >= (5, 140):
                 self._vk_id = (await self.groups.getById())['groups'][0]['id']
             else:
                 self._vk_id = (await self.groups.getById())[0]['id']
-        return self._vk_id
+        return cast(int, self._vk_id)

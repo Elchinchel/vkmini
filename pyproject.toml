@@ -1,0 +1,44 @@
+[project]
+name = "vkmini"
+version = "5.199.0a1"
+authors = [
+  { name="Elchin Sarkarov", email="elchin751@gmail.com" },
+]
+description = "VK API requests library"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["typing-extensions", "aiohttp>=3.6.2"]
+
+[project.urls]
+"Homepage" = "https://github.com/Elchinchel/vkmini"
+"Bug Tracker" = "https://github.com/Elchinchel/vkmini/issues"
+
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# [tool.setuptools.packages.find]
+# include = ["communica*"]
+# namespaces=false
+
+[tool.pyright]
+typeCheckingMode = "basic"
+reportIncompatibleMethodOverride = "warning"
+reportUnnecessaryTypeIgnoreComments = "warning"
+exclude = ["./build/"]
+
+[tool.ruff]
+line-length = 85
+
+[tool.ruff.lint.isort]
+length-sort = true
+lines-after-imports = 2
+known-third-party = []
+
+[tool.ruff.format]
+quote-style = "single"

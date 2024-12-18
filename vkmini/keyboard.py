@@ -1,7 +1,6 @@
 import json
-
 from enum import Enum
-from typing import Any, List, Dict, Union, Literal
+from typing import Any, Dict, List, Union, Literal
 
 
 __all__ = (
@@ -92,6 +91,7 @@ class Button:
         }
 
 
+# XXX
 class FormattableButton(Button):
     """
     Позволяет не создавать клавиатуру каждый раз, когда нужно поменять
