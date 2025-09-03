@@ -98,7 +98,7 @@ class BaseLP(ABC):
 class GroupLP(BaseLP):
     """
     Реализует получение событий через Bots Long Poll API
-    (https://dev.vk.com/api/bots-long-poll/getting-started)
+    (https://dev.vk.ru/api/bots-long-poll/getting-started)
     """
     wait: int
 
@@ -120,7 +120,7 @@ class GroupLP(BaseLP):
 
         Args:
             `wait`: максимальное время ожидания события, в секундах
-                (https://dev.vk.com/api/bots-long-poll/getting-started#Подключение)
+                (https://dev.vk.ru/api/bots-long-poll/getting-started#Подключение)
 
             `mode`: дополнительные опции ответа
 
@@ -144,7 +144,7 @@ class GroupLP(BaseLP):
         """
         Выполняет однократный запрос к API и возвращает
         список событий из поля 'updates'
-        (https://dev.vk.com/api/bots-long-poll/getting-started#Формат%20данных)
+        (https://dev.vk.ru/api/bots-long-poll/getting-started#Формат%20данных)
         """
         return await self._poller.check(self._get_url, self._session)
 

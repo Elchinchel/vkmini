@@ -102,9 +102,9 @@ class VkApi:
         """
         Args:
             `access_token`: ключ доступа VK API
-                (https://dev.vk.com/api/access-token/getting-started)
+                (https://dev.vk.ru/api/access-token/getting-started)
 
-            `version`: версия VK API (https://dev.vk.com/reference/versions)
+            `version`: версия VK API (https://dev.vk.ru/reference/versions)
 
             `retries`: количество повторных попыток
                 при возникновении ошибки VkErrorTooMany(6)
@@ -133,7 +133,7 @@ class VkApi:
         """
         Выполняет код на языке VKScript
 
-        Описание метода: https://dev.vk.com/method/execute
+        Описание метода: https://dev.vk.ru/method/execute
 
         Возвращает объект `vkmini.api.ExecuteResult`
         """

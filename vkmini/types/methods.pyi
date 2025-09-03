@@ -1,7 +1,8 @@
-from vkmini.types import objects, responses
-from typing import Any, Literal, Optional, Protocol, Union, overload
+from typing import Any, Union, Literal, Optional, Protocol, overload
+
 from typing_extensions import TypeAlias
 
+from vkmini.types import objects, responses
 
 class _VkMethod(Protocol):
     async def __call__(self, **kwargs) -> Any: ...
@@ -26,7 +27,7 @@ class account:
     async def ban(self, *, owner_id: Optional[int] = None, **kwargs: Any) -> 'responses.base_ok_response': ...
 
     async def changePassword(self, *, new_password: str, restore_sid: Optional[str] = None, change_password_hash: Optional[str] = None, old_password: Optional[str] = None, **kwargs: Any) -> 'responses.account_changePassword_response':
-        '''Changes a user password after access is successfully restored with the [vk.com/dev/auth.restore|auth.restore] method.'''
+        '''Changes a user password after access is successfully restored with the [vk.ru/dev/auth.restore|auth.restore] method.'''
 
     async def getActiveOffers(self, *, offset: int = 0, count: int = 100, **kwargs: Any) -> 'responses.account_getActiveOffers_response':
         '''Returns a list of active ads (offers) which executed by the user will bring him/her respective number of votes to his balance in the application.'''
@@ -309,16 +310,16 @@ class asr:
         '''Returns status of the task with provided `task_id`'''
 
     async def getUploadUrl(self, **kwargs: Any) -> 'responses.base_getUploadServer_response':
-        '''Returns the server address to [vk.com/dev/upload_files_2|upload audio files].'''
+        '''Returns the server address to [vk.ru/dev/upload_files_2|upload audio files].'''
 
     async def process(self, *, audio: str, model: Literal['neutral', 'spontaneous'], **kwargs: Any) -> 'responses.asr_process_response':
-        '''Starts ASR task on [vk.com/dev/upload_files_2|uploaded audio file].'''
+        '''Starts ASR task on [vk.ru/dev/upload_files_2|uploaded audio file].'''
 
 class auth:
     def __getattr__(self, __name: str) -> _VkMethod: ...
 
     async def restore(self, *, phone: str, last_name: str, **kwargs: Any) -> 'responses.auth_restore_response':
-        '''Allows to restore account access using a code received via SMS. " This method is only available for apps with [vk.com/dev/auth_direct|Direct authorization] access. "'''
+        '''Allows to restore account access using a code received via SMS. " This method is only available for apps with [vk.ru/dev/auth_direct|Direct authorization] access. "'''
 
 class board:
     def __getattr__(self, __name: str) -> _VkMethod: ...
@@ -474,7 +475,7 @@ class docs:
     async def restore(self, *, owner_id: int, doc_id: int, **kwargs: Any) -> 'responses.base_ok_response': ...
 
     async def save(self, *, file: str, title: Optional[str] = None, tags: Optional[str] = None, return_tags: Flag = False, **kwargs: Any) -> 'responses.docs_save_response':
-        '''Saves a document after [vk.com/dev/upload_files_2|uploading it to a server].'''
+        '''Saves a document after [vk.ru/dev/upload_files_2|uploading it to a server].'''
 
     async def search(self, *, q: Optional[str] = None, search_own: Optional[Flag] = None, offset: Optional[int] = None, return_tags: Optional[Flag] = None, count: int = 20, **kwargs: Any) -> 'responses.docs_search_response':
         '''Returns a list of documents matching the search criteria.'''
@@ -670,7 +671,7 @@ class groups:
     async def getCallbackServers(self, *, group_id: int, server_ids: Optional[Union[int, str]] = None, **kwargs: Any) -> 'responses.groups_getCallbackServers_response': ...
 
     async def getCallbackSettings(self, *, group_id: int, server_id: Optional[int] = None, **kwargs: Any) -> 'responses.groups_getCallbackSettings_response':
-        '''Returns [vk.com/dev/callback_api|Callback API] notifications settings.'''
+        '''Returns [vk.ru/dev/callback_api|Callback API] notifications settings.'''
 
     async def getCatalogInfo(self, *, extended: Flag = 0, subcategories: Flag = 0, **kwargs: Any) -> Union['responses.groups_getCatalogInfo_response', 'responses.groups_getCatalogInfo_extended_response']:
         '''Returns categories list for communities catalog'''
@@ -1320,13 +1321,13 @@ class photos:
         '''Saves market photos after successful uploading.'''
 
     async def saveMessagesPhoto(self, *, photo: str, server: Optional[int] = None, hash: Optional[str] = None, **kwargs: Any) -> 'responses.photos_saveMessagesPhoto_response':
-        '''Saves a photo after being successfully uploaded. URL obtained with [vk.com/dev/photos.getMessagesUploadServer|photos.getMessagesUploadServer] method.'''
+        '''Saves a photo after being successfully uploaded. URL obtained with [vk.ru/dev/photos.getMessagesUploadServer|photos.getMessagesUploadServer] method.'''
 
     async def saveOwnerCoverPhoto(self, *, response_json: Optional[str] = None, hash: Optional[str] = None, photo: Optional[str] = None, crop_x: int = 0, crop_height: int = 0, crop_y: int = 0, crop_width: int = 0, is_video_cover: Flag = False, **kwargs: Any) -> 'responses.photos_saveOwnerCoverPhoto_response':
         '''Saves cover photo after successful uploading.'''
 
     async def saveOwnerPhoto(self, *, server: Optional[str] = None, hash: Optional[str] = None, photo: Optional[str] = None, **kwargs: Any) -> 'responses.photos_saveOwnerPhoto_response':
-        '''Saves a profile or community photo. Upload URL can be got with the [vk.com/dev/photos.getOwnerPhotoUploadServer|photos.getOwnerPhotoUploadServer] method.'''
+        '''Saves a profile or community photo. Upload URL can be got with the [vk.ru/dev/photos.getOwnerPhotoUploadServer|photos.getOwnerPhotoUploadServer] method.'''
 
     async def saveWallPhoto(self, *, photo: str, user_id: Optional[int] = None, group_id: Optional[int] = None, server: Optional[int] = None, hash: Optional[str] = None, latitude: Optional[float] = None, longitude: Optional[float] = None, caption: Optional[str] = None, **kwargs: Any) -> 'responses.photos_saveWallPhoto_response':
         '''Saves a photo to a user's or community's wall after being uploaded.'''
@@ -1403,7 +1404,7 @@ class secure:
         '''Returns payment balance of the application in hundredth of a vote.'''
 
     async def getSMSHistory(self, *, user_id: Optional[int] = None, date_from: Optional[int] = None, date_to: Optional[int] = None, limit: int = 1000, **kwargs: Any) -> 'responses.secure_getSMSHistory_response':
-        '''Shows a list of SMS notifications sent by the application using [vk.com/dev/secure.sendSMSNotification|secure.sendSMSNotification] method.'''
+        '''Shows a list of SMS notifications sent by the application using [vk.ru/dev/secure.sendSMSNotification|secure.sendSMSNotification] method.'''
 
     async def getTransactionsHistory(self, *, type: Optional[int] = None, uid_from: Optional[int] = None, uid_to: Optional[int] = None, date_from: Optional[int] = None, date_to: Optional[int] = None, limit: int = 1000, **kwargs: Any) -> 'responses.secure_getTransactionsHistory_response':
         '''Shows history of votes transaction between users and the application.'''
@@ -1741,8 +1742,8 @@ class widgets:
     def __getattr__(self, __name: str) -> _VkMethod: ...
 
     async def getComments(self, *, widget_api_id: Optional[int] = None, url: Optional[str] = None, page_id: Optional[str] = None, fields: Optional[Union['objects.users_fields', str]] = None, order: str = 'date', offset: int = 0, count: int = 10, **kwargs: Any) -> 'responses.widgets_getComments_response':
-        '''Gets a list of comments for the page added through the [vk.com/dev/Comments|Comments widget].'''
+        '''Gets a list of comments for the page added through the [vk.ru/dev/Comments|Comments widget].'''
 
     async def getPages(self, *, widget_api_id: Optional[int] = None, order: str = 'friend_likes', period: str = 'week', offset: int = 0, count: int = 10, **kwargs: Any) -> 'responses.widgets_getPages_response':
-        '''Gets a list of application/site pages where the [vk.com/dev/Comments|Comments widget] or [vk.com/dev/Like|Like widget] is installed.'''
+        '''Gets a list of application/site pages where the [vk.ru/dev/Comments|Comments widget] or [vk.ru/dev/Like|Like widget] is installed.'''
 

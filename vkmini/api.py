@@ -34,7 +34,7 @@ class BaseCaptchaHandler(ABC):
 
 
 class VkApi:
-    URL: str = 'https://api.vk.com/method/%s?v=%s&lang=%s'
+    URL: str = 'https://api.vk.кг/method/%s?v=%s&lang=%s'
     rps_delay: float = 1 / 3
 
     _vk_id: Union[int, None] = None

@@ -1,5 +1,6 @@
-from typing import List, Literal, Union
-from typing_extensions import NotRequired, TypeAlias, TypedDict
+from typing import List, Union, Literal
+
+from typing_extensions import TypeAlias, TypedDict, NotRequired
 
 
 Flag: TypeAlias = int
@@ -1073,7 +1074,7 @@ class ads_stats_format(TypedDict):
     month: NotRequired[str]  # Month as YYYY-MM
     year: NotRequired[int]  # Year as YYYY
     overall: NotRequired[int]  # 1 if period=overall
-    reach: NotRequired[int]  # Reach 
+    reach: NotRequired[int]  # Reach
     spent: NotRequired[str]  # Spent funds
     video_plays_unique_started: NotRequired[int]  # Video plays unique started count
     video_plays_unique_3_seconds: NotRequired[int]  # Video plays unique 3 seconds count
@@ -2857,10 +2858,10 @@ class messages_keyboard_button_action_location(TypedDict):
 
 class messages_keyboard_button_action_open_app(TypedDict):
     '''Description of the action, that should be performed on button click'''
-    app_id: int  # Fragment value in app link like vk.com/app{app_id}_-654321#hash
-    hash: NotRequired[str]  # Fragment value in app link like vk.com/app123456_-654321#{hash}
+    app_id: int  # Fragment value in app link like vk.ru/app{app_id}_-654321#hash
+    hash: NotRequired[str]  # Fragment value in app link like vk.ru/app123456_-654321#{hash}
     label: str  # Label for button
-    owner_id: int  # Fragment value in app link like vk.com/app123456_{owner_id}#hash
+    owner_id: int  # Fragment value in app link like vk.ru/app123456_{owner_id}#hash
     payload: NotRequired[str]  # Additional data sent along with message for developer convenience
     type: Literal['open_app']
 
@@ -2883,7 +2884,7 @@ class messages_keyboard_button_action_text(TypedDict):
 
 class messages_keyboard_button_action_vkpay(TypedDict):
     '''Description of the action, that should be performed on button click'''
-    hash: str  # Fragment value in app link like vk.com/app123456_-654321#{hash}
+    hash: str  # Fragment value in app link like vk.ru/app123456_-654321#{hash}
     payload: NotRequired[str]  # Additional data sent along with message for developer convenience
     type: Literal['vkpay']
 
@@ -3132,7 +3133,7 @@ class notes_note_comment(TypedDict):
     message: str  # Comment text
     nid: int  # Note ID
     oid: int  # Note ID
-    reply_to: NotRequired[int]  # ID of replied comment 
+    reply_to: NotRequired[int]  # ID of replied comment
     uid: int  # Comment author's ID
 
 class notifications_feedback(TypedDict):

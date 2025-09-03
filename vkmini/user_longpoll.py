@@ -14,7 +14,7 @@ class UserLP(BaseLP, Generic[PollerT]):
     Реализует получение событий через User Long Poll API
 
     Официальная документация:
-    https://dev.vk.com/api/user-long-poll/getting-started
+    https://dev.vk.ru/api/user-long-poll/getting-started
 
     Неофициальная документация:
     https://github.com/danyadev/longpoll-doc
@@ -40,7 +40,7 @@ class UserLP(BaseLP, Generic[PollerT]):
 
         Args:
             `wait`: максимальное время ожидания события, в секундах
-                (https://dev.vk.com/api/bots-long-poll/getting-started#Подключение)
+                (https://dev.vk.ru/api/bots-long-poll/getting-started#Подключение)
 
             `mode`: дополнительные опции ответа
 
@@ -59,7 +59,7 @@ class UserLP(BaseLP, Generic[PollerT]):
         """
         Выполняет однократный запрос к API и возвращает
         список событий из поля 'updates'
-        (https://dev.vk.com/api/user-long-poll/getting-started#Формат%20ответа)
+        (https://dev.vk.ru/api/user-long-poll/getting-started#Формат%20ответа)
         """
         if self._poller is None:
             self.set_poller(LongPoller(self.get_longpoll_data))
