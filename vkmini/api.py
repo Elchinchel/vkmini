@@ -1,15 +1,14 @@
 import asyncio
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Union, Optional, cast
 from logging import getLogger
+from typing import Any, Dict, List, Optional, Union, cast
 
 from aiohttp.client import ClientSession
 
 from vkmini import request
-from vkmini.utils import Blocker, parse_api_version
 from vkmini.exceptions import VkErrorCaptcha, VkErrorTooMany, VkResponseException
 from vkmini.method_groups import MethodGroup
-
+from vkmini.utils import Blocker, parse_api_version
 
 logger = getLogger(__name__)
 
@@ -34,7 +33,7 @@ class BaseCaptchaHandler(ABC):
 
 
 class VkApi:
-    URL: str = 'https://api.vk.кг/method/%s?v=%s&lang=%s'
+    URL: str = 'https://api.vk.ru/method/%s?v=%s&lang=%s'
     rps_delay: float = 1 / 3
 
     _vk_id: Union[int, None] = None
